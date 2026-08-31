@@ -34,7 +34,7 @@ body {
   font-family: "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
   font-size: 15px;
   line-height: 1.65;
-  padding-bottom: 86px;
+  padding-bottom: 30px;
 }
 
 button,
@@ -121,12 +121,6 @@ main {
   margin: 0 auto;
 }
 
-.hero {
-  padding: 10px 12px 9px;
-  color: white;
-  background: var(--navy);
-}
-
 .eyebrow,
 .section-kicker {
   color: var(--orange);
@@ -135,107 +129,20 @@ main {
   letter-spacing: 0.16em;
 }
 
-.time-panel {
-  margin: 0;
-  padding: 10px 12px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 14px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 15px;
-}
-
-.time-label {
-  color: #a9c0c5;
-  font-size: 10px;
-  font-weight: 700;
-}
-
-.current-time {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-}
-
-.current-time span {
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.current-time strong {
-  font-size: 24px;
-  line-height: 1;
-  letter-spacing: -0.04em;
-}
-
-.time-actions {
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-}
-
-.time-input-label {
+.program-tabs {
+  position: sticky;
+  z-index: 19;
+  top: 56px;
   display: grid;
-  gap: 3px;
-  color: #a9c0c5;
-  font-size: 9px;
-  font-weight: 700;
-}
-
-.time-input-label input,
-.quiet-button {
-  min-height: 36px;
-  color: white;
-  background: rgba(0, 0, 0, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  border-radius: 8px;
-}
-
-.time-input-label input {
-  width: 88px;
-  padding: 6px 8px;
-}
-
-.quiet-button {
-  padding: 6px 10px;
-  cursor: pointer;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.demo-notice {
-  margin: 7px 4px 0;
-  color: #b8cbcf;
-  font-size: 10px;
-}
-
-.demo-notice span {
-  margin-right: 5px;
-  padding: 2px 6px;
-  color: var(--navy);
-  background: var(--yellow);
-  border-radius: 4px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-}
-
-.demo-notice.is-live span {
-  color: white;
-  background: var(--green);
-}
-
-.date-tabs {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  padding: 0 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 0 8px;
   background: var(--navy);
 }
 
-.date-tab {
+.program-tab {
   position: relative;
-  padding: 8px 6px 9px;
+  min-width: 0;
+  padding: 7px 2px 8px;
   color: #a9c0c5;
   background: transparent;
   border: 0;
@@ -243,44 +150,81 @@ main {
   cursor: pointer;
 }
 
-.date-tab span,
-.date-tab small {
-  font-size: 9px;
+.program-tab span,
+.program-tab small {
+  font-size: 8px;
   font-weight: 700;
 }
 
-.date-tab strong {
-  margin: 0 3px;
+.program-tab strong {
+  margin: 0 2px;
   color: white;
-  font-size: 17px;
+  font-size: 16px;
 }
 
-.date-tab.is-active {
+.program-tab-now strong {
+  display: block;
+  margin: 1px 0 0;
+  overflow: hidden;
+  font-size: 11px;
+  line-height: 1.55;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.program-tab.is-active {
   color: var(--yellow);
   border-bottom-color: var(--yellow);
 }
 
-.view-tabs {
-  display: none;
-  padding: 9px 36px 0;
-  gap: 6px;
-  background: var(--paper);
+.shared-filter {
+  margin: 12px 16px 0;
 }
 
-.view-tabs button {
-  padding: 8px 18px;
-  color: var(--muted);
-  background: transparent;
-  border: 0;
-  border-bottom: 2px solid transparent;
-  cursor: pointer;
-  font-size: 12px;
+.reference-panel {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  color: white;
+  background: var(--navy);
+  border-radius: 11px;
+}
+
+.reference-panel label {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap: 3px;
+  color: #bfd0d4;
+  font-size: 9px;
   font-weight: 700;
 }
 
-.view-tabs button.is-current {
-  color: var(--orange);
-  border-bottom-color: var(--orange);
+.reference-panel input,
+.reference-now-button {
+  height: 36px;
+  color: white;
+  background: rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 8px;
+}
+
+.reference-panel input {
+  width: 100%;
+  min-width: 0;
+  padding: 5px 7px;
+  color-scheme: dark;
+  font-size: 12px;
+}
+
+.reference-now-button {
+  flex: 0 0 auto;
+  padding: 5px 9px;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 700;
 }
 
 .section-block {
@@ -646,63 +590,17 @@ main {
   margin: 3px 0 0;
 }
 
-.bottom-nav {
-  position: fixed;
-  z-index: 30;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  min-height: 68px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  background: rgba(255, 254, 249, 0.96);
-  border-top: 1px solid var(--line);
-  box-shadow: 0 -8px 24px rgba(18, 60, 74, 0.08);
-  backdrop-filter: blur(12px);
-}
-
-.bottom-nav a,
-.bottom-nav button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  color: var(--muted);
-  background: transparent;
-  border: 0;
-  cursor: pointer;
-  text-decoration: none;
-  font-size: 9px;
-  font-weight: 700;
-}
-
-.bottom-nav a span,
-.bottom-nav button span {
-  font-size: 20px;
-  line-height: 1;
-}
-
-.bottom-nav a.is-current,
-.bottom-nav button.is-current {
-  color: var(--orange);
-}
-
 @media (min-width: 700px) {
   body {
     padding-bottom: 30px;
   }
 
-  .hero {
-    padding: 12px 28px 10px;
-  }
-
-  .date-tabs {
+  .program-tabs {
     padding-inline: 28px;
   }
 
-  .view-tabs {
-    display: flex;
+  .shared-filter {
+    margin-inline: 36px;
   }
 
   .section-block {
@@ -719,9 +617,6 @@ main {
     margin-inline: 36px;
   }
 
-  .bottom-nav {
-    display: none;
-  }
 }
 
 @media (max-width: 370px) {
@@ -730,23 +625,15 @@ main {
     font-size: 10px;
   }
 
-  .time-panel {
-    padding-inline: 9px;
+  .program-tab strong {
+    font-size: 14px;
   }
 
-  .current-time {
-    gap: 5px;
+  .program-tab-now strong {
+    font-size: 10px;
   }
 
-  .current-time span {
-    font-size: 11px;
-  }
-
-  .current-time strong {
-    font-size: 21px;
-  }
-
-  .quiet-button {
+  .reference-now-button {
     padding-inline: 7px;
   }
 }

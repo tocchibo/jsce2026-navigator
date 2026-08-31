@@ -36,54 +36,60 @@
     </header>
 
     <main id="top">
-      <section class="hero" aria-label="表示日時">
-        <div class="time-panel">
-          <div>
-            <span class="time-label">表示基準</span>
-            <div class="current-time">
-              <span id="current-date">9月2日（水）</span>
-              <strong id="current-time">10:15</strong>
-            </div>
-          </div>
-          <div class="time-actions">
-            <label class="time-input-label" for="time-input">
-              時刻を試す
-              <input id="time-input" type="time" value="10:15" step="300" />
-            </label>
-            <button id="use-real-time" class="quiet-button" type="button">現在時刻</button>
-          </div>
-        </div>
-
-        <div id="demo-notice" class="demo-notice">
-          <span>DEMO</span>
-          大会期間外のため、確認用日時を表示しています
-        </div>
-      </section>
-
-      <nav class="date-tabs" aria-label="開催日を選択">
-        <button class="date-tab is-active" type="button" data-date="2026-09-02">
+      <nav class="program-tabs" aria-label="表示するプログラムを選択">
+        <button class="program-tab program-tab-now is-active" type="button" data-program-tab="now">
+          <span>NOW</span>
+          <strong>今から1時間</strong>
+        </button>
+        <button class="program-tab" type="button" data-program-tab="2026-09-02">
           <span>DAY 1</span>
           <strong>9/2</strong>
           <small>水</small>
         </button>
-        <button class="date-tab" type="button" data-date="2026-09-03">
+        <button class="program-tab" type="button" data-program-tab="2026-09-03">
           <span>DAY 2</span>
           <strong>9/3</strong>
           <small>木</small>
         </button>
-        <button class="date-tab" type="button" data-date="2026-09-04">
+        <button class="program-tab" type="button" data-program-tab="2026-09-04">
           <span>DAY 3</span>
           <strong>9/4</strong>
           <small>金</small>
         </button>
       </nav>
 
-      <nav class="view-tabs" aria-label="表示を切り替え">
-        <button class="is-current" type="button" data-view="now">今から1時間</button>
-        <button type="button" data-view="schedule">日別一覧</button>
-      </nav>
+      <details class="filter-panel shared-filter">
+        <summary id="filter-summary">
+          <span>絞り込み</span>
+          <span class="filter-summary-note">部門・会場・キーワード</span>
+        </summary>
+        <div class="filter-controls">
+          <label class="query-field">
+            <span>キーワード</span>
+            <input id="query-filter" type="search" placeholder="題名・氏名・所属・講演番号" />
+          </label>
+          <div class="select-row">
+            <label>
+              <span>部門</span>
+              <select id="division-filter"><option value="">すべての部門</option></select>
+            </label>
+            <label>
+              <span>キャンパス</span>
+              <select id="campus-filter"><option value="">すべてのキャンパス</option></select>
+            </label>
+          </div>
+          <button id="clear-filters" class="clear-filter-button" type="button" disabled>条件をクリア</button>
+        </div>
+      </details>
 
       <section id="now-view" class="section-block now-block view-panel" aria-labelledby="now-heading">
+        <div class="reference-panel">
+          <label for="reference-datetime">
+            <span>表示基準日時（日本時間）</span>
+            <input id="reference-datetime" type="datetime-local" step="60" />
+          </label>
+          <button id="use-real-time" class="reference-now-button" type="button">現在時刻</button>
+        </div>
         <div class="section-heading">
           <div>
             <span class="section-kicker">NOW + 60 MIN</span>
@@ -91,29 +97,6 @@
           </div>
           <span id="session-count" class="count-badge">0件</span>
         </div>
-        <details class="filter-panel">
-          <summary id="filter-summary">
-            <span>絞り込み</span>
-            <span class="filter-summary-note">部門・会場・キーワード</span>
-          </summary>
-          <div class="filter-controls">
-            <label class="query-field">
-              <span>キーワード</span>
-              <input id="query-filter" type="search" placeholder="題名・氏名・所属・講演番号" />
-            </label>
-            <div class="select-row">
-              <label>
-                <span>部門</span>
-                <select id="division-filter"><option value="">すべての部門</option></select>
-              </label>
-              <label>
-                <span>キャンパス</span>
-                <select id="campus-filter"><option value="">すべてのキャンパス</option></select>
-              </label>
-            </div>
-            <button id="clear-filters" class="clear-filter-button" type="button" disabled>条件をクリア</button>
-          </div>
-        </details>
         <div id="upcoming-sessions" class="session-list" aria-live="polite"></div>
       </section>
 
@@ -135,23 +118,5 @@
       </aside>
     </main>
 
-    <nav class="bottom-nav" aria-label="主要メニュー">
-      <button class="is-current" type="button" data-view="now">
-        <span aria-hidden="true">◷</span>
-        今から1時間
-      </button>
-      <button type="button" data-view="schedule">
-        <span aria-hidden="true">▦</span>
-        日別一覧
-      </button>
-      <a
-        href="https://pub.confit.atlas.jp/ja/event/jsce2026/bookmarks"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <span aria-hidden="true">☆</span>
-        本家保存
-      </a>
-    </nav>
   </body>
 </html>

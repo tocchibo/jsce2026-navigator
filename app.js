@@ -1,20 +1,18 @@
 const EVENT_DATES = ["2026-09-02", "2026-09-03", "2026-09-04"];
-const DEFAULT_DATE = "2026-09-02";
-const DEFAULT_TIME = "10:15";
 const PRESENTATION_URL = "https://pub.confit.atlas.jp/ja/event/jsce2026/presentation/";
 
 let sessions = [];
 const sessionsById = new Map();
 const searchTextById = new Map();
+const initialNow = japanNow();
 
 const state = {
-  selectedDate: DEFAULT_DATE,
-  selectedTime: DEFAULT_TIME,
+  activeTab: "now",
+  referenceDate: initialNow.date,
+  referenceTime: initialNow.time,
   division: "",
   campus: "",
   query: "",
-  view: "now",
-  live: false,
 };
 
 const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
@@ -39,7 +37,7 @@ function escapeHtml(value) {
 }
 
 function sessionStatus(session) {
-  const now = minutes(state.selectedTime);
+  const now = minutes(state.referenceTime);
   if (now >= minutes(session.start) && now < minutes(session.end)) {
     return { label: "開催中", className: "is-live" };
   }
@@ -126,18 +124,28 @@ function hasActiveFilters() {
 }
 
 function renderView() {
-  document.querySelector("#now-view").hidden = state.view !== "now";
-  document.querySelector("#schedule-view").hidden = state.view !== "schedule";
-  document.querySelectorAll("[data-view]").forEach((button) => {
-    const isCurrent = button.dataset.view === state.view;
-    button.classList.toggle("is-current", isCurrent);
-    button.setAttribute("aria-pressed", String(isCurrent));
+  const isNow = state.activeTab === "now";
+  document.querySelector("#now-view").hidden = !isNow;
+  document.querySelector("#schedule-view").hidden = isNow;
+  document.querySelectorAll("[data-program-tab]").forEach((button) => {
+    const isCurrent = button.dataset.programTab === state.activeTab;
+    button.classList.toggle("is-active", isCurrent);
+    button.setAttribute("aria-selected", String(isCurrent));
   });
 }
 
 function render() {
+  const referenceSessions = sessions
+    .filter((session) => session.date === state.referenceDate)
+    .sort(
+      (a, b) =>
+        minutes(a.start) - minutes(b.start) ||
+        a.campus.localeCompare(b.campus, "ja") ||
+        a.room.localeCompare(b.room, "ja"),
+    );
+  const scheduleDate = state.activeTab === "now" ? EVENT_DATES[0] : state.activeTab;
   const allDaySessions = sessions
-    .filter((session) => session.date === state.selectedDate)
+    .filter((session) => session.date === scheduleDate)
     .sort(
       (a, b) =>
         minutes(a.start) - minutes(b.start) ||
@@ -145,18 +153,14 @@ function render() {
         a.room.localeCompare(b.room, "ja"),
     );
   const daySessions = allDaySessions.filter(matchesFilters);
-  const now = minutes(state.selectedTime);
+  const now = minutes(state.referenceTime);
   const horizon = now + 60;
-  const allUpcoming = allDaySessions.filter(
+  const allUpcoming = referenceSessions.filter(
     (session) => minutes(session.end) > now && minutes(session.start) <= horizon,
   );
   const upcoming = allUpcoming.filter(matchesFilters);
 
-  document.querySelector("#current-date").textContent = dateFormatter.format(
-    new Date(`${state.selectedDate}T12:00:00+09:00`),
-  );
-  document.querySelector("#current-time").textContent = state.selectedTime;
-  document.querySelector("#time-input").value = state.selectedTime;
+  document.querySelector("#reference-datetime").value = `${state.referenceDate}T${state.referenceTime}`;
   document.querySelector("#session-count").textContent = hasActiveFilters()
     ? `${upcoming.length}/${allUpcoming.length}件`
     : `${upcoming.length}件`;
@@ -167,19 +171,11 @@ function render() {
     ? daySessions.map((session) => sessionMarkup(session, false)).join("")
     : emptyMarkup("この日の該当セッションはありません");
 
-  document.querySelector("#schedule-heading").textContent = `この日のセッション（${daySessions.length}件）`;
+  const scheduleDateLabel = dateFormatter.format(new Date(`${scheduleDate}T12:00:00+09:00`));
+  document.querySelector("#schedule-heading").textContent = `${scheduleDateLabel}のセッション（${daySessions.length}件）`;
   document.querySelector("#filter-summary").classList.toggle("has-filter", hasActiveFilters());
   document.querySelector("#clear-filters").disabled = !hasActiveFilters();
 
-  document.querySelectorAll(".date-tab").forEach((button) => {
-    button.classList.toggle("is-active", button.dataset.date === state.selectedDate);
-  });
-
-  const notice = document.querySelector("#demo-notice");
-  notice.classList.toggle("is-live", state.live);
-  notice.innerHTML = state.live
-    ? "<span>LIVE</span>日本時間の現在日時を表示しています"
-    : "<span>DEMO</span>大会期間外のため、確認用日時を表示しています";
   renderView();
 }
 
@@ -260,33 +256,26 @@ async function loadSessions() {
   }
 }
 
-document.querySelectorAll(".date-tab").forEach((button) => {
+document.querySelectorAll("[data-program-tab]").forEach((button) => {
   button.addEventListener("click", () => {
-    state.selectedDate = button.dataset.date;
-    state.live = false;
+    state.activeTab = button.dataset.programTab;
     render();
-  });
-});
-
-document.querySelectorAll("[data-view]").forEach((button) => {
-  button.addEventListener("click", () => {
-    state.view = button.dataset.view;
-    renderView();
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 });
 
-document.querySelector("#time-input").addEventListener("change", (event) => {
-  state.selectedTime = event.target.value || DEFAULT_TIME;
-  state.live = false;
+document.querySelector("#reference-datetime").addEventListener("change", (event) => {
+  const [date, time] = event.target.value.split("T");
+  if (!date || !time) return;
+  state.referenceDate = date;
+  state.referenceTime = time;
   render();
 });
 
 document.querySelector("#use-real-time").addEventListener("click", () => {
   const now = japanNow();
-  state.selectedDate = EVENT_DATES.includes(now.date) ? now.date : DEFAULT_DATE;
-  state.selectedTime = now.time;
-  state.live = EVENT_DATES.includes(now.date);
+  state.referenceDate = now.date;
+  state.referenceTime = now.time;
   render();
 });
 

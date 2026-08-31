@@ -72,14 +72,14 @@ const initial = await evaluate(`
   new Promise((resolve, reject) => {
     let attempts = 0;
     const timer = setInterval(() => {
-      const dayCards = document.querySelectorAll('#schedule-sessions .session-card').length;
-      if (dayCards === 126) {
+      const divisionOptions = document.querySelector('#division-filter').options.length;
+      const referenceValue = document.querySelector('#reference-datetime').value;
+      if (divisionOptions === 9 && referenceValue) {
         clearInterval(timer);
         resolve({
-          count: document.querySelector('#session-count').textContent,
-          upcomingCards: document.querySelectorAll('#upcoming-sessions .session-card').length,
-          dayCards,
-          divisionOptions: document.querySelector('#division-filter').options.length,
+          referenceValue,
+          divisionOptions,
+          activeTab: document.querySelector('.program-tab.is-active').dataset.programTab,
           nowHidden: document.querySelector('#now-view').hidden,
           scheduleHidden: document.querySelector('#schedule-view').hidden,
         });
@@ -91,18 +91,46 @@ const initial = await evaluate(`
   })
 `);
 
-assert.deepEqual(initial, {
+assert.deepEqual(
+  {
+    divisionOptions: initial.divisionOptions,
+    activeTab: initial.activeTab,
+    nowHidden: initial.nowHidden,
+    scheduleHidden: initial.scheduleHidden,
+  },
+  {
+  divisionOptions: 9,
+  activeTab: "now",
+  nowHidden: false,
+  scheduleHidden: true,
+  },
+);
+assert.match(initial.referenceValue, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/);
+
+const upcoming = await evaluate(`
+  new Promise((resolve) => {
+    const input = document.querySelector('#reference-datetime');
+    input.value = '2026-09-02T10:15';
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+    setTimeout(() => resolve({
+      count: document.querySelector('#session-count').textContent,
+      upcomingCards: document.querySelectorAll('#upcoming-sessions .session-card').length,
+      nowHidden: document.querySelector('#now-view').hidden,
+      scheduleHidden: document.querySelector('#schedule-view').hidden,
+    }), 100);
+  })
+`);
+
+assert.deepEqual(upcoming, {
   count: "88件",
   upcomingCards: 88,
-  dayCards: 126,
-  divisionOptions: 9,
   nowHidden: false,
   scheduleHidden: true,
 });
 
 const filtered = await evaluate(`
   new Promise((resolve) => {
-    document.querySelector('[data-view="schedule"]').click();
+    document.querySelector('[data-program-tab="2026-09-02"]').click();
     const input = document.querySelector('#query-filter');
     input.value = '留萌開発事務所';
     input.dispatchEvent(new Event('input', { bubbles: true }));
@@ -118,6 +146,7 @@ const filtered = await evaluate(`
         affiliations: [...card.querySelectorAll('.talk-affiliations')].map((item) => item.textContent),
         nowHidden: document.querySelector('#now-view').hidden,
         scheduleHidden: document.querySelector('#schedule-view').hidden,
+        referencePanelVisible: document.querySelector('.reference-panel').checkVisibility(),
       }), 100);
     }, 100);
   })
@@ -128,10 +157,11 @@ assert.equal(filtered.upcomingCards, 0);
 assert.equal(filtered.dayCards, 1);
 assert.equal(filtered.nowHidden, true);
 assert.equal(filtered.scheduleHidden, false);
+assert.equal(filtered.referencePanelVisible, false);
 assert.ok(filtered.links.some((url) => url.endsWith("/CS18-07")));
 assert.ok(filtered.authors.some((value) => value.includes("千葉 雄貴")));
 assert.ok(filtered.affiliations.some((value) => value.includes("留萌開発事務所")));
 
-console.log(JSON.stringify({ initial, filtered }, null, 2));
+console.log(JSON.stringify({ initial, upcoming, filtered }, null, 2));
 await call("Browser.close").catch(() => {});
 socket.close();
