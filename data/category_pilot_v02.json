@@ -1,0 +1,4472 @@
+{
+  "taxonomy_version": "0.2.0",
+  "status": "stratified_pilot",
+  "sample_method": "15 evenly spaced presentations per official division",
+  "classification_method": "weighted explicit evidence rules v0.2",
+  "presentations": [
+    {
+      "code": "I-01",
+      "labels": {
+        "domain": [
+          "bridge",
+          "construction_materials"
+        ],
+        "phase": [
+          "inspection_diagnosis",
+          "design_analysis",
+          "maintenance_repair"
+        ],
+        "method": [
+          "ai_ml",
+          "nondestructive_testing"
+        ],
+        "material": [
+          "frp_composite"
+        ],
+        "issue": [
+          "aging_lifecycle"
+        ]
+      },
+      "confidence": "medium",
+      "review_required": true,
+      "review_reasons": [
+        "phase:tag_limit"
+      ],
+      "scores": {
+        "domain": {
+          "bridge": 9,
+          "construction_materials": 8
+        },
+        "phase": {
+          "inspection_diagnosis": 14,
+          "design_analysis": 8,
+          "maintenance_repair": 8
+        },
+        "method": {
+          "ai_ml": 14,
+          "nondestructive_testing": 14
+        },
+        "material": {
+          "frp_composite": 8
+        },
+        "issue": {
+          "aging_lifecycle": 5
+        }
+      }
+    },
+    {
+      "code": "I-39",
+      "labels": {
+        "domain": [
+          "structural_system"
+        ],
+        "phase": [
+          "technology_development",
+          "design_analysis"
+        ],
+        "method": [],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "medium",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "structural_system": 14
+        },
+        "phase": {
+          "technology_development": 6,
+          "design_analysis": 5
+        },
+        "method": {},
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "I-77",
+      "labels": {
+        "domain": [
+          "bridge"
+        ],
+        "phase": [
+          "inspection_diagnosis",
+          "technology_development",
+          "survey_measurement"
+        ],
+        "method": [
+          "ai_ml",
+          "field_test_monitoring"
+        ],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "bridge": 16
+        },
+        "phase": {
+          "inspection_diagnosis": 14,
+          "technology_development": 14,
+          "survey_measurement": 5
+        },
+        "method": {
+          "ai_ml": 6,
+          "field_test_monitoring": 5
+        },
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "II-01",
+      "labels": {
+        "domain": [
+          "river_watershed"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "river_watershed": 8
+        },
+        "phase": {
+          "performance_evaluation": 14
+        },
+        "method": {},
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "II-21",
+      "labels": {
+        "domain": [
+          "coast_port_ocean",
+          "environment_ecosystem"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [
+          "field_test_monitoring",
+          "laboratory_experiment"
+        ],
+        "material": [],
+        "issue": [
+          "biodiversity_water_quality"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "coast_port_ocean": 16,
+          "environment_ecosystem": 16
+        },
+        "phase": {
+          "performance_evaluation": 8
+        },
+        "method": {
+          "field_test_monitoring": 5,
+          "laboratory_experiment": 5
+        },
+        "material": {},
+        "issue": {
+          "biodiversity_water_quality": 16
+        }
+      }
+    },
+    {
+      "code": "II-42",
+      "labels": {
+        "domain": [
+          "river_watershed",
+          "waste_contamination"
+        ],
+        "phase": [
+          "survey_measurement",
+          "design_analysis"
+        ],
+        "method": [
+          "statistics_optimization"
+        ],
+        "material": [
+          "polymer_resin"
+        ],
+        "issue": [
+          "pollution_remediation"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "river_watershed": 14,
+          "waste_contamination": 9
+        },
+        "phase": {
+          "survey_measurement": 14,
+          "design_analysis": 8
+        },
+        "method": {
+          "statistics_optimization": 14
+        },
+        "material": {
+          "polymer_resin": 9
+        },
+        "issue": {
+          "pollution_remediation": 9
+        }
+      }
+    },
+    {
+      "code": "II-63",
+      "labels": {
+        "domain": [
+          "atmosphere_climate",
+          "river_watershed"
+        ],
+        "phase": [
+          "survey_measurement",
+          "disaster_action"
+        ],
+        "method": [
+          "statistics_optimization"
+        ],
+        "material": [],
+        "issue": [
+          "flood_tsunami_storm"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "atmosphere_climate": 14,
+          "river_watershed": 9
+        },
+        "phase": {
+          "survey_measurement": 14,
+          "disaster_action": 5
+        },
+        "method": {
+          "statistics_optimization": 14
+        },
+        "material": {},
+        "issue": {
+          "flood_tsunami_storm": 14
+        }
+      }
+    },
+    {
+      "code": "III-01",
+      "labels": {
+        "domain": [
+          "ground_foundation_slope"
+        ],
+        "phase": [
+          "performance_evaluation",
+          "survey_measurement"
+        ],
+        "method": [
+          "nondestructive_testing"
+        ],
+        "material": [],
+        "issue": [
+          "seismic_liquefaction"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "ground_foundation_slope": 8
+        },
+        "phase": {
+          "performance_evaluation": 16,
+          "survey_measurement": 16
+        },
+        "method": {
+          "nondestructive_testing": 14
+        },
+        "material": {},
+        "issue": {
+          "seismic_liquefaction": 8
+        }
+      }
+    },
+    {
+      "code": "III-45",
+      "labels": {
+        "domain": [
+          "construction_materials"
+        ],
+        "phase": [
+          "material_development",
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [
+          "waste_recycled"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "construction_materials": 16
+        },
+        "phase": {
+          "material_development": 8,
+          "performance_evaluation": 8
+        },
+        "method": {},
+        "material": {
+          "waste_recycled": 14
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "III-90",
+      "labels": {
+        "domain": [
+          "construction_materials",
+          "ground_foundation_slope"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [
+          "concrete_cement",
+          "waste_recycled",
+          "soil_rock"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "construction_materials": 14,
+          "ground_foundation_slope": 10
+        },
+        "phase": {
+          "performance_evaluation": 8
+        },
+        "method": {},
+        "material": {
+          "concrete_cement": 14,
+          "waste_recycled": 14,
+          "soil_rock": 10
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "IV-01",
+      "labels": {
+        "domain": [
+          "civil_systems",
+          "urban_transport"
+        ],
+        "phase": [
+          "policy_planning"
+        ],
+        "method": [],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "civil_systems": 16,
+          "urban_transport": 9
+        },
+        "phase": {
+          "policy_planning": 9
+        },
+        "method": {},
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "IV-19",
+      "labels": {
+        "domain": [
+          "urban_transport"
+        ],
+        "phase": [
+          "policy_planning",
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "mobility_accessibility"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "urban_transport": 16
+        },
+        "phase": {
+          "policy_planning": 8,
+          "performance_evaluation": 5
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "mobility_accessibility": 16
+        }
+      }
+    },
+    {
+      "code": "IV-37",
+      "labels": {
+        "domain": [
+          "structural_system",
+          "construction_site"
+        ],
+        "phase": [
+          "design_analysis",
+          "maintenance_repair",
+          "construction"
+        ],
+        "method": [
+          "numerical_simulation",
+          "bim_digital_twin",
+          "three_d_remote"
+        ],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "medium",
+      "review_required": true,
+      "review_reasons": [
+        "phase:tag_limit"
+      ],
+      "scores": {
+        "domain": {
+          "structural_system": 14,
+          "construction_site": 5
+        },
+        "phase": {
+          "design_analysis": 14,
+          "maintenance_repair": 14,
+          "construction": 8
+        },
+        "method": {
+          "numerical_simulation": 11,
+          "bim_digital_twin": 6,
+          "three_d_remote": 6
+        },
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "V-01",
+      "labels": {
+        "domain": [
+          "road_pavement",
+          "construction_materials"
+        ],
+        "phase": [
+          "maintenance_repair"
+        ],
+        "method": [],
+        "material": [
+          "asphalt",
+          "soil_rock"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "road_pavement": 16,
+          "construction_materials": 6
+        },
+        "phase": {
+          "maintenance_repair": 14
+        },
+        "method": {},
+        "material": {
+          "asphalt": 6,
+          "soil_rock": 6
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "V-71",
+      "labels": {
+        "domain": [
+          "construction_materials"
+        ],
+        "phase": [
+          "quality_control"
+        ],
+        "method": [],
+        "material": [
+          "concrete_cement"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "construction_materials": 14
+        },
+        "phase": {
+          "quality_control": 16
+        },
+        "method": {},
+        "material": {
+          "concrete_cement": 14
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "V-140",
+      "labels": {
+        "domain": [
+          "construction_materials"
+        ],
+        "phase": [
+          "maintenance_repair"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "deterioration_corrosion"
+        ]
+      },
+      "confidence": "low",
+      "review_required": true,
+      "review_reasons": [
+        "domain:fallback"
+      ],
+      "scores": {
+        "domain": {
+          "construction_materials": 0
+        },
+        "phase": {
+          "maintenance_repair": 11
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "deterioration_corrosion": 14
+        }
+      }
+    },
+    {
+      "code": "VI-01",
+      "labels": {
+        "domain": [
+          "road_pavement",
+          "education_society"
+        ],
+        "phase": [
+          "maintenance_repair",
+          "education_consensus"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "aging_lifecycle",
+          "knowledge_transfer"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "road_pavement": 14,
+          "education_society": 8
+        },
+        "phase": {
+          "maintenance_repair": 14,
+          "education_consensus": 8
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "aging_lifecycle": 14,
+          "knowledge_transfer": 8
+        }
+      }
+    },
+    {
+      "code": "VI-128",
+      "labels": {
+        "domain": [
+          "bridge",
+          "structural_system"
+        ],
+        "phase": [
+          "performance_evaluation",
+          "renewal_demolition",
+          "maintenance_repair"
+        ],
+        "method": [],
+        "material": [
+          "concrete_cement"
+        ],
+        "issue": [
+          "aging_lifecycle",
+          "deterioration_corrosion",
+          "fatigue_fracture"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "bridge": 16,
+          "structural_system": 14
+        },
+        "phase": {
+          "performance_evaluation": 14,
+          "renewal_demolition": 14,
+          "maintenance_repair": 6
+        },
+        "method": {},
+        "material": {
+          "concrete_cement": 14
+        },
+        "issue": {
+          "aging_lifecycle": 9,
+          "deterioration_corrosion": 9,
+          "fatigue_fracture": 9
+        }
+      }
+    },
+    {
+      "code": "VI-254",
+      "labels": {
+        "domain": [
+          "tunnel_underground"
+        ],
+        "phase": [
+          "construction",
+          "survey_measurement"
+        ],
+        "method": [
+          "field_test_monitoring"
+        ],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "tunnel_underground": 16
+        },
+        "phase": {
+          "construction": 8,
+          "survey_measurement": 8
+        },
+        "method": {
+          "field_test_monitoring": 5
+        },
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "VII-01",
+      "labels": {
+        "domain": [
+          "energy_industrial",
+          "tunnel_underground"
+        ],
+        "phase": [
+          "construction",
+          "environmental_action"
+        ],
+        "method": [],
+        "material": [
+          "wood_biomass"
+        ],
+        "issue": [
+          "climate_decarbonization",
+          "wind_snow_cold"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "energy_industrial": 14,
+          "tunnel_underground": 14
+        },
+        "phase": {
+          "construction": 14,
+          "environmental_action": 14
+        },
+        "method": {},
+        "material": {
+          "wood_biomass": 6
+        },
+        "issue": {
+          "climate_decarbonization": 14,
+          "wind_snow_cold": 9
+        }
+      }
+    },
+    {
+      "code": "VII-11",
+      "labels": {
+        "domain": [
+          "atmosphere_climate",
+          "environment_ecosystem",
+          "urban_transport"
+        ],
+        "phase": [
+          "design_analysis",
+          "environmental_action",
+          "performance_evaluation"
+        ],
+        "method": [
+          "numerical_simulation",
+          "bim_digital_twin"
+        ],
+        "material": [],
+        "issue": [
+          "climate_decarbonization"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "atmosphere_climate": 14,
+          "environment_ecosystem": 8,
+          "urban_transport": 8
+        },
+        "phase": {
+          "design_analysis": 8,
+          "environmental_action": 8,
+          "performance_evaluation": 8
+        },
+        "method": {
+          "numerical_simulation": 14,
+          "bim_digital_twin": 6
+        },
+        "material": {},
+        "issue": {
+          "climate_decarbonization": 14
+        }
+      }
+    },
+    {
+      "code": "VII-21",
+      "labels": {
+        "domain": [
+          "water_sewerage"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "low",
+      "review_required": true,
+      "review_reasons": [
+        "phase:fallback"
+      ],
+      "scores": {
+        "domain": {
+          "water_sewerage": 10
+        },
+        "phase": {
+          "performance_evaluation": 0
+        },
+        "method": {},
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "CS3-01",
+      "labels": {
+        "domain": [
+          "bridge"
+        ],
+        "phase": [
+          "policy_planning"
+        ],
+        "method": [],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "medium",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "bridge": 7
+        },
+        "phase": {
+          "policy_planning": 10
+        },
+        "method": {},
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "CS10-16",
+      "labels": {
+        "domain": [
+          "bridge",
+          "road_pavement"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "seismic_liquefaction",
+          "flood_tsunami_storm",
+          "resilience_emergency"
+        ]
+      },
+      "confidence": "low",
+      "review_required": true,
+      "review_reasons": [
+        "phase:fallback"
+      ],
+      "scores": {
+        "domain": {
+          "bridge": 14,
+          "road_pavement": 14
+        },
+        "phase": {
+          "performance_evaluation": 0
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "seismic_liquefaction": 16,
+          "flood_tsunami_storm": 14,
+          "resilience_emergency": 9
+        }
+      }
+    },
+    {
+      "code": "I-115",
+      "labels": {
+        "domain": [
+          "bridge"
+        ],
+        "phase": [
+          "design_analysis",
+          "performance_evaluation"
+        ],
+        "method": [
+          "numerical_simulation",
+          "laboratory_experiment"
+        ],
+        "material": [
+          "polymer_resin"
+        ],
+        "issue": [
+          "fatigue_fracture",
+          "deterioration_corrosion"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "bridge": 14
+        },
+        "phase": {
+          "design_analysis": 9,
+          "performance_evaluation": 8
+        },
+        "method": {
+          "numerical_simulation": 9,
+          "laboratory_experiment": 8
+        },
+        "material": {
+          "polymer_resin": 14
+        },
+        "issue": {
+          "fatigue_fracture": 14,
+          "deterioration_corrosion": 8
+        }
+      }
+    },
+    {
+      "code": "I-153",
+      "labels": {
+        "domain": [
+          "bridge"
+        ],
+        "phase": [
+          "design_analysis"
+        ],
+        "method": [
+          "numerical_simulation"
+        ],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "bridge": 16
+        },
+        "phase": {
+          "design_analysis": 11
+        },
+        "method": {
+          "numerical_simulation": 9
+        },
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "I-191",
+      "labels": {
+        "domain": [
+          "bridge"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [
+          "laboratory_experiment"
+        ],
+        "material": [
+          "steel_metal"
+        ],
+        "issue": [
+          "wind_snow_cold"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "bridge": 14
+        },
+        "phase": {
+          "performance_evaluation": 14
+        },
+        "method": {
+          "laboratory_experiment": 9
+        },
+        "material": {
+          "steel_metal": 14
+        },
+        "issue": {
+          "wind_snow_cold": 16
+        }
+      }
+    },
+    {
+      "code": "I-229",
+      "labels": {
+        "domain": [
+          "bridge",
+          "structural_system",
+          "railway"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [
+          "steel_metal"
+        ],
+        "issue": [
+          "fatigue_fracture"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "bridge": 14,
+          "structural_system": 14,
+          "railway": 9
+        },
+        "phase": {
+          "performance_evaluation": 8
+        },
+        "method": {},
+        "material": {
+          "steel_metal": 9
+        },
+        "issue": {
+          "fatigue_fracture": 16
+        }
+      }
+    },
+    {
+      "code": "I-267",
+      "labels": {
+        "domain": [
+          "bridge"
+        ],
+        "phase": [
+          "survey_measurement",
+          "performance_evaluation",
+          "technology_development"
+        ],
+        "method": [
+          "sensing_iot"
+        ],
+        "material": [],
+        "issue": [
+          "seismic_liquefaction"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "bridge": 11
+        },
+        "phase": {
+          "survey_measurement": 10,
+          "performance_evaluation": 8,
+          "technology_development": 8
+        },
+        "method": {
+          "sensing_iot": 14
+        },
+        "material": {},
+        "issue": {
+          "seismic_liquefaction": 14
+        }
+      }
+    },
+    {
+      "code": "I-305",
+      "labels": {
+        "domain": [
+          "construction_materials"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [
+          "steel_metal"
+        ],
+        "issue": [
+          "deterioration_corrosion"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "construction_materials": 8
+        },
+        "phase": {
+          "performance_evaluation": 8
+        },
+        "method": {},
+        "material": {
+          "steel_metal": 8
+        },
+        "issue": {
+          "deterioration_corrosion": 8
+        }
+      }
+    },
+    {
+      "code": "II-83",
+      "labels": {
+        "domain": [
+          "river_watershed"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [
+          "water_sediment",
+          "soil_rock"
+        ],
+        "issue": [
+          "landslide_erosion"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "river_watershed": 14
+        },
+        "phase": {
+          "performance_evaluation": 8
+        },
+        "method": {},
+        "material": {
+          "water_sediment": 16,
+          "soil_rock": 14
+        },
+        "issue": {
+          "landslide_erosion": 9
+        }
+      }
+    },
+    {
+      "code": "II-103",
+      "labels": {
+        "domain": [
+          "river_watershed"
+        ],
+        "phase": [
+          "design_analysis",
+          "performance_evaluation"
+        ],
+        "method": [
+          "numerical_simulation"
+        ],
+        "material": [],
+        "issue": [
+          "flood_tsunami_storm"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "river_watershed": 16
+        },
+        "phase": {
+          "design_analysis": 14,
+          "performance_evaluation": 14
+        },
+        "method": {
+          "numerical_simulation": 6
+        },
+        "material": {},
+        "issue": {
+          "flood_tsunami_storm": 14
+        }
+      }
+    },
+    {
+      "code": "II-124",
+      "labels": {
+        "domain": [
+          "coast_port_ocean",
+          "ground_foundation_slope"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [
+          "numerical_simulation"
+        ],
+        "material": [],
+        "issue": [
+          "seismic_liquefaction"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "coast_port_ocean": 16,
+          "ground_foundation_slope": 14
+        },
+        "phase": {
+          "performance_evaluation": 8
+        },
+        "method": {
+          "numerical_simulation": 9
+        },
+        "material": {},
+        "issue": {
+          "seismic_liquefaction": 8
+        }
+      }
+    },
+    {
+      "code": "II-145",
+      "labels": {
+        "domain": [
+          "river_watershed"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "river_watershed": 11
+        },
+        "phase": {
+          "performance_evaluation": 14
+        },
+        "method": {},
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "II-165",
+      "labels": {
+        "domain": [
+          "river_watershed"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "low",
+      "review_required": true,
+      "review_reasons": [
+        "domain:fallback"
+      ],
+      "scores": {
+        "domain": {
+          "river_watershed": 0
+        },
+        "phase": {
+          "performance_evaluation": 8
+        },
+        "method": {},
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "III-134",
+      "labels": {
+        "domain": [
+          "river_watershed"
+        ],
+        "phase": [
+          "inspection_diagnosis"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "landslide_erosion"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "river_watershed": 14
+        },
+        "phase": {
+          "inspection_diagnosis": 8
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "landslide_erosion": 11
+        }
+      }
+    },
+    {
+      "code": "III-178",
+      "labels": {
+        "domain": [
+          "road_pavement",
+          "tunnel_underground"
+        ],
+        "phase": [
+          "maintenance_repair"
+        ],
+        "method": [],
+        "material": [
+          "soil_rock"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "road_pavement": 14,
+          "tunnel_underground": 14
+        },
+        "phase": {
+          "maintenance_repair": 16
+        },
+        "method": {},
+        "material": {
+          "soil_rock": 14
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "III-222",
+      "labels": {
+        "domain": [
+          "bridge"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [
+          "laboratory_experiment"
+        ],
+        "material": [
+          "geosynthetics"
+        ],
+        "issue": [
+          "seismic_liquefaction"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "bridge": 8
+        },
+        "phase": {
+          "performance_evaluation": 14
+        },
+        "method": {
+          "laboratory_experiment": 11
+        },
+        "material": {
+          "geosynthetics": 16
+        },
+        "issue": {
+          "seismic_liquefaction": 14
+        }
+      }
+    },
+    {
+      "code": "III-267",
+      "labels": {
+        "domain": [
+          "tunnel_underground",
+          "ground_foundation_slope",
+          "construction_site"
+        ],
+        "phase": [
+          "construction",
+          "design_analysis",
+          "quality_control"
+        ],
+        "method": [],
+        "material": [
+          "soil_rock"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "tunnel_underground": 16,
+          "ground_foundation_slope": 14,
+          "construction_site": 5
+        },
+        "phase": {
+          "construction": 8,
+          "design_analysis": 8,
+          "quality_control": 5
+        },
+        "method": {},
+        "material": {
+          "soil_rock": 14
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "III-311",
+      "labels": {
+        "domain": [
+          "ground_foundation_slope"
+        ],
+        "phase": [
+          "survey_measurement",
+          "design_analysis"
+        ],
+        "method": [
+          "ai_ml"
+        ],
+        "material": [
+          "soil_rock"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "ground_foundation_slope": 10
+        },
+        "phase": {
+          "survey_measurement": 14,
+          "design_analysis": 5
+        },
+        "method": {
+          "ai_ml": 14
+        },
+        "material": {
+          "soil_rock": 10
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "III-355",
+      "labels": {
+        "domain": [
+          "ground_foundation_slope"
+        ],
+        "phase": [
+          "survey_measurement"
+        ],
+        "method": [
+          "field_test_monitoring"
+        ],
+        "material": [
+          "soil_rock"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "ground_foundation_slope": 14
+        },
+        "phase": {
+          "survey_measurement": 9
+        },
+        "method": {
+          "field_test_monitoring": 14
+        },
+        "material": {
+          "soil_rock": 14
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "IV-55",
+      "labels": {
+        "domain": [
+          "urban_transport",
+          "road_pavement"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "mobility_accessibility",
+          "safety_risk"
+        ]
+      },
+      "confidence": "low",
+      "review_required": true,
+      "review_reasons": [
+        "phase:fallback"
+      ],
+      "scores": {
+        "domain": {
+          "urban_transport": 11,
+          "road_pavement": 8
+        },
+        "phase": {
+          "performance_evaluation": 0
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "mobility_accessibility": 11,
+          "safety_risk": 9
+        }
+      }
+    },
+    {
+      "code": "IV-75",
+      "labels": {
+        "domain": [
+          "urban_transport",
+          "road_pavement"
+        ],
+        "phase": [
+          "performance_evaluation",
+          "policy_planning"
+        ],
+        "method": [
+          "gis_spatial",
+          "ai_ml"
+        ],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "urban_transport": 16,
+          "road_pavement": 14
+        },
+        "phase": {
+          "performance_evaluation": 9,
+          "policy_planning": 5
+        },
+        "method": {
+          "gis_spatial": 14,
+          "ai_ml": 6
+        },
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "IV-93",
+      "labels": {
+        "domain": [
+          "road_pavement",
+          "construction_site",
+          "urban_transport"
+        ],
+        "phase": [
+          "construction",
+          "performance_evaluation",
+          "disaster_action"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "safety_risk"
+        ]
+      },
+      "confidence": "medium",
+      "review_required": true,
+      "review_reasons": [
+        "phase:tag_limit"
+      ],
+      "scores": {
+        "domain": {
+          "road_pavement": 8,
+          "construction_site": 6,
+          "urban_transport": 6
+        },
+        "phase": {
+          "construction": 9,
+          "performance_evaluation": 8,
+          "disaster_action": 6
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "safety_risk": 9
+        }
+      }
+    },
+    {
+      "code": "IV-111",
+      "labels": {
+        "domain": [
+          "railway"
+        ],
+        "phase": [
+          "design_analysis"
+        ],
+        "method": [
+          "statistics_optimization"
+        ],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "railway": 14
+        },
+        "phase": {
+          "design_analysis": 8
+        },
+        "method": {
+          "statistics_optimization": 5
+        },
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "IV-129",
+      "labels": {
+        "domain": [
+          "atmosphere_climate"
+        ],
+        "phase": [
+          "survey_measurement"
+        ],
+        "method": [
+          "three_d_remote"
+        ],
+        "material": [],
+        "issue": [
+          "wind_snow_cold"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "atmosphere_climate": 14
+        },
+        "phase": {
+          "survey_measurement": 8
+        },
+        "method": {
+          "three_d_remote": 16
+        },
+        "material": {},
+        "issue": {
+          "wind_snow_cold": 14
+        }
+      }
+    },
+    {
+      "code": "IV-147",
+      "labels": {
+        "domain": [
+          "construction_site"
+        ],
+        "phase": [
+          "quality_control",
+          "survey_measurement",
+          "performance_evaluation"
+        ],
+        "method": [
+          "drone_uncrewed",
+          "three_d_remote"
+        ],
+        "material": [],
+        "issue": [
+          "safety_risk",
+          "landslide_erosion",
+          "productivity_labor"
+        ]
+      },
+      "confidence": "medium",
+      "review_required": true,
+      "review_reasons": [
+        "phase:tag_limit"
+      ],
+      "scores": {
+        "domain": {
+          "construction_site": 14
+        },
+        "phase": {
+          "quality_control": 14,
+          "survey_measurement": 11,
+          "performance_evaluation": 9
+        },
+        "method": {
+          "drone_uncrewed": 14,
+          "three_d_remote": 6
+        },
+        "material": {},
+        "issue": {
+          "safety_risk": 14,
+          "landslide_erosion": 8,
+          "productivity_labor": 6
+        }
+      }
+    },
+    {
+      "code": "V-210",
+      "labels": {
+        "domain": [
+          "construction_materials",
+          "coast_port_ocean",
+          "energy_industrial"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [
+          "concrete_cement",
+          "waste_recycled"
+        ],
+        "issue": []
+      },
+      "confidence": "medium",
+      "review_required": true,
+      "review_reasons": [
+        "domain:tag_limit"
+      ],
+      "scores": {
+        "domain": {
+          "construction_materials": 16,
+          "coast_port_ocean": 6,
+          "energy_industrial": 6
+        },
+        "phase": {
+          "performance_evaluation": 8
+        },
+        "method": {},
+        "material": {
+          "concrete_cement": 14,
+          "waste_recycled": 8
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "V-280",
+      "labels": {
+        "domain": [
+          "construction_materials"
+        ],
+        "phase": [
+          "material_development",
+          "performance_evaluation",
+          "environmental_action"
+        ],
+        "method": [],
+        "material": [
+          "polymer_resin",
+          "asphalt",
+          "waste_recycled"
+        ],
+        "issue": [
+          "circular_resources"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "construction_materials": 8
+        },
+        "phase": {
+          "material_development": 14,
+          "performance_evaluation": 6,
+          "environmental_action": 5
+        },
+        "method": {},
+        "material": {
+          "polymer_resin": 14,
+          "asphalt": 8,
+          "waste_recycled": 6
+        },
+        "issue": {
+          "circular_resources": 6
+        }
+      }
+    },
+    {
+      "code": "V-349",
+      "labels": {
+        "domain": [
+          "water_sewerage",
+          "construction_materials"
+        ],
+        "phase": [
+          "material_development",
+          "construction"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "productivity_labor"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "water_sewerage": 14,
+          "construction_materials": 5
+        },
+        "phase": {
+          "material_development": 14,
+          "construction": 9
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "productivity_labor": 9
+        }
+      }
+    },
+    {
+      "code": "V-419",
+      "labels": {
+        "domain": [
+          "structural_system"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [
+          "laboratory_experiment"
+        ],
+        "material": [
+          "steel_metal"
+        ],
+        "issue": []
+      },
+      "confidence": "medium",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "structural_system": 5
+        },
+        "phase": {
+          "performance_evaluation": 14
+        },
+        "method": {
+          "laboratory_experiment": 5
+        },
+        "material": {
+          "steel_metal": 8
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "V-489",
+      "labels": {
+        "domain": [
+          "ground_foundation_slope",
+          "structural_system"
+        ],
+        "phase": [
+          "inspection_diagnosis",
+          "performance_evaluation"
+        ],
+        "method": [
+          "statistics_optimization"
+        ],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "ground_foundation_slope": 14,
+          "structural_system": 11
+        },
+        "phase": {
+          "inspection_diagnosis": 14,
+          "performance_evaluation": 14
+        },
+        "method": {
+          "statistics_optimization": 9
+        },
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "V-558",
+      "labels": {
+        "domain": [
+          "construction_materials"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [
+          "concrete_cement"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "construction_materials": 10
+        },
+        "phase": {
+          "performance_evaluation": 14
+        },
+        "method": {},
+        "material": {
+          "concrete_cement": 8
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "VI-381",
+      "labels": {
+        "domain": [
+          "construction_site"
+        ],
+        "phase": [
+          "technology_development",
+          "design_analysis"
+        ],
+        "method": [
+          "data_platform",
+          "ai_ml",
+          "image_processing",
+          "field_test_monitoring"
+        ],
+        "material": [],
+        "issue": [
+          "safety_risk"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "construction_site": 8
+        },
+        "phase": {
+          "technology_development": 14,
+          "design_analysis": 9
+        },
+        "method": {
+          "data_platform": 11,
+          "ai_ml": 9,
+          "image_processing": 9,
+          "field_test_monitoring": 8
+        },
+        "material": {},
+        "issue": {
+          "safety_risk": 16
+        }
+      }
+    },
+    {
+      "code": "VI-508",
+      "labels": {
+        "domain": [
+          "water_sewerage"
+        ],
+        "phase": [
+          "construction"
+        ],
+        "method": [],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "water_sewerage": 14
+        },
+        "phase": {
+          "construction": 14
+        },
+        "method": {},
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "VI-634",
+      "labels": {
+        "domain": [
+          "bridge",
+          "road_pavement"
+        ],
+        "phase": [
+          "performance_evaluation",
+          "survey_measurement",
+          "inspection_diagnosis"
+        ],
+        "method": [
+          "field_test_monitoring"
+        ],
+        "material": [],
+        "issue": [
+          "landslide_erosion",
+          "aging_lifecycle"
+        ]
+      },
+      "confidence": "medium",
+      "review_required": true,
+      "review_reasons": [
+        "phase:tag_limit"
+      ],
+      "scores": {
+        "domain": {
+          "bridge": 14,
+          "road_pavement": 6
+        },
+        "phase": {
+          "performance_evaluation": 8,
+          "survey_measurement": 8,
+          "inspection_diagnosis": 6
+        },
+        "method": {
+          "field_test_monitoring": 8
+        },
+        "material": {},
+        "issue": {
+          "landslide_erosion": 14,
+          "aging_lifecycle": 6
+        }
+      }
+    },
+    {
+      "code": "VI-761",
+      "labels": {
+        "domain": [
+          "ground_foundation_slope"
+        ],
+        "phase": [
+          "construction"
+        ],
+        "method": [],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "ground_foundation_slope": 14
+        },
+        "phase": {
+          "construction": 8
+        },
+        "method": {},
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "VI-887",
+      "labels": {
+        "domain": [
+          "tunnel_underground"
+        ],
+        "phase": [
+          "material_development"
+        ],
+        "method": [],
+        "material": [
+          "co2_carbon"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "tunnel_underground": 16
+        },
+        "phase": {
+          "material_development": 8
+        },
+        "method": {},
+        "material": {
+          "co2_carbon": 9
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "VII-30",
+      "labels": {
+        "domain": [
+          "water_sewerage",
+          "waste_contamination"
+        ],
+        "phase": [
+          "renewal_demolition"
+        ],
+        "method": [],
+        "material": [
+          "waste_recycled"
+        ],
+        "issue": [
+          "circular_resources"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "water_sewerage": 14,
+          "waste_contamination": 5
+        },
+        "phase": {
+          "renewal_demolition": 8
+        },
+        "method": {},
+        "material": {
+          "waste_recycled": 8
+        },
+        "issue": {
+          "circular_resources": 14
+        }
+      }
+    },
+    {
+      "code": "VII-40",
+      "labels": {
+        "domain": [
+          "water_sewerage",
+          "waste_contamination"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [
+          "wood_biomass"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "water_sewerage": 14,
+          "waste_contamination": 5
+        },
+        "phase": {
+          "performance_evaluation": 8
+        },
+        "method": {},
+        "material": {
+          "wood_biomass": 14
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "VII-50",
+      "labels": {
+        "domain": [
+          "road_pavement",
+          "energy_industrial"
+        ],
+        "phase": [
+          "renewal_demolition"
+        ],
+        "method": [],
+        "material": [
+          "soil_rock",
+          "waste_recycled"
+        ],
+        "issue": [
+          "circular_resources"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "road_pavement": 14,
+          "energy_industrial": 11
+        },
+        "phase": {
+          "renewal_demolition": 11
+        },
+        "method": {},
+        "material": {
+          "soil_rock": 14,
+          "waste_recycled": 11
+        },
+        "issue": {
+          "circular_resources": 11
+        }
+      }
+    },
+    {
+      "code": "VII-60",
+      "labels": {
+        "domain": [
+          "waste_contamination"
+        ],
+        "phase": [
+          "construction",
+          "renewal_demolition"
+        ],
+        "method": [],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "waste_contamination": 14
+        },
+        "phase": {
+          "construction": 14,
+          "renewal_demolition": 14
+        },
+        "method": {},
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "VII-69",
+      "labels": {
+        "domain": [
+          "coast_port_ocean"
+        ],
+        "phase": [
+          "environmental_action"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "circular_resources"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "coast_port_ocean": 14
+        },
+        "phase": {
+          "environmental_action": 8
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "circular_resources": 8
+        }
+      }
+    },
+    {
+      "code": "VII-79",
+      "labels": {
+        "domain": [
+          "coast_port_ocean"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [
+          "water_sediment"
+        ],
+        "issue": [
+          "biodiversity_water_quality"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "coast_port_ocean": 14
+        },
+        "phase": {
+          "performance_evaluation": 8
+        },
+        "method": {},
+        "material": {
+          "water_sediment": 14
+        },
+        "issue": {
+          "biodiversity_water_quality": 16
+        }
+      }
+    },
+    {
+      "code": "VII-89",
+      "labels": {
+        "domain": [
+          "waste_contamination",
+          "water_sewerage"
+        ],
+        "phase": [
+          "environmental_action",
+          "performance_evaluation"
+        ],
+        "method": [
+          "field_test_monitoring"
+        ],
+        "material": [
+          "soil_rock"
+        ],
+        "issue": [
+          "pollution_remediation"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "waste_contamination": 16,
+          "water_sewerage": 16
+        },
+        "phase": {
+          "environmental_action": 14,
+          "performance_evaluation": 9
+        },
+        "method": {
+          "field_test_monitoring": 6
+        },
+        "material": {
+          "soil_rock": 5
+        },
+        "issue": {
+          "pollution_remediation": 16
+        }
+      }
+    },
+    {
+      "code": "VII-99",
+      "labels": {
+        "domain": [
+          "waste_contamination"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "pollution_remediation"
+        ]
+      },
+      "confidence": "low",
+      "review_required": true,
+      "review_reasons": [
+        "phase:fallback"
+      ],
+      "scores": {
+        "domain": {
+          "waste_contamination": 16
+        },
+        "phase": {
+          "performance_evaluation": 0
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "pollution_remediation": 16
+        }
+      }
+    },
+    {
+      "code": "CS1-02",
+      "labels": {
+        "domain": [
+          "education_society",
+          "civil_systems"
+        ],
+        "phase": [
+          "performance_evaluation",
+          "education_consensus"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "knowledge_transfer"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "education_society": 11,
+          "civil_systems": 9
+        },
+        "phase": {
+          "performance_evaluation": 11,
+          "education_consensus": 8
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "knowledge_transfer": 6
+        }
+      }
+    },
+    {
+      "code": "CS3-34",
+      "labels": {
+        "domain": [
+          "bridge"
+        ],
+        "phase": [
+          "design_analysis",
+          "performance_evaluation",
+          "maintenance_repair"
+        ],
+        "method": [],
+        "material": [
+          "steel_metal"
+        ],
+        "issue": [
+          "fatigue_fracture",
+          "aging_lifecycle",
+          "productivity_labor"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "bridge": 16
+        },
+        "phase": {
+          "design_analysis": 14,
+          "performance_evaluation": 14,
+          "maintenance_repair": 9
+        },
+        "method": {},
+        "material": {
+          "steel_metal": 14
+        },
+        "issue": {
+          "fatigue_fracture": 14,
+          "aging_lifecycle": 9,
+          "productivity_labor": 6
+        }
+      }
+    },
+    {
+      "code": "CS6-22",
+      "labels": {
+        "domain": [
+          "construction_materials",
+          "bridge",
+          "road_pavement"
+        ],
+        "phase": [
+          "design_analysis",
+          "maintenance_repair",
+          "inspection_diagnosis"
+        ],
+        "method": [
+          "numerical_simulation"
+        ],
+        "material": [
+          "frp_composite",
+          "concrete_cement"
+        ],
+        "issue": []
+      },
+      "confidence": "medium",
+      "review_required": true,
+      "review_reasons": [
+        "phase:tag_limit"
+      ],
+      "scores": {
+        "domain": {
+          "construction_materials": 16,
+          "bridge": 14,
+          "road_pavement": 8
+        },
+        "phase": {
+          "design_analysis": 14,
+          "maintenance_repair": 9,
+          "inspection_diagnosis": 8
+        },
+        "method": {
+          "numerical_simulation": 9
+        },
+        "material": {
+          "frp_composite": 16,
+          "concrete_cement": 9
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "CS10-64",
+      "labels": {
+        "domain": [
+          "tunnel_underground",
+          "ground_foundation_slope",
+          "structural_system"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [
+          "soil_rock",
+          "steel_metal"
+        ],
+        "issue": [
+          "seismic_liquefaction"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "tunnel_underground": 14,
+          "ground_foundation_slope": 8,
+          "structural_system": 5
+        },
+        "phase": {
+          "performance_evaluation": 14
+        },
+        "method": {},
+        "material": {
+          "soil_rock": 8,
+          "steel_metal": 8
+        },
+        "issue": {
+          "seismic_liquefaction": 11
+        }
+      }
+    },
+    {
+      "code": "CS11-28",
+      "labels": {
+        "domain": [
+          "civil_systems",
+          "education_society"
+        ],
+        "phase": [
+          "education_consensus",
+          "design_analysis",
+          "technology_development"
+        ],
+        "method": [
+          "ai_ml"
+        ],
+        "material": [],
+        "issue": [
+          "knowledge_transfer",
+          "aging_lifecycle"
+        ]
+      },
+      "confidence": "medium",
+      "review_required": true,
+      "review_reasons": [
+        "phase:tag_limit"
+      ],
+      "scores": {
+        "domain": {
+          "civil_systems": 14,
+          "education_society": 14
+        },
+        "phase": {
+          "education_consensus": 14,
+          "design_analysis": 10,
+          "technology_development": 8
+        },
+        "method": {
+          "ai_ml": 16
+        },
+        "material": {},
+        "issue": {
+          "knowledge_transfer": 14,
+          "aging_lifecycle": 5
+        }
+      }
+    },
+    {
+      "code": "CS14-22",
+      "labels": {
+        "domain": [
+          "civil_systems",
+          "education_society"
+        ],
+        "phase": [
+          "education_consensus",
+          "operation_management",
+          "policy_planning"
+        ],
+        "method": [
+          "ai_ml"
+        ],
+        "material": [],
+        "issue": [
+          "governance_procurement"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "civil_systems": 14,
+          "education_society": 14
+        },
+        "phase": {
+          "education_consensus": 14,
+          "operation_management": 8,
+          "policy_planning": 6
+        },
+        "method": {
+          "ai_ml": 16
+        },
+        "material": {},
+        "issue": {
+          "governance_procurement": 14
+        }
+      }
+    },
+    {
+      "code": "CS18-19",
+      "labels": {
+        "domain": [
+          "construction_site"
+        ],
+        "phase": [
+          "survey_measurement"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "governance_procurement"
+        ]
+      },
+      "confidence": "medium",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "construction_site": 14
+        },
+        "phase": {
+          "survey_measurement": 5
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "governance_procurement": 10
+        }
+      }
+    },
+    {
+      "code": "I-343",
+      "labels": {
+        "domain": [
+          "structural_system"
+        ],
+        "phase": [
+          "survey_measurement",
+          "maintenance_repair"
+        ],
+        "method": [],
+        "material": [
+          "steel_metal"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "structural_system": 14
+        },
+        "phase": {
+          "survey_measurement": 8,
+          "maintenance_repair": 5
+        },
+        "method": {},
+        "material": {
+          "steel_metal": 14
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "I-381",
+      "labels": {
+        "domain": [
+          "structural_system"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "landslide_erosion",
+          "safety_risk"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "structural_system": 14
+        },
+        "phase": {
+          "performance_evaluation": 14
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "landslide_erosion": 14,
+          "safety_risk": 14
+        }
+      }
+    },
+    {
+      "code": "I-419",
+      "labels": {
+        "domain": [
+          "structural_system",
+          "coast_port_ocean",
+          "construction_materials"
+        ],
+        "phase": [
+          "design_analysis",
+          "performance_evaluation"
+        ],
+        "method": [
+          "numerical_simulation"
+        ],
+        "material": [
+          "concrete_cement"
+        ],
+        "issue": []
+      },
+      "confidence": "medium",
+      "review_required": true,
+      "review_reasons": [
+        "domain:tag_limit"
+      ],
+      "scores": {
+        "domain": {
+          "structural_system": 14,
+          "coast_port_ocean": 6,
+          "construction_materials": 6
+        },
+        "phase": {
+          "design_analysis": 14,
+          "performance_evaluation": 8
+        },
+        "method": {
+          "numerical_simulation": 9
+        },
+        "material": {
+          "concrete_cement": 6
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "I-457",
+      "labels": {
+        "domain": [
+          "structural_system"
+        ],
+        "phase": [
+          "performance_evaluation",
+          "design_analysis",
+          "construction"
+        ],
+        "method": [
+          "field_test_monitoring",
+          "numerical_simulation"
+        ],
+        "material": [
+          "steel_metal"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "structural_system": 16
+        },
+        "phase": {
+          "performance_evaluation": 14,
+          "design_analysis": 9,
+          "construction": 8
+        },
+        "method": {
+          "field_test_monitoring": 8,
+          "numerical_simulation": 6
+        },
+        "material": {
+          "steel_metal": 14
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "I-495",
+      "labels": {
+        "domain": [
+          "structural_system"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [
+          "laboratory_experiment"
+        ],
+        "material": [
+          "steel_metal"
+        ],
+        "issue": [
+          "fatigue_fracture"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "structural_system": 16
+        },
+        "phase": {
+          "performance_evaluation": 16
+        },
+        "method": {
+          "laboratory_experiment": 5
+        },
+        "material": {
+          "steel_metal": 14
+        },
+        "issue": {
+          "fatigue_fracture": 16
+        }
+      }
+    },
+    {
+      "code": "I-533",
+      "labels": {
+        "domain": [
+          "structural_system",
+          "bridge"
+        ],
+        "phase": [
+          "maintenance_repair",
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [
+          "steel_metal"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "structural_system": 16,
+          "bridge": 14
+        },
+        "phase": {
+          "maintenance_repair": 14,
+          "performance_evaluation": 5
+        },
+        "method": {},
+        "material": {
+          "steel_metal": 14
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "II-185",
+      "labels": {
+        "domain": [
+          "atmosphere_climate",
+          "dam_reservoir"
+        ],
+        "phase": [
+          "design_analysis",
+          "performance_evaluation"
+        ],
+        "method": [
+          "statistics_optimization"
+        ],
+        "material": [],
+        "issue": [
+          "climate_decarbonization",
+          "biodiversity_water_quality"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "atmosphere_climate": 14,
+          "dam_reservoir": 14
+        },
+        "phase": {
+          "design_analysis": 14,
+          "performance_evaluation": 14
+        },
+        "method": {
+          "statistics_optimization": 14
+        },
+        "material": {},
+        "issue": {
+          "climate_decarbonization": 14,
+          "biodiversity_water_quality": 8
+        }
+      }
+    },
+    {
+      "code": "II-206",
+      "labels": {
+        "domain": [
+          "river_watershed"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "flood_tsunami_storm"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "river_watershed": 16
+        },
+        "phase": {
+          "performance_evaluation": 8
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "flood_tsunami_storm": 5
+        }
+      }
+    },
+    {
+      "code": "II-227",
+      "labels": {
+        "domain": [
+          "coast_port_ocean"
+        ],
+        "phase": [
+          "survey_measurement",
+          "performance_evaluation"
+        ],
+        "method": [
+          "sensing_iot",
+          "field_test_monitoring"
+        ],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "coast_port_ocean": 16
+        },
+        "phase": {
+          "survey_measurement": 14,
+          "performance_evaluation": 8
+        },
+        "method": {
+          "sensing_iot": 14,
+          "field_test_monitoring": 11
+        },
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "II-247",
+      "labels": {
+        "domain": [
+          "river_watershed"
+        ],
+        "phase": [
+          "survey_measurement"
+        ],
+        "method": [],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "river_watershed": 16
+        },
+        "phase": {
+          "survey_measurement": 8
+        },
+        "method": {},
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "II-267",
+      "labels": {
+        "domain": [
+          "river_watershed"
+        ],
+        "phase": [
+          "design_analysis",
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "river_watershed": 9
+        },
+        "phase": {
+          "design_analysis": 8,
+          "performance_evaluation": 8
+        },
+        "method": {},
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "II-288",
+      "labels": {
+        "domain": [
+          "atmosphere_climate",
+          "dam_reservoir",
+          "river_watershed"
+        ],
+        "phase": [
+          "technology_development",
+          "operation_management",
+          "survey_measurement"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "wind_snow_cold"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "atmosphere_climate": 14,
+          "dam_reservoir": 9,
+          "river_watershed": 8
+        },
+        "phase": {
+          "technology_development": 14,
+          "operation_management": 9,
+          "survey_measurement": 8
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "wind_snow_cold": 14
+        }
+      }
+    },
+    {
+      "code": "III-400",
+      "labels": {
+        "domain": [
+          "ground_foundation_slope"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [
+          "image_processing"
+        ],
+        "material": [
+          "soil_rock"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "ground_foundation_slope": 14
+        },
+        "phase": {
+          "performance_evaluation": 8
+        },
+        "method": {
+          "image_processing": 14
+        },
+        "material": {
+          "soil_rock": 14
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "III-444",
+      "labels": {
+        "domain": [
+          "ground_foundation_slope",
+          "structural_system"
+        ],
+        "phase": [
+          "performance_evaluation",
+          "design_analysis"
+        ],
+        "method": [
+          "statistics_optimization",
+          "numerical_simulation"
+        ],
+        "material": [
+          "soil_rock"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "ground_foundation_slope": 16,
+          "structural_system": 14
+        },
+        "phase": {
+          "performance_evaluation": 14,
+          "design_analysis": 9
+        },
+        "method": {
+          "statistics_optimization": 9,
+          "numerical_simulation": 6
+        },
+        "material": {
+          "soil_rock": 14
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "III-488",
+      "labels": {
+        "domain": [
+          "ground_foundation_slope"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "fatigue_fracture"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "ground_foundation_slope": 10
+        },
+        "phase": {
+          "performance_evaluation": 14
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "fatigue_fracture": 14
+        }
+      }
+    },
+    {
+      "code": "III-532",
+      "labels": {
+        "domain": [
+          "ground_foundation_slope",
+          "energy_industrial",
+          "structural_system"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "ground_foundation_slope": 16,
+          "energy_industrial": 14,
+          "structural_system": 5
+        },
+        "phase": {
+          "performance_evaluation": 14
+        },
+        "method": {},
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "III-577",
+      "labels": {
+        "domain": [
+          "ground_foundation_slope"
+        ],
+        "phase": [
+          "design_analysis"
+        ],
+        "method": [
+          "numerical_simulation"
+        ],
+        "material": [
+          "steel_metal"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "ground_foundation_slope": 16
+        },
+        "phase": {
+          "design_analysis": 14
+        },
+        "method": {
+          "numerical_simulation": 14
+        },
+        "material": {
+          "steel_metal": 14
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "III-621",
+      "labels": {
+        "domain": [
+          "ground_foundation_slope",
+          "tunnel_underground"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [
+          "laboratory_experiment"
+        ],
+        "material": [
+          "soil_rock"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "ground_foundation_slope": 9,
+          "tunnel_underground": 8
+        },
+        "phase": {
+          "performance_evaluation": 8
+        },
+        "method": {
+          "laboratory_experiment": 5
+        },
+        "material": {
+          "soil_rock": 9
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "IV-165",
+      "labels": {
+        "domain": [
+          "urban_transport"
+        ],
+        "phase": [
+          "disaster_action",
+          "policy_planning",
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "governance_procurement"
+        ]
+      },
+      "confidence": "low",
+      "review_required": true,
+      "review_reasons": [
+        "domain:fallback"
+      ],
+      "scores": {
+        "domain": {
+          "urban_transport": 0
+        },
+        "phase": {
+          "disaster_action": 16,
+          "policy_planning": 13,
+          "performance_evaluation": 5
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "governance_procurement": 11
+        }
+      }
+    },
+    {
+      "code": "IV-184",
+      "labels": {
+        "domain": [
+          "urban_transport"
+        ],
+        "phase": [
+          "disaster_action",
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "flood_tsunami_storm",
+          "mobility_accessibility",
+          "safety_risk"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "urban_transport": 14
+        },
+        "phase": {
+          "disaster_action": 14,
+          "performance_evaluation": 5
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "flood_tsunami_storm": 16,
+          "mobility_accessibility": 14,
+          "safety_risk": 8
+        }
+      }
+    },
+    {
+      "code": "IV-204",
+      "labels": {
+        "domain": [
+          "road_pavement",
+          "urban_transport"
+        ],
+        "phase": [
+          "design_analysis"
+        ],
+        "method": [
+          "statistics_optimization"
+        ],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "medium",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "road_pavement": 14,
+          "urban_transport": 5
+        },
+        "phase": {
+          "design_analysis": 5
+        },
+        "method": {
+          "statistics_optimization": 5
+        },
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "IV-223",
+      "labels": {
+        "domain": [
+          "tunnel_underground",
+          "road_pavement"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "safety_risk"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "tunnel_underground": 14,
+          "road_pavement": 9
+        },
+        "phase": {
+          "performance_evaluation": 8
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "safety_risk": 9
+        }
+      }
+    },
+    {
+      "code": "IV-241",
+      "labels": {
+        "domain": [
+          "road_pavement"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "road_pavement": 14
+        },
+        "phase": {
+          "performance_evaluation": 14
+        },
+        "method": {},
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "IV-259",
+      "labels": {
+        "domain": [
+          "ground_foundation_slope",
+          "railway"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [
+          "sensing_iot"
+        ],
+        "material": [
+          "soil_rock"
+        ],
+        "issue": [
+          "landslide_erosion",
+          "seismic_liquefaction"
+        ]
+      },
+      "confidence": "low",
+      "review_required": true,
+      "review_reasons": [
+        "phase:fallback"
+      ],
+      "scores": {
+        "domain": {
+          "ground_foundation_slope": 14,
+          "railway": 8
+        },
+        "phase": {
+          "performance_evaluation": 0
+        },
+        "method": {
+          "sensing_iot": 6
+        },
+        "material": {
+          "soil_rock": 14
+        },
+        "issue": {
+          "landslide_erosion": 9,
+          "seismic_liquefaction": 9
+        }
+      }
+    },
+    {
+      "code": "V-628",
+      "labels": {
+        "domain": [
+          "construction_materials"
+        ],
+        "phase": [
+          "design_analysis",
+          "performance_evaluation",
+          "material_development"
+        ],
+        "method": [
+          "numerical_simulation"
+        ],
+        "material": [
+          "concrete_cement"
+        ],
+        "issue": []
+      },
+      "confidence": "medium",
+      "review_required": true,
+      "review_reasons": [
+        "phase:tag_limit"
+      ],
+      "scores": {
+        "domain": {
+          "construction_materials": 16
+        },
+        "phase": {
+          "design_analysis": 14,
+          "performance_evaluation": 14,
+          "material_development": 9
+        },
+        "method": {
+          "numerical_simulation": 9
+        },
+        "material": {
+          "concrete_cement": 16
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "V-697",
+      "labels": {
+        "domain": [
+          "railway"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "wind_snow_cold",
+          "deterioration_corrosion"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "railway": 14
+        },
+        "phase": {
+          "performance_evaluation": 8
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "wind_snow_cold": 16,
+          "deterioration_corrosion": 5
+        }
+      }
+    },
+    {
+      "code": "V-767",
+      "labels": {
+        "domain": [
+          "construction_materials"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [
+          "laboratory_experiment"
+        ],
+        "material": [
+          "frp_composite"
+        ],
+        "issue": []
+      },
+      "confidence": "medium",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "construction_materials": 5
+        },
+        "phase": {
+          "performance_evaluation": 14
+        },
+        "method": {
+          "laboratory_experiment": 14
+        },
+        "material": {
+          "frp_composite": 14
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "V-837",
+      "labels": {
+        "domain": [
+          "construction_materials",
+          "structural_system"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [
+          "laboratory_experiment"
+        ],
+        "material": [
+          "concrete_cement"
+        ],
+        "issue": [
+          "wind_snow_cold"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "construction_materials": 9,
+          "structural_system": 5
+        },
+        "phase": {
+          "performance_evaluation": 10
+        },
+        "method": {
+          "laboratory_experiment": 5
+        },
+        "material": {
+          "concrete_cement": 9
+        },
+        "issue": {
+          "wind_snow_cold": 14
+        }
+      }
+    },
+    {
+      "code": "V-906",
+      "labels": {
+        "domain": [
+          "construction_materials"
+        ],
+        "phase": [
+          "material_development",
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [
+          "concrete_cement"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "construction_materials": 16
+        },
+        "phase": {
+          "material_development": 14,
+          "performance_evaluation": 8
+        },
+        "method": {},
+        "material": {
+          "concrete_cement": 5
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "V-976",
+      "labels": {
+        "domain": [
+          "construction_materials"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "aging_lifecycle",
+          "deterioration_corrosion"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "construction_materials": 8
+        },
+        "phase": {
+          "performance_evaluation": 14
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "aging_lifecycle": 14,
+          "deterioration_corrosion": 14
+        }
+      }
+    },
+    {
+      "code": "VI-1014",
+      "labels": {
+        "domain": [
+          "construction_materials"
+        ],
+        "phase": [
+          "performance_evaluation",
+          "construction"
+        ],
+        "method": [
+          "laboratory_experiment"
+        ],
+        "material": [
+          "concrete_cement"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "construction_materials": 14
+        },
+        "phase": {
+          "performance_evaluation": 14,
+          "construction": 5
+        },
+        "method": {
+          "laboratory_experiment": 5
+        },
+        "material": {
+          "concrete_cement": 14
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "VI-1141",
+      "labels": {
+        "domain": [
+          "ground_foundation_slope"
+        ],
+        "phase": [
+          "construction"
+        ],
+        "method": [],
+        "material": [
+          "steel_metal"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "ground_foundation_slope": 16
+        },
+        "phase": {
+          "construction": 14
+        },
+        "method": {},
+        "material": {
+          "steel_metal": 14
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "VI-1267",
+      "labels": {
+        "domain": [
+          "construction_materials",
+          "tunnel_underground",
+          "structural_system"
+        ],
+        "phase": [
+          "material_development"
+        ],
+        "method": [],
+        "material": [
+          "concrete_cement"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "construction_materials": 16,
+          "tunnel_underground": 14,
+          "structural_system": 6
+        },
+        "phase": {
+          "material_development": 14
+        },
+        "method": {},
+        "material": {
+          "concrete_cement": 8
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "VI-1394",
+      "labels": {
+        "domain": [
+          "railway",
+          "ground_foundation_slope",
+          "construction_materials"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [
+          "laboratory_experiment"
+        ],
+        "material": [
+          "concrete_cement"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "railway": 16,
+          "ground_foundation_slope": 14,
+          "construction_materials": 9
+        },
+        "phase": {
+          "performance_evaluation": 14
+        },
+        "method": {
+          "laboratory_experiment": 8
+        },
+        "material": {
+          "concrete_cement": 9
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "VI-1521",
+      "labels": {
+        "domain": [
+          "tunnel_underground"
+        ],
+        "phase": [
+          "design_analysis"
+        ],
+        "method": [
+          "statistics_optimization"
+        ],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "tunnel_underground": 14
+        },
+        "phase": {
+          "design_analysis": 14
+        },
+        "method": {
+          "statistics_optimization": 9
+        },
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "VI-1647",
+      "labels": {
+        "domain": [
+          "tunnel_underground"
+        ],
+        "phase": [
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [
+          "steel_metal"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "tunnel_underground": 16
+        },
+        "phase": {
+          "performance_evaluation": 8
+        },
+        "method": {},
+        "material": {
+          "steel_metal": 8
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "VI-1774",
+      "labels": {
+        "domain": [
+          "coast_port_ocean"
+        ],
+        "phase": [
+          "construction",
+          "maintenance_repair"
+        ],
+        "method": [],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "coast_port_ocean": 16
+        },
+        "phase": {
+          "construction": 9,
+          "maintenance_repair": 5
+        },
+        "method": {},
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "VII-109",
+      "labels": {
+        "domain": [
+          "civil_systems",
+          "environment_ecosystem",
+          "river_watershed"
+        ],
+        "phase": [
+          "operation_management",
+          "survey_measurement",
+          "disaster_action"
+        ],
+        "method": [
+          "field_test_monitoring"
+        ],
+        "material": [],
+        "issue": [
+          "flood_tsunami_storm"
+        ]
+      },
+      "confidence": "medium",
+      "review_required": true,
+      "review_reasons": [
+        "domain:tag_limit"
+      ],
+      "scores": {
+        "domain": {
+          "civil_systems": 14,
+          "environment_ecosystem": 14,
+          "river_watershed": 9
+        },
+        "phase": {
+          "operation_management": 8,
+          "survey_measurement": 8,
+          "disaster_action": 6
+        },
+        "method": {
+          "field_test_monitoring": 5
+        },
+        "material": {},
+        "issue": {
+          "flood_tsunami_storm": 6
+        }
+      }
+    },
+    {
+      "code": "VII-118",
+      "labels": {
+        "domain": [
+          "environment_ecosystem"
+        ],
+        "phase": [
+          "environmental_action",
+          "performance_evaluation"
+        ],
+        "method": [
+          "drone_uncrewed",
+          "image_processing"
+        ],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "environment_ecosystem": 14
+        },
+        "phase": {
+          "environmental_action": 16,
+          "performance_evaluation": 10
+        },
+        "method": {
+          "drone_uncrewed": 14,
+          "image_processing": 14
+        },
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "VII-128",
+      "labels": {
+        "domain": [
+          "environment_ecosystem"
+        ],
+        "phase": [
+          "environmental_action",
+          "survey_measurement"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "biodiversity_water_quality"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "environment_ecosystem": 16
+        },
+        "phase": {
+          "environmental_action": 16,
+          "survey_measurement": 9
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "biodiversity_water_quality": 16
+        }
+      }
+    },
+    {
+      "code": "VII-138",
+      "labels": {
+        "domain": [
+          "environment_ecosystem"
+        ],
+        "phase": [
+          "environmental_action",
+          "performance_evaluation",
+          "policy_planning"
+        ],
+        "method": [
+          "gis_spatial"
+        ],
+        "material": [],
+        "issue": [
+          "biodiversity_water_quality"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "environment_ecosystem": 14
+        },
+        "phase": {
+          "environmental_action": 14,
+          "performance_evaluation": 14,
+          "policy_planning": 14
+        },
+        "method": {
+          "gis_spatial": 6
+        },
+        "material": {},
+        "issue": {
+          "biodiversity_water_quality": 14
+        }
+      }
+    },
+    {
+      "code": "CS1-45",
+      "labels": {
+        "domain": [
+          "education_society",
+          "construction_site"
+        ],
+        "phase": [
+          "education_consensus",
+          "performance_evaluation"
+        ],
+        "method": [],
+        "material": [],
+        "issue": [
+          "knowledge_transfer",
+          "productivity_labor"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "education_society": 16,
+          "construction_site": 14
+        },
+        "phase": {
+          "education_consensus": 16,
+          "performance_evaluation": 6
+        },
+        "method": {},
+        "material": {},
+        "issue": {
+          "knowledge_transfer": 9,
+          "productivity_labor": 6
+        }
+      }
+    },
+    {
+      "code": "CS9-51",
+      "labels": {
+        "domain": [
+          "bridge",
+          "railway"
+        ],
+        "phase": [
+          "survey_measurement",
+          "technology_development"
+        ],
+        "method": [
+          "sensing_iot"
+        ],
+        "material": [
+          "concrete_cement"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "bridge": 14,
+          "railway": 8
+        },
+        "phase": {
+          "survey_measurement": 16,
+          "technology_development": 14
+        },
+        "method": {
+          "sensing_iot": 14
+        },
+        "material": {
+          "concrete_cement": 9
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "CS10-129",
+      "labels": {
+        "domain": [
+          "ground_foundation_slope",
+          "railway",
+          "structural_system"
+        ],
+        "phase": [
+          "design_analysis"
+        ],
+        "method": [],
+        "material": [
+          "soil_rock"
+        ],
+        "issue": [
+          "safety_risk",
+          "seismic_liquefaction"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "ground_foundation_slope": 14,
+          "railway": 14,
+          "structural_system": 5
+        },
+        "phase": {
+          "design_analysis": 8
+        },
+        "method": {},
+        "material": {
+          "soil_rock": 14
+        },
+        "issue": {
+          "safety_risk": 14,
+          "seismic_liquefaction": 10
+        }
+      }
+    },
+    {
+      "code": "CS14-70",
+      "labels": {
+        "domain": [
+          "tunnel_underground"
+        ],
+        "phase": [
+          "design_analysis",
+          "performance_evaluation",
+          "construction"
+        ],
+        "method": [
+          "ai_ml",
+          "statistics_optimization"
+        ],
+        "material": [],
+        "issue": []
+      },
+      "confidence": "medium",
+      "review_required": true,
+      "review_reasons": [
+        "phase:tag_limit"
+      ],
+      "scores": {
+        "domain": {
+          "tunnel_underground": 14
+        },
+        "phase": {
+          "design_analysis": 14,
+          "performance_evaluation": 14,
+          "construction": 9
+        },
+        "method": {
+          "ai_ml": 13,
+          "statistics_optimization": 6
+        },
+        "material": {},
+        "issue": {}
+      }
+    },
+    {
+      "code": "CS19-24",
+      "labels": {
+        "domain": [
+          "bridge",
+          "road_pavement"
+        ],
+        "phase": [
+          "maintenance_repair",
+          "renewal_demolition",
+          "construction"
+        ],
+        "method": [],
+        "material": [
+          "concrete_cement"
+        ],
+        "issue": []
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "bridge": 16,
+          "road_pavement": 5
+        },
+        "phase": {
+          "maintenance_repair": 16,
+          "renewal_demolition": 11,
+          "construction": 8
+        },
+        "method": {},
+        "material": {
+          "concrete_cement": 14
+        },
+        "issue": {}
+      }
+    },
+    {
+      "code": "CS22-23",
+      "labels": {
+        "domain": [
+          "energy_industrial",
+          "coast_port_ocean"
+        ],
+        "phase": [
+          "design_analysis",
+          "performance_evaluation",
+          "environmental_action"
+        ],
+        "method": [],
+        "material": [
+          "co2_carbon"
+        ],
+        "issue": [
+          "climate_decarbonization"
+        ]
+      },
+      "confidence": "high",
+      "review_required": false,
+      "review_reasons": [],
+      "scores": {
+        "domain": {
+          "energy_industrial": 16,
+          "coast_port_ocean": 14
+        },
+        "phase": {
+          "design_analysis": 8,
+          "performance_evaluation": 8,
+          "environmental_action": 6
+        },
+        "method": {},
+        "material": {
+          "co2_carbon": 10
+        },
+        "issue": {
+          "climate_decarbonization": 14
+        }
+      }
+    }
+  ]
+}

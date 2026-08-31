@@ -27,10 +27,18 @@ uv run python -m http.server 8000
 
 ## 独自カテゴリ設計
 
-講演内容を横断的に探すための分類体系案は、[カテゴリ事前設計](docs/category-taxonomy-design.md)にまとめています。機械可読な定義は `data/category_taxonomy.json`、部門横断の試行分類は `data/category_pilot.json` です。
+講演内容を横断的に探すための分類体系案は、[カテゴリ事前設計](docs/category-taxonomy-design.md)にまとめています。機械可読な定義は `data/category_taxonomy.json`、120講演の層化試行結果は `data/category_pilot_v02.json`、評価結果は[層化試行レポート](docs/category-pilot-v02-report.md)です。
 
 ```powershell
 uv run --no-project python scripts\validate_category_taxonomy.py
+```
+
+梗概の著者キーワード・短い内容要約は、PDFからローカル専用ファイルへ抽出します。抽出物はGitの管理対象外です。
+
+```powershell
+uv run --no-project python scripts\extract_category_sample.py
+uv run --no-project python scripts\build_category_pilot_v02.py
+uv run --no-project python scripts\analyze_category_pilot_v02.py
 ```
 
 ## プログラムデータの再生成
