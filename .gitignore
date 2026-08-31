@@ -1,0 +1,13 @@
+# Source PDFs are kept locally and are too large for GitHub.
+2026/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Local browser test screenshots
+jsce2026-mobile*.png
+
+# OS-generated files
+Thumbs.db
+.DS_Store
