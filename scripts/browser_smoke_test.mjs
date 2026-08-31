@@ -80,6 +80,8 @@ const initial = await evaluate(`
           upcomingCards: document.querySelectorAll('#upcoming-sessions .session-card').length,
           dayCards,
           divisionOptions: document.querySelector('#division-filter').options.length,
+          nowHidden: document.querySelector('#now-view').hidden,
+          scheduleHidden: document.querySelector('#schedule-view').hidden,
         });
       } else if (attempts++ > 100) {
         clearInterval(timer);
@@ -94,10 +96,13 @@ assert.deepEqual(initial, {
   upcomingCards: 88,
   dayCards: 126,
   divisionOptions: 9,
+  nowHidden: false,
+  scheduleHidden: true,
 });
 
 const filtered = await evaluate(`
   new Promise((resolve) => {
+    document.querySelector('[data-view="schedule"]').click();
     const input = document.querySelector('#query-filter');
     input.value = '留萌開発事務所';
     input.dispatchEvent(new Event('input', { bubbles: true }));
@@ -111,6 +116,8 @@ const filtered = await evaluate(`
         links: [...card.querySelectorAll('.talk-link')].map((link) => link.href),
         authors: [...card.querySelectorAll('.talk-authors')].map((item) => item.textContent),
         affiliations: [...card.querySelectorAll('.talk-affiliations')].map((item) => item.textContent),
+        nowHidden: document.querySelector('#now-view').hidden,
+        scheduleHidden: document.querySelector('#schedule-view').hidden,
       }), 100);
     }, 100);
   })
@@ -119,6 +126,8 @@ const filtered = await evaluate(`
 assert.equal(filtered.count, "0/88件");
 assert.equal(filtered.upcomingCards, 0);
 assert.equal(filtered.dayCards, 1);
+assert.equal(filtered.nowHidden, true);
+assert.equal(filtered.scheduleHidden, false);
 assert.ok(filtered.links.some((url) => url.endsWith("/CS18-07")));
 assert.ok(filtered.authors.some((value) => value.includes("千葉 雄貴")));
 assert.ok(filtered.affiliations.some((value) => value.includes("留萌開発事務所")));

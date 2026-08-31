@@ -13,6 +13,7 @@ const state = {
   division: "",
   campus: "",
   query: "",
+  view: "now",
   live: false,
 };
 
@@ -124,6 +125,16 @@ function hasActiveFilters() {
   return Boolean(state.division || state.campus || state.query);
 }
 
+function renderView() {
+  document.querySelector("#now-view").hidden = state.view !== "now";
+  document.querySelector("#schedule-view").hidden = state.view !== "schedule";
+  document.querySelectorAll("[data-view]").forEach((button) => {
+    const isCurrent = button.dataset.view === state.view;
+    button.classList.toggle("is-current", isCurrent);
+    button.setAttribute("aria-pressed", String(isCurrent));
+  });
+}
+
 function render() {
   const allDaySessions = sessions
     .filter((session) => session.date === state.selectedDate)
@@ -169,6 +180,7 @@ function render() {
   notice.innerHTML = state.live
     ? "<span>LIVE</span>日本時間の現在日時を表示しています"
     : "<span>DEMO</span>大会期間外のため、確認用日時を表示しています";
+  renderView();
 }
 
 function populateFilterOptions() {
@@ -253,6 +265,14 @@ document.querySelectorAll(".date-tab").forEach((button) => {
     state.selectedDate = button.dataset.date;
     state.live = false;
     render();
+  });
+});
+
+document.querySelectorAll("[data-view]").forEach((button) => {
+  button.addEventListener("click", () => {
+    state.view = button.dataset.view;
+    renderView();
+    window.scrollTo({ top: 0, behavior: "smooth" });
   });
 });
 

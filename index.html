@@ -78,7 +78,12 @@
         </button>
       </nav>
 
-      <section class="section-block now-block" aria-labelledby="now-heading">
+      <nav class="view-tabs" aria-label="表示を切り替え">
+        <button class="is-current" type="button" data-view="now">今から1時間</button>
+        <button type="button" data-view="schedule">日別一覧</button>
+      </nav>
+
+      <section id="now-view" class="section-block now-block view-panel" aria-labelledby="now-heading">
         <div class="section-heading">
           <div>
             <span class="section-kicker">NOW + 60 MIN</span>
@@ -112,7 +117,7 @@
         <div id="upcoming-sessions" class="session-list" aria-live="polite"></div>
       </section>
 
-      <section id="day-schedule" class="section-block schedule-block" aria-labelledby="schedule-heading">
+      <section id="schedule-view" class="section-block schedule-block view-panel" aria-labelledby="schedule-heading" hidden>
         <div class="section-heading">
           <div>
             <span class="section-kicker">ALL DAY</span>
@@ -131,14 +136,14 @@
     </main>
 
     <nav class="bottom-nav" aria-label="主要メニュー">
-      <a class="is-current" href="#top">
+      <button class="is-current" type="button" data-view="now">
         <span aria-hidden="true">◷</span>
         今から1時間
-      </a>
-      <a href="#day-schedule">
+      </button>
+      <button type="button" data-view="schedule">
         <span aria-hidden="true">▦</span>
         日別一覧
-      </a>
+      </button>
       <a
         href="https://pub.confit.atlas.jp/ja/event/jsce2026/bookmarks"
         target="_blank"

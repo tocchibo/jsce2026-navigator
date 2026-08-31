@@ -260,6 +260,29 @@ main {
   border-bottom-color: var(--yellow);
 }
 
+.view-tabs {
+  display: none;
+  padding: 9px 36px 0;
+  gap: 6px;
+  background: var(--paper);
+}
+
+.view-tabs button {
+  padding: 8px 18px;
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.view-tabs button.is-current {
+  color: var(--orange);
+  border-bottom-color: var(--orange);
+}
+
 .section-block {
   padding: 18px 16px 4px;
 }
@@ -580,9 +603,7 @@ main {
 }
 
 .schedule-block {
-  margin-top: 20px;
-  padding-top: 32px;
-  border-top: 1px solid #d5d9d5;
+  padding-top: 18px;
 }
 
 .schedule-list .session-card {
@@ -640,24 +661,30 @@ main {
   backdrop-filter: blur(12px);
 }
 
-.bottom-nav a {
+.bottom-nav a,
+.bottom-nav button {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 2px;
   color: var(--muted);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
   text-decoration: none;
   font-size: 9px;
   font-weight: 700;
 }
 
-.bottom-nav a span {
+.bottom-nav a span,
+.bottom-nav button span {
   font-size: 20px;
   line-height: 1;
 }
 
-.bottom-nav a.is-current {
+.bottom-nav a.is-current,
+.bottom-nav button.is-current {
   color: var(--orange);
 }
 
@@ -672,6 +699,10 @@ main {
 
   .date-tabs {
     padding-inline: 28px;
+  }
+
+  .view-tabs {
+    display: flex;
   }
 
   .section-block {
