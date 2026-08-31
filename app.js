@@ -14,13 +14,13 @@ const state = {
   activeTab: "now",
   referenceDate: initialNow.date,
   referenceTime: initialNow.time,
-  division: "",
-  campus: "",
-  theme: "",
+  divisions: new Set(),
+  campuses: new Set(),
+  themes: new Set(),
   query: "",
   followRealTime: true,
-  openSessionIds: new Set(),
   timeGroupOpen: new Map(),
+  activeSessionId: null,
 };
 
 const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
@@ -159,9 +159,10 @@ function sessionCollectionCounts(session) {
     }))
     .filter((collection) => collection.count > 0)
     .sort((a, b) => {
-      if (state.theme) {
-        if (a.id === state.theme) return -1;
-        if (b.id === state.theme) return 1;
+      if (state.themes.size) {
+        const aSelected = state.themes.has(a.id);
+        const bSelected = state.themes.has(b.id);
+        if (aSelected !== bSelected) return aSelected ? -1 : 1;
       }
       return b.count - a.count || a.order - b.order;
     });
@@ -180,10 +181,9 @@ function sessionThemeMarkup(session) {
 
 function sessionMarkup(session) {
   const status = sessionStatus(session);
-  const isOpen = state.openSessionIds.has(session.id);
   return `
-    <details class="session-card" data-session-id="${escapeHtml(session.id)}" ${isOpen ? "open" : ""}>
-      <summary class="session-summary">
+    <article class="session-card" data-session-id="${escapeHtml(session.id)}" role="button" tabindex="0" aria-haspopup="dialog" aria-label="${escapeHtml(session.title)}の詳細を開く">
+      <div class="session-summary">
         <div class="session-topline">
           ${status ? `<span class="status-pill ${status.className}">${status.label}</span>` : ""}
           <span>${escapeHtml(session.start)}–${escapeHtml(session.end)}</span>
@@ -197,9 +197,8 @@ function sessionMarkup(session) {
           <span aria-label="会場"><span aria-hidden="true">●</span> ${escapeHtml(session.campus)}</span>
           <span aria-label="教室"><b>${escapeHtml(session.room)}</b></span>
         </div>
-      </summary>
-      <div class="talks" data-talks ${isOpen ? 'data-loaded="true"' : ""}>${isOpen ? talksMarkup(session) : ""}</div>
-    </details>`;
+      </div>
+    </article>`;
 }
 
 function talksMarkup(session) {
@@ -211,6 +210,41 @@ function talksMarkup(session) {
     <ol class="talk-list">${session.talks
       .map((talk, index) => talkMarkup(talk, session, index))
       .join("")}</ol>`;
+}
+
+function sessionDialogMarkup(session) {
+  const status = sessionStatus(session);
+  return `
+    <section class="session-dialog-summary">
+      <div class="session-topline">
+        ${status ? `<span class="status-pill ${status.className}">${status.label}</span>` : ""}
+        <span>${escapeHtml(session.start)}–${escapeHtml(session.end)}</span>
+        <span>・</span>
+        <span>${escapeHtml(session.division)}</span>
+      </div>
+      <h2 id="session-dialog-title">${escapeHtml(session.title)}</h2>
+      ${currentTalkMarkup(session)}
+      ${sessionThemeMarkup(session)}
+      <div class="meta-row">
+        <span aria-label="会場"><span aria-hidden="true">●</span> ${escapeHtml(session.campus)}</span>
+        <span aria-label="教室"><b>${escapeHtml(session.room)}</b></span>
+      </div>
+    </section>
+    <div class="talks session-dialog-talks">${talksMarkup(session)}</div>`;
+}
+
+function openSessionDialog(session) {
+  const dialog = document.querySelector("#session-dialog");
+  state.activeSessionId = session.id;
+  document.querySelector("#session-dialog-content").innerHTML = sessionDialogMarkup(session);
+  if (!dialog.open) dialog.showModal();
+  document.body.classList.add("modal-open");
+  document.querySelector("#session-dialog-content").scrollTop = 0;
+  document.querySelector("#session-dialog-close").focus();
+}
+
+function closeSessionDialog() {
+  document.querySelector("#session-dialog").close();
 }
 
 function emptyMarkup(message = "この時間帯に該当するセッションはありません") {
@@ -291,11 +325,15 @@ function scheduleGroupsMarkup(daySessions, scheduleDate) {
 }
 
 function matchesFilters(session) {
-  if (state.division && session.division !== state.division) return false;
-  if (state.campus && session.campus !== state.campus) return false;
-  if (state.theme) {
-    const collection = browseCollections.find((item) => item.id === state.theme);
-    if (!collection || !session.talks.some((talk) => collectionMatchesCode(collection, talk[1]))) {
+  if (state.divisions.size && !state.divisions.has(session.division)) return false;
+  if (state.campuses.size && !state.campuses.has(session.campus)) return false;
+  if (state.themes.size) {
+    const selectedCollections = browseCollections.filter((item) => state.themes.has(item.id));
+    if (
+      !selectedCollections.some((collection) =>
+        session.talks.some((talk) => collectionMatchesCode(collection, talk[1])),
+      )
+    ) {
       return false;
     }
   }
@@ -311,7 +349,30 @@ function matchesFilters(session) {
 }
 
 function hasActiveFilters() {
-  return Boolean(state.division || state.campus || state.theme || state.query);
+  return Boolean(
+    state.divisions.size || state.campuses.size || state.themes.size || state.query,
+  );
+}
+
+function selectedFilterLabel(values, labelForValue) {
+  if (!values.size) return "すべて";
+  if (values.size === 1) return labelForValue([...values][0]);
+  return `${values.size}件選択`;
+}
+
+function updateMultiFilterLabels() {
+  document.querySelector("#theme-filter-label").textContent = selectedFilterLabel(
+    state.themes,
+    (value) => browseCollections.find((item) => item.id === value)?.label ?? value,
+  );
+  document.querySelector("#division-filter-label").textContent = selectedFilterLabel(
+    state.divisions,
+    (value) => value,
+  );
+  document.querySelector("#campus-filter-label").textContent = selectedFilterLabel(
+    state.campuses,
+    (value) => value,
+  );
 }
 
 function renderView() {
@@ -378,8 +439,32 @@ function render() {
   document.querySelector("#schedule-heading").textContent = `${scheduleDateLabel}のセッション（${daySessions.length}件）`;
   document.querySelector("#filter-summary").classList.toggle("has-filter", hasActiveFilters());
   document.querySelector("#clear-filters").disabled = !hasActiveFilters();
+  updateMultiFilterLabels();
+
+  const dialog = document.querySelector("#session-dialog");
+  if (dialog.open && state.activeSessionId) {
+    const activeSession = sessionsById.get(state.activeSessionId);
+    if (activeSession) {
+      const content = document.querySelector("#session-dialog-content");
+      const scrollTop = content.scrollTop;
+      content.innerHTML = sessionDialogMarkup(activeSession);
+      content.scrollTop = scrollTop;
+    }
+  }
 
   renderView();
+}
+
+function multiSelectOptionsMarkup(groupId, values) {
+  return values
+    .map(
+      ({ value, label }, index) => `
+        <label class="multi-select-option" for="${groupId}-option-${index}">
+          <input id="${groupId}-option-${index}" type="checkbox" value="${escapeHtml(value)}" />
+          <span>${escapeHtml(label)}</span>
+        </label>`,
+    )
+    .join("");
 }
 
 function populateFilterOptions() {
@@ -400,21 +485,21 @@ function populateFilterOptions() {
     a.localeCompare(b, "ja"),
   );
 
-  document.querySelector("#division-filter").innerHTML = [
-    '<option value="">すべての部門</option>',
-    ...divisions.map((value) => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`),
-  ].join("");
-  document.querySelector("#campus-filter").innerHTML = [
-    '<option value="">すべてのキャンパス</option>',
-    ...campuses.map((value) => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`),
-  ].join("");
-  document.querySelector("#theme-filter").innerHTML = [
-    '<option value="">すべてのテーマ</option>',
-    ...browseCollections.map(
-      (collection) =>
-        `<option value="${escapeHtml(collection.id)}">${escapeHtml(collection.label)}</option>`,
-    ),
-  ].join("");
+  document.querySelector("#division-filter").innerHTML = multiSelectOptionsMarkup(
+    "division-filter",
+    divisions.map((value) => ({ value, label: value })),
+  );
+  document.querySelector("#campus-filter").innerHTML = multiSelectOptionsMarkup(
+    "campus-filter",
+    campuses.map((value) => ({ value, label: value })),
+  );
+  document.querySelector("#theme-filter").innerHTML = multiSelectOptionsMarkup(
+    "theme-filter",
+    browseCollections.map((collection) => ({
+      value: collection.id,
+      label: collection.label,
+    })),
+  );
 }
 
 function japanNow() {
@@ -524,30 +609,30 @@ document.querySelector("#query-filter").addEventListener("input", (event) => {
   render();
 });
 
-document.querySelector("#division-filter").addEventListener("change", (event) => {
-  state.division = event.target.value;
-  render();
-});
+function bindMultiFilter(selector, selectedValues) {
+  document.querySelector(selector).addEventListener("change", (event) => {
+    if (event.target.type !== "checkbox") return;
+    if (event.target.checked) selectedValues.add(event.target.value);
+    else selectedValues.delete(event.target.value);
+    render();
+  });
+}
 
-document.querySelector("#campus-filter").addEventListener("change", (event) => {
-  state.campus = event.target.value;
-  render();
-});
-
-document.querySelector("#theme-filter").addEventListener("change", (event) => {
-  state.theme = event.target.value;
-  render();
-});
+bindMultiFilter("#division-filter", state.divisions);
+bindMultiFilter("#campus-filter", state.campuses);
+bindMultiFilter("#theme-filter", state.themes);
 
 document.querySelector("#clear-filters").addEventListener("click", () => {
   state.query = "";
-  state.division = "";
-  state.campus = "";
-  state.theme = "";
+  state.divisions.clear();
+  state.campuses.clear();
+  state.themes.clear();
   document.querySelector("#query-filter").value = "";
-  document.querySelector("#division-filter").value = "";
-  document.querySelector("#campus-filter").value = "";
-  document.querySelector("#theme-filter").value = "";
+  document
+    .querySelectorAll(".multi-select-options input[type='checkbox']")
+    .forEach((input) => {
+      input.checked = false;
+    });
   render();
 });
 
@@ -558,25 +643,33 @@ document.addEventListener("click", (event) => {
   state.timeGroupOpen.set(timeGroup.dataset.timeGroupKey, !timeGroup.open);
 });
 
-document.addEventListener(
-  "toggle",
-  (event) => {
-    const details = event.target.closest?.(".session-card");
-    if (!details || event.target !== details) return;
-    if (!details.open) {
-      state.openSessionIds.delete(details.dataset.sessionId);
-      return;
-    }
-    state.openSessionIds.add(details.dataset.sessionId);
-    const container = details.querySelector("[data-talks]");
-    if (container.dataset.loaded) return;
-    const session = sessionsById.get(details.dataset.sessionId);
-    if (!session) return;
-    container.innerHTML = talksMarkup(session);
-    container.dataset.loaded = "true";
-  },
-  true,
-);
+document.addEventListener("click", (event) => {
+  const card = event.target.closest?.(".session-card");
+  if (!card) return;
+  const session = sessionsById.get(card.dataset.sessionId);
+  if (session) openSessionDialog(session);
+});
+
+document.addEventListener("keydown", (event) => {
+  const card = event.target.closest?.(".session-card");
+  if (!card || !["Enter", " "].includes(event.key)) return;
+  event.preventDefault();
+  const session = sessionsById.get(card.dataset.sessionId);
+  if (session) openSessionDialog(session);
+});
+
+document.querySelector("#session-dialog-close").addEventListener("click", closeSessionDialog);
+
+document.querySelector("#session-dialog").addEventListener("click", (event) => {
+  if (event.target === event.currentTarget) closeSessionDialog();
+});
+
+document.querySelector("#session-dialog").addEventListener("close", () => {
+  const closedSessionId = state.activeSessionId;
+  state.activeSessionId = null;
+  document.body.classList.remove("modal-open");
+  document.querySelector(`[data-session-id="${closedSessionId}"]`)?.focus();
+});
 
 setInterval(() => {
   const now = japanNow();

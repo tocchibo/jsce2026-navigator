@@ -74,10 +74,10 @@ const initial = await evaluate(`
   new Promise((resolve, reject) => {
     let attempts = 0;
     const timer = setInterval(() => {
-      const divisionOptions = document.querySelector('#division-filter').options.length;
-      const themeOptions = document.querySelector('#theme-filter').options.length;
+      const divisionOptions = document.querySelectorAll('#division-filter input').length;
+      const themeOptions = document.querySelectorAll('#theme-filter input').length;
       const referenceValue = document.querySelector('#reference-datetime').value;
-      if (divisionOptions === 9 && themeOptions === 20 && referenceValue) {
+      if (divisionOptions === 8 && themeOptions === 19 && referenceValue) {
         clearInterval(timer);
         resolve({
           referenceValue,
@@ -104,8 +104,8 @@ assert.deepEqual(
     scheduleHidden: initial.scheduleHidden,
   },
   {
-  divisionOptions: 9,
-  themeOptions: 20,
+  divisionOptions: 8,
+  themeOptions: 19,
   activeTab: "now",
   nowHidden: false,
   scheduleHidden: true,
@@ -120,14 +120,16 @@ const upcoming = await evaluate(`
     input.dispatchEvent(new Event('change', { bubbles: true }));
     setTimeout(() => {
       const liveCard = document.querySelector('#upcoming-sessions .session-card:has(.session-current-talk)');
-      liveCard.open = true;
+      liveCard.click();
       setTimeout(() => resolve({
         count: document.querySelector('#session-count').textContent,
         upcomingCards: document.querySelectorAll('#upcoming-sessions .session-card').length,
         liveCards: document.querySelectorAll('#upcoming-sessions .session-current-talk').length,
-        currentTalks: liveCard.querySelectorAll('.talk-item.is-current').length,
-        nextTalks: liveCard.querySelectorAll('.talk-item.is-next').length,
-        currentLabel: liveCard.querySelector('.talk-item.is-current .talk-time b')?.textContent,
+        dialogOpen: document.querySelector('#session-dialog').open,
+        currentTalks: document.querySelectorAll('#session-dialog .talk-item.is-current').length,
+        nextTalks: document.querySelectorAll('#session-dialog .talk-item.is-next').length,
+        currentLabel: document.querySelector('#session-dialog .talk-item.is-current .talk-time b')?.textContent,
+        inlineTalks: document.querySelectorAll('#upcoming-sessions .talk-list').length,
         nowHidden: document.querySelector('#now-view').hidden,
         scheduleHidden: document.querySelector('#schedule-view').hidden,
       }), 100);
@@ -138,14 +140,17 @@ const upcoming = await evaluate(`
 assert.equal(upcoming.count, "88件");
 assert.equal(upcoming.upcomingCards, 88);
 assert.ok(upcoming.liveCards > 0);
+assert.equal(upcoming.dialogOpen, true);
 assert.equal(upcoming.currentTalks, 1);
 assert.ok(upcoming.nextTalks <= 1);
 assert.equal(upcoming.currentLabel, "開催中");
+assert.equal(upcoming.inlineTalks, 0);
 assert.equal(upcoming.nowHidden, false);
 assert.equal(upcoming.scheduleHidden, true);
 
 const grouped = await evaluate(`
   new Promise((resolve) => {
+    document.querySelector('#session-dialog-close').click();
     document.querySelector('[data-program-tab="2026-09-02"]').click();
     setTimeout(() => resolve({
       timeGroups: document.querySelectorAll('#schedule-sessions .time-group').length,
@@ -170,17 +175,19 @@ const filtered = await evaluate(`
     input.dispatchEvent(new Event('input', { bubbles: true }));
     setTimeout(() => {
       const card = document.querySelector('#schedule-sessions .session-card');
-      card.open = true;
+      card.click();
       setTimeout(() => resolve({
         count: document.querySelector('#session-count').textContent,
         upcomingCards: document.querySelectorAll('#upcoming-sessions .session-card').length,
         dayCards: document.querySelectorAll('#schedule-sessions .session-card').length,
         timeGroups: document.querySelectorAll('#schedule-sessions .time-group').length,
         openGroups: document.querySelectorAll('#schedule-sessions .time-group[open]').length,
-        links: [...card.querySelectorAll('.talk-link')].map((link) => link.href),
-        authors: [...card.querySelectorAll('.talk-authors')].map((item) => item.textContent),
-        affiliations: [...card.querySelectorAll('.talk-affiliations')].map((item) => item.textContent),
-        talkTags: [...card.querySelectorAll('.talk-tag')].map((item) => item.textContent),
+        dialogOpen: document.querySelector('#session-dialog').open,
+        inlineTalks: document.querySelectorAll('#schedule-sessions .talk-list').length,
+        links: [...document.querySelectorAll('#session-dialog .talk-link')].map((link) => link.href),
+        authors: [...document.querySelectorAll('#session-dialog .talk-authors')].map((item) => item.textContent),
+        affiliations: [...document.querySelectorAll('#session-dialog .talk-affiliations')].map((item) => item.textContent),
+        talkTags: [...document.querySelectorAll('#session-dialog .talk-tag')].map((item) => item.textContent),
         nowHidden: document.querySelector('#now-view').hidden,
         scheduleHidden: document.querySelector('#schedule-view').hidden,
         referencePanelVisible: document.querySelector('.reference-panel').checkVisibility(),
@@ -194,6 +201,8 @@ assert.equal(filtered.upcomingCards, 0);
 assert.equal(filtered.dayCards, 1);
 assert.equal(filtered.timeGroups, 1);
 assert.equal(filtered.openGroups, 1);
+assert.equal(filtered.dialogOpen, true);
+assert.equal(filtered.inlineTalks, 0);
 assert.equal(filtered.nowHidden, true);
 assert.equal(filtered.scheduleHidden, false);
 assert.equal(filtered.referencePanelVisible, false);
@@ -204,16 +213,18 @@ assert.ok(filtered.talkTags.length > 0);
 
 const themed = await evaluate(`
   new Promise((resolve) => {
+    document.querySelector('#session-dialog-close').click();
     document.querySelector('#clear-filters').click();
     document.querySelector('[data-program-tab="2026-09-04"]').click();
-    const select = document.querySelector('#theme-filter');
-    select.value = 'space';
-    select.dispatchEvent(new Event('change', { bubbles: true }));
+    const checkbox = document.querySelector('#theme-filter input[value="space"]');
+    checkbox.checked = true;
+    checkbox.dispatchEvent(new Event('change', { bubbles: true }));
     setTimeout(() => resolve({
       dayCards: document.querySelectorAll('#schedule-sessions .session-card').length,
       themeLabels: [...document.querySelectorAll('#schedule-sessions .session-themes')]
         .map((item) => item.textContent),
       filterActive: document.querySelector('#filter-summary').classList.contains('has-filter'),
+      themeLabel: document.querySelector('#theme-filter-label').textContent,
     }), 100);
   })
 `);
@@ -221,7 +232,25 @@ const themed = await evaluate(`
 assert.ok(themed.dayCards >= 3);
 assert.ok(themed.themeLabels.every((value) => value.includes("宇宙・月面")));
 assert.equal(themed.filterActive, true);
+assert.equal(themed.themeLabel, "宇宙・月面");
 
-console.log(JSON.stringify({ initial, upcoming, grouped, filtered, themed }, null, 2));
+const multiSelected = await evaluate(`
+  new Promise((resolve) => {
+    const checkbox = document.querySelector('#theme-filter input[value="ai_dx"]');
+    checkbox.checked = true;
+    checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+    setTimeout(() => resolve({
+      checkedThemes: document.querySelectorAll('#theme-filter input:checked').length,
+      themeLabel: document.querySelector('#theme-filter-label').textContent,
+      dayCards: document.querySelectorAll('#schedule-sessions .session-card').length,
+    }), 100);
+  })
+`);
+
+assert.equal(multiSelected.checkedThemes, 2);
+assert.equal(multiSelected.themeLabel, "2件選択");
+assert.ok(multiSelected.dayCards >= themed.dayCards);
+
+console.log(JSON.stringify({ initial, upcoming, grouped, filtered, themed, multiSelected }, null, 2));
 await call("Browser.close").catch(() => {});
 socket.close();

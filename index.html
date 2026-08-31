@@ -68,19 +68,29 @@
             <span>キーワード</span>
             <input id="query-filter" type="search" placeholder="題名・氏名・所属・講演番号" />
           </label>
-          <label>
-            <span>テーマから探す</span>
-            <select id="theme-filter"><option value="">すべてのテーマ</option></select>
-          </label>
-          <div class="select-row">
-            <label>
-              <span>部門</span>
-              <select id="division-filter"><option value="">すべての部門</option></select>
-            </label>
-            <label>
-              <span>キャンパス</span>
-              <select id="campus-filter"><option value="">すべてのキャンパス</option></select>
-            </label>
+          <p class="multi-filter-note">各欄では、選んだ項目のいずれかに一致するセッションを表示します。</p>
+          <div class="multi-filter-grid">
+            <details class="multi-select">
+              <summary>
+                <span>テーマ</span>
+                <b id="theme-filter-label">すべて</b>
+              </summary>
+              <div id="theme-filter" class="multi-select-options"></div>
+            </details>
+            <details class="multi-select">
+              <summary>
+                <span>部門</span>
+                <b id="division-filter-label">すべて</b>
+              </summary>
+              <div id="division-filter" class="multi-select-options"></div>
+            </details>
+            <details class="multi-select">
+              <summary>
+                <span>会場</span>
+                <b id="campus-filter-label">すべて</b>
+              </summary>
+              <div id="campus-filter" class="multi-select-options"></div>
+            </details>
           </div>
           <button id="clear-filters" class="clear-filter-button" type="button" disabled>条件をクリア</button>
         </div>
@@ -121,6 +131,19 @@
         </p>
       </aside>
     </main>
+
+    <dialog id="session-dialog" class="session-dialog" aria-labelledby="session-dialog-title">
+      <div class="session-dialog-shell">
+        <header class="session-dialog-header">
+          <div>
+            <span>SESSION DETAIL</span>
+            <strong>セッション詳細</strong>
+          </div>
+          <button id="session-dialog-close" type="button" aria-label="セッション詳細を閉じる">×</button>
+        </header>
+        <div id="session-dialog-content" class="session-dialog-content"></div>
+      </div>
+    </dialog>
 
   </body>
 </html>

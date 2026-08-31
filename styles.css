@@ -332,8 +332,7 @@ main {
   font-weight: 700;
 }
 
-.filter-controls input,
-.filter-controls select {
+.filter-controls input[type="search"] {
   width: 100%;
   min-width: 0;
   height: 36px;
@@ -345,10 +344,106 @@ main {
   font-size: 12px;
 }
 
-.select-row {
+.multi-filter-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.multi-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.multi-select {
+  min-width: 0;
+  background: white;
+  border: 1px solid #bdc7c5;
+  border-radius: 7px;
+}
+
+.multi-select[open] {
+  grid-column: 1 / -1;
+}
+
+.multi-select > summary {
+  min-height: 36px;
+  padding: 5px 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.multi-select > summary::-webkit-details-marker {
+  display: none;
+}
+
+.multi-select > summary::after {
+  content: "+";
+  margin-left: auto;
+  color: var(--navy);
+  font-size: 14px;
+}
+
+.multi-select[open] > summary::after {
+  content: "−";
+}
+
+.multi-select > summary span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.multi-select > summary b {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--navy);
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.multi-select-options {
+  max-height: 240px;
+  padding: 6px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+  gap: 2px 6px;
+  overflow-y: auto;
+  border-top: 1px solid var(--line);
+}
+
+.multi-select-option {
+  min-width: 0;
+  min-height: 34px;
+  padding: 5px 6px;
+  display: flex !important;
+  grid-template-columns: none !important;
+  align-items: center;
+  gap: 7px !important;
+  color: var(--ink) !important;
+  background: #fbfaf5;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+}
+
+.multi-select-option:has(input:checked) {
+  color: var(--navy) !important;
+  background: var(--navy-soft);
+}
+
+.multi-select-option input {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 auto;
+  margin: 0;
+  accent-color: var(--navy);
 }
 
 .clear-filter-button {
@@ -453,10 +548,12 @@ main {
   border: 1px solid var(--line);
   border-radius: 14px;
   box-shadow: var(--shadow);
+  cursor: pointer;
 }
 
-.session-card[open] {
-  border-color: #aebebd;
+.session-card:focus-visible {
+  outline: 3px solid rgba(22, 122, 105, 0.35);
+  outline-offset: 2px;
 }
 
 .session-summary {
@@ -466,12 +563,8 @@ main {
   list-style: none;
 }
 
-.session-summary::-webkit-details-marker {
-  display: none;
-}
-
 .session-summary::after {
-  content: "+";
+  content: "›";
   position: absolute;
   right: 15px;
   top: 13px;
@@ -482,13 +575,9 @@ main {
   color: var(--navy);
   background: var(--navy-soft);
   border-radius: 50%;
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 21px;
+  font-weight: 700;
   line-height: 1;
-}
-
-.session-card[open] .session-summary::after {
-  content: "−";
 }
 
 .session-topline {
@@ -742,6 +831,106 @@ main {
   box-shadow: none;
 }
 
+.modal-open {
+  overflow: hidden;
+}
+
+.session-dialog {
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  color: var(--ink);
+  background: rgba(18, 60, 74, 0.72);
+  border: 0;
+}
+
+.session-dialog::backdrop {
+  background: rgba(8, 25, 31, 0.72);
+}
+
+.session-dialog-shell {
+  width: min(100%, 760px);
+  height: 100dvh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.28);
+}
+
+.session-dialog-header {
+  z-index: 2;
+  min-height: 58px;
+  padding: 8px 12px 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: white;
+  background: var(--navy);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.session-dialog-header span,
+.session-dialog-header strong {
+  display: block;
+}
+
+.session-dialog-header span {
+  color: var(--yellow);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.session-dialog-header strong {
+  font-size: 13px;
+}
+
+.session-dialog-header button {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.session-dialog-content {
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.session-dialog-summary {
+  padding: 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+.session-dialog-summary h2 {
+  margin: 6px 0 10px;
+  font-size: 20px;
+  line-height: 1.45;
+  letter-spacing: -0.02em;
+}
+
+.session-dialog-talks {
+  border-top: 0;
+}
+
+.session-dialog .talk-list {
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
+}
+
 .empty-state {
   padding: 26px 20px;
   text-align: center;
@@ -791,6 +980,10 @@ main {
     margin-inline: 36px;
   }
 
+  .multi-select-options {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .section-block {
     padding-inline: 36px;
   }
@@ -823,6 +1016,10 @@ main {
 
   .reference-now-button {
     padding-inline: 7px;
+  }
+
+  .multi-select-options {
+    grid-template-columns: 1fr;
   }
 }
 
