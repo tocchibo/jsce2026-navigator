@@ -25,6 +25,14 @@ uv run python -m http.server 8000
 
 プログラムPDFから抽出した748セッション、5,636講演を収録しています。
 
+## 独自カテゴリ設計
+
+講演内容を横断的に探すための分類体系案は、[カテゴリ事前設計](docs/category-taxonomy-design.md)にまとめています。機械可読な定義は `data/category_taxonomy.json`、部門横断の試行分類は `data/category_pilot.json` です。
+
+```powershell
+uv run --no-project python scripts\validate_category_taxonomy.py
+```
+
 ## プログラムデータの再生成
 
 ```powershell

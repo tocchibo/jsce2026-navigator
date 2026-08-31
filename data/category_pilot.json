@@ -1,0 +1,308 @@
+{
+  "taxonomy_version": "0.1.0",
+  "status": "design_pilot",
+  "description": "分類軸の境界確認用に公式8分類から抽出した試行例。全件分類の確定データではない。",
+  "presentations": [
+    {
+      "code": "I-01",
+      "basis": "abstract_checked",
+      "confidence": "high",
+      "labels": {
+        "domain": ["bridge"],
+        "phase": ["quality_control", "inspection_diagnosis"],
+        "method": ["ai_ml", "laboratory_experiment", "nondestructive_testing"],
+        "material": ["frp_composite", "polymer_resin"],
+        "issue": []
+      }
+    },
+    {
+      "code": "I-49",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["bridge"],
+        "phase": ["design_analysis"],
+        "method": [],
+        "material": ["concrete_cement"],
+        "issue": ["seismic_liquefaction"]
+      }
+    },
+    {
+      "code": "I-194",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["bridge"],
+        "phase": ["survey_measurement", "design_analysis"],
+        "method": ["field_test_monitoring"],
+        "material": [],
+        "issue": ["wind_snow_cold"]
+      }
+    },
+    {
+      "code": "II-53",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["river_watershed"],
+        "phase": ["survey_measurement", "disaster_action"],
+        "method": ["gis_spatial", "data_platform", "numerical_simulation"],
+        "material": [],
+        "issue": ["flood_tsunami_storm"]
+      }
+    },
+    {
+      "code": "II-105",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["coast_port_ocean", "energy_industrial"],
+        "phase": ["design_analysis"],
+        "method": [],
+        "material": ["soil_rock"],
+        "issue": ["landslide_erosion"]
+      }
+    },
+    {
+      "code": "II-235",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["river_watershed", "urban_transport"],
+        "phase": ["policy_planning", "disaster_action"],
+        "method": [],
+        "material": [],
+        "issue": ["flood_tsunami_storm", "resilience_emergency"]
+      }
+    },
+    {
+      "code": "III-01",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["ground_foundation_slope"],
+        "phase": ["survey_measurement"],
+        "method": ["field_test_monitoring"],
+        "material": ["soil_rock"],
+        "issue": ["seismic_liquefaction"]
+      }
+    },
+    {
+      "code": "III-395",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["waste_contamination", "ground_foundation_slope"],
+        "phase": ["environmental_action"],
+        "method": ["laboratory_experiment"],
+        "material": ["soil_rock"],
+        "issue": ["pollution_remediation"]
+      }
+    },
+    {
+      "code": "III-451",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["ground_foundation_slope"],
+        "phase": ["survey_measurement", "disaster_action"],
+        "method": ["three_d_remote", "gis_spatial"],
+        "material": [],
+        "issue": ["landslide_erosion"]
+      }
+    },
+    {
+      "code": "IV-24",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["urban_transport"],
+        "phase": ["policy_planning", "operation_management"],
+        "method": [],
+        "material": [],
+        "issue": ["mobility_accessibility"]
+      }
+    },
+    {
+      "code": "IV-163",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["civil_systems"],
+        "phase": ["survey_measurement"],
+        "method": ["image_processing", "three_d_remote"],
+        "material": [],
+        "issue": []
+      }
+    },
+    {
+      "code": "IV-187",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["river_watershed", "urban_transport"],
+        "phase": ["disaster_action", "operation_management"],
+        "method": [],
+        "material": [],
+        "issue": ["resilience_emergency"]
+      }
+    },
+    {
+      "code": "V-01",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["road_pavement"],
+        "phase": ["maintenance_repair"],
+        "method": [],
+        "material": ["asphalt"],
+        "issue": ["aging_lifecycle"]
+      }
+    },
+    {
+      "code": "V-266",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["road_pavement"],
+        "phase": ["inspection_diagnosis"],
+        "method": ["image_processing", "nondestructive_testing"],
+        "material": [],
+        "issue": ["wind_snow_cold"]
+      }
+    },
+    {
+      "code": "V-887",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["structural_system"],
+        "phase": ["material_development"],
+        "method": ["laboratory_experiment"],
+        "material": ["concrete_cement"],
+        "issue": ["deterioration_corrosion"]
+      }
+    },
+    {
+      "code": "VI-01",
+      "basis": "title_and_session",
+      "confidence": "low",
+      "labels": {
+        "domain": ["civil_systems", "education_society"],
+        "phase": ["operation_management", "education_consensus"],
+        "method": [],
+        "material": [],
+        "issue": ["aging_lifecycle", "governance_procurement"]
+      },
+      "review_note": "Well-beingを人材テーマと運用テーマのどちらに寄せるか梗概確認が必要"
+    },
+    {
+      "code": "VI-484",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["construction_site", "ground_foundation_slope"],
+        "phase": ["construction"],
+        "method": ["robotics_automation"],
+        "material": [],
+        "issue": ["productivity_labor"]
+      }
+    },
+    {
+      "code": "VI-968",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["tunnel_underground"],
+        "phase": ["quality_control"],
+        "method": ["image_processing"],
+        "material": ["concrete_cement"],
+        "issue": []
+      }
+    },
+    {
+      "code": "VII-25",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["water_sewerage"],
+        "phase": ["operation_management", "environmental_action"],
+        "method": [],
+        "material": [],
+        "issue": ["climate_decarbonization"]
+      }
+    },
+    {
+      "code": "VII-50",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["energy_industrial", "road_pavement"],
+        "phase": ["renewal_demolition", "material_development"],
+        "method": ["laboratory_experiment"],
+        "material": ["frp_composite", "waste_recycled"],
+        "issue": ["circular_resources"]
+      }
+    },
+    {
+      "code": "VII-125",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["environment_ecosystem", "road_pavement"],
+        "phase": ["environmental_action"],
+        "method": [],
+        "material": [],
+        "issue": ["biodiversity_water_quality"]
+      }
+    },
+    {
+      "code": "CS12-04",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["waste_contamination", "ground_foundation_slope"],
+        "phase": ["survey_measurement"],
+        "method": ["field_test_monitoring"],
+        "material": ["soil_rock"],
+        "issue": ["safety_risk"]
+      }
+    },
+    {
+      "code": "CS17-18",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["civil_systems"],
+        "phase": ["operation_management"],
+        "method": ["bim_digital_twin", "data_platform"],
+        "material": [],
+        "issue": ["productivity_labor", "governance_procurement"]
+      }
+    },
+    {
+      "code": "CS21-15",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["space_lunar", "structural_system"],
+        "phase": ["design_analysis", "material_development"],
+        "method": [],
+        "material": [],
+        "issue": ["safety_risk"]
+      }
+    },
+    {
+      "code": "CS22-09",
+      "basis": "title_and_session",
+      "confidence": "medium",
+      "labels": {
+        "domain": ["structural_system"],
+        "phase": ["material_development"],
+        "method": ["laboratory_experiment"],
+        "material": ["concrete_cement", "co2_carbon"],
+        "issue": ["climate_decarbonization"]
+      }
+    }
+  ]
+}
