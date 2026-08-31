@@ -68,17 +68,21 @@ async function evaluate(expression) {
   throw new Error("JavaScriptの実行コンテキストを取得できませんでした");
 }
 
+await call("Page.reload", { ignoreCache: true });
+
 const initial = await evaluate(`
   new Promise((resolve, reject) => {
     let attempts = 0;
     const timer = setInterval(() => {
       const divisionOptions = document.querySelector('#division-filter').options.length;
+      const themeOptions = document.querySelector('#theme-filter').options.length;
       const referenceValue = document.querySelector('#reference-datetime').value;
-      if (divisionOptions === 9 && referenceValue) {
+      if (divisionOptions === 9 && themeOptions === 20 && referenceValue) {
         clearInterval(timer);
         resolve({
           referenceValue,
           divisionOptions,
+          themeOptions,
           activeTab: document.querySelector('.program-tab.is-active').dataset.programTab,
           nowHidden: document.querySelector('#now-view').hidden,
           scheduleHidden: document.querySelector('#schedule-view').hidden,
@@ -94,12 +98,14 @@ const initial = await evaluate(`
 assert.deepEqual(
   {
     divisionOptions: initial.divisionOptions,
+    themeOptions: initial.themeOptions,
     activeTab: initial.activeTab,
     nowHidden: initial.nowHidden,
     scheduleHidden: initial.scheduleHidden,
   },
   {
   divisionOptions: 9,
+  themeOptions: 20,
   activeTab: "now",
   nowHidden: false,
   scheduleHidden: true,
@@ -144,6 +150,7 @@ const filtered = await evaluate(`
         links: [...card.querySelectorAll('.talk-link')].map((link) => link.href),
         authors: [...card.querySelectorAll('.talk-authors')].map((item) => item.textContent),
         affiliations: [...card.querySelectorAll('.talk-affiliations')].map((item) => item.textContent),
+        talkTags: [...card.querySelectorAll('.talk-tag')].map((item) => item.textContent),
         nowHidden: document.querySelector('#now-view').hidden,
         scheduleHidden: document.querySelector('#schedule-view').hidden,
         referencePanelVisible: document.querySelector('.reference-panel').checkVisibility(),
@@ -161,7 +168,28 @@ assert.equal(filtered.referencePanelVisible, false);
 assert.ok(filtered.links.some((url) => url.endsWith("/CS18-07")));
 assert.ok(filtered.authors.some((value) => value.includes("千葉 雄貴")));
 assert.ok(filtered.affiliations.some((value) => value.includes("留萌開発事務所")));
+assert.ok(filtered.talkTags.length > 0);
 
-console.log(JSON.stringify({ initial, upcoming, filtered }, null, 2));
+const themed = await evaluate(`
+  new Promise((resolve) => {
+    document.querySelector('#clear-filters').click();
+    document.querySelector('[data-program-tab="2026-09-04"]').click();
+    const select = document.querySelector('#theme-filter');
+    select.value = 'space';
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+    setTimeout(() => resolve({
+      dayCards: document.querySelectorAll('#schedule-sessions .session-card').length,
+      themeLabels: [...document.querySelectorAll('#schedule-sessions .session-themes')]
+        .map((item) => item.textContent),
+      filterActive: document.querySelector('#filter-summary').classList.contains('has-filter'),
+    }), 100);
+  })
+`);
+
+assert.ok(themed.dayCards >= 3);
+assert.ok(themed.themeLabels.every((value) => value.includes("宇宙・月面")));
+assert.equal(themed.filterActive, true);
+
+console.log(JSON.stringify({ initial, upcoming, filtered, themed }, null, 2));
 await call("Browser.close").catch(() => {});
 socket.close();

@@ -4,6 +4,7 @@
 # Python cache files
 __pycache__/
 *.py[cod]
+.uv-cache/
 
 # Local browser test screenshots
 jsce2026-mobile*.png

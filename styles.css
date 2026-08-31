@@ -452,6 +452,29 @@ main {
   letter-spacing: -0.02em;
 }
 
+.session-themes,
+.talk-tags {
+  display: flex;
+  gap: 5px;
+  overflow: hidden;
+}
+
+.session-themes {
+  margin: -1px 0 8px;
+}
+
+.session-themes span,
+.talk-tag {
+  flex: 0 0 auto;
+  padding: 2px 6px;
+  color: var(--navy);
+  background: var(--navy-soft);
+  border-radius: 5px;
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
 .meta-row {
   display: flex;
   flex-wrap: wrap;
@@ -522,6 +545,21 @@ main {
   font-size: 13px;
   font-weight: 600;
   line-height: 1.55;
+}
+
+.talk-tags {
+  margin-top: 5px;
+}
+
+.talk-tag-phase {
+  color: #9a3c1e;
+  background: var(--orange-soft);
+}
+
+.talk-tag-method,
+.talk-tag-issue {
+  color: var(--green);
+  background: var(--green-soft);
 }
 
 .talk-authors,

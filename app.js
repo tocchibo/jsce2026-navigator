@@ -4,6 +4,9 @@ const PRESENTATION_URL = "https://pub.confit.atlas.jp/ja/event/jsce2026/presenta
 let sessions = [];
 const sessionsById = new Map();
 const searchTextById = new Map();
+const categoriesByCode = new Map();
+const categoryLabelByQualifiedId = new Map();
+let browseCollections = [];
 const initialNow = japanNow();
 
 const state = {
@@ -12,6 +15,7 @@ const state = {
   referenceTime: initialNow.time,
   division: "",
   campus: "",
+  theme: "",
   query: "",
 };
 
@@ -47,6 +51,27 @@ function sessionStatus(session) {
   return { label: "終了", className: "is-ended" };
 }
 
+function talkCategoryMarkup(code) {
+  const category = categoriesByCode.get(code);
+  if (!category) return "";
+  const priorities = ["domain", "phase", "method", "issue", "material"];
+  const selected = [];
+  for (const axisId of priorities) {
+    const labelId = category.labels[axisId]?.[0];
+    if (!labelId) continue;
+    const label = categoryLabelByQualifiedId.get(`${axisId}:${labelId}`);
+    if (label) selected.push({ axisId, label });
+    if (selected.length === 3) break;
+  }
+  if (!selected.length) return "";
+  return `<span class="talk-tags">${selected
+    .map(
+      ({ axisId, label }) =>
+        `<span class="talk-tag talk-tag-${escapeHtml(axisId)}">${escapeHtml(label)}</span>`,
+    )
+    .join("")}</span>`;
+}
+
 function talkMarkup(talk) {
   const [time, code, title, , authors] = talk;
   const affiliationStart = authors.search(/\s+\(\d+\.\s*/);
@@ -59,12 +84,50 @@ function talkMarkup(talk) {
         <span>
           <span class="talk-code">${escapeHtml(code)}</span>
           <span class="talk-title">${escapeHtml(title)}</span>
+          ${talkCategoryMarkup(code)}
           <span class="talk-authors"><b>著者</b>${escapeHtml(names)}</span>
           ${affiliations ? `<span class="talk-affiliations"><b>所属</b>${escapeHtml(affiliations)}</span>` : ""}
         </span>
         <span class="external-icon" aria-hidden="true">↗</span>
       </a>
     </li>`;
+}
+
+function collectionMatchesCode(collection, code) {
+  const category = categoriesByCode.get(code);
+  if (!category) return false;
+  return collection.any.some((qualifiedId) => {
+    const [axisId, labelId] = qualifiedId.split(":");
+    return category.labels[axisId]?.includes(labelId);
+  });
+}
+
+function sessionCollectionCounts(session) {
+  return browseCollections
+    .map((collection, order) => ({
+      ...collection,
+      order,
+      count: session.talks.filter((talk) => collectionMatchesCode(collection, talk[1])).length,
+    }))
+    .filter((collection) => collection.count > 0)
+    .sort((a, b) => {
+      if (state.theme) {
+        if (a.id === state.theme) return -1;
+        if (b.id === state.theme) return 1;
+      }
+      return b.count - a.count || a.order - b.order;
+    });
+}
+
+function sessionThemeMarkup(session) {
+  const themes = sessionCollectionCounts(session).slice(0, 3);
+  if (!themes.length) return "";
+  return `<div class="session-themes" aria-label="代表テーマ">${themes
+    .map(
+      (theme) =>
+        `<span>${escapeHtml(theme.label)} ${theme.count}/${session.talks.length}</span>`,
+    )
+    .join("")}</div>`;
 }
 
 function sessionMarkup(session, showStatus = true) {
@@ -79,6 +142,7 @@ function sessionMarkup(session, showStatus = true) {
           <span>${escapeHtml(session.division)}</span>
         </div>
         <h3>${escapeHtml(session.title)}</h3>
+        ${sessionThemeMarkup(session)}
         <div class="meta-row">
           <span aria-label="会場"><span aria-hidden="true">●</span> ${escapeHtml(session.campus)}</span>
           <span aria-label="教室"><b>${escapeHtml(session.room)}</b></span>
@@ -108,6 +172,12 @@ function emptyMarkup(message = "この時間帯に該当するセッションは
 function matchesFilters(session) {
   if (state.division && session.division !== state.division) return false;
   if (state.campus && session.campus !== state.campus) return false;
+  if (state.theme) {
+    const collection = browseCollections.find((item) => item.id === state.theme);
+    if (!collection || !session.talks.some((talk) => collectionMatchesCode(collection, talk[1]))) {
+      return false;
+    }
+  }
 
   const words = state.query
     .toLocaleLowerCase("ja")
@@ -120,7 +190,7 @@ function matchesFilters(session) {
 }
 
 function hasActiveFilters() {
-  return Boolean(state.division || state.campus || state.query);
+  return Boolean(state.division || state.campus || state.theme || state.query);
 }
 
 function renderView() {
@@ -205,6 +275,13 @@ function populateFilterOptions() {
     '<option value="">すべてのキャンパス</option>',
     ...campuses.map((value) => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`),
   ].join("");
+  document.querySelector("#theme-filter").innerHTML = [
+    '<option value="">すべてのテーマ</option>',
+    ...browseCollections.map(
+      (collection) =>
+        `<option value="${escapeHtml(collection.id)}">${escapeHtml(collection.label)}</option>`,
+    ),
+  ].join("");
 }
 
 function japanNow() {
@@ -225,6 +302,13 @@ function japanNow() {
 }
 
 function buildSearchIndex(session) {
+  const categoryLabels = session.talks.flatMap((talk) => {
+    const category = categoriesByCode.get(talk[1]);
+    if (!category) return [];
+    return Object.entries(category.labels).flatMap(([axisId, labelIds]) =>
+      labelIds.map((labelId) => categoryLabelByQualifiedId.get(`${axisId}:${labelId}`) ?? ""),
+    );
+  });
   return [
     session.title,
     session.division,
@@ -232,6 +316,7 @@ function buildSearchIndex(session) {
     session.room,
     session.chair,
     ...session.talks.flatMap((talk) => talk.slice(1)),
+    ...categoryLabels,
   ]
     .join(" ")
     .toLocaleLowerCase("ja");
@@ -239,9 +324,29 @@ function buildSearchIndex(session) {
 
 async function loadSessions() {
   try {
-    const response = await fetch("data/sessions.json");
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    sessions = await response.json();
+    const [sessionsResponse, taxonomyResponse, categoriesResponse] = await Promise.all([
+      fetch("data/sessions.json"),
+      fetch("data/category_taxonomy.json"),
+      fetch("data/categories.json"),
+    ]);
+    for (const response of [sessionsResponse, taxonomyResponse, categoriesResponse]) {
+      if (!response.ok) throw new Error(`${response.url}: HTTP ${response.status}`);
+    }
+    const [loadedSessions, taxonomy, categoryData] = await Promise.all([
+      sessionsResponse.json(),
+      taxonomyResponse.json(),
+      categoriesResponse.json(),
+    ]);
+    sessions = loadedSessions;
+    browseCollections = taxonomy.browse_collections;
+    for (const axis of taxonomy.axes) {
+      for (const value of axis.values) {
+        categoryLabelByQualifiedId.set(`${axis.id}:${value.id}`, value.label);
+      }
+    }
+    for (const category of categoryData.presentations) {
+      categoriesByCode.set(category.code, category);
+    }
     for (const session of sessions) {
       sessionsById.set(session.id, session);
       searchTextById.set(session.id, buildSearchIndex(session));
@@ -294,13 +399,20 @@ document.querySelector("#campus-filter").addEventListener("change", (event) => {
   render();
 });
 
+document.querySelector("#theme-filter").addEventListener("change", (event) => {
+  state.theme = event.target.value;
+  render();
+});
+
 document.querySelector("#clear-filters").addEventListener("click", () => {
   state.query = "";
   state.division = "";
   state.campus = "";
+  state.theme = "";
   document.querySelector("#query-filter").value = "";
   document.querySelector("#division-filter").value = "";
   document.querySelector("#campus-filter").value = "";
+  document.querySelector("#theme-filter").value = "";
   render();
 });
 

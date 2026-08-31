@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2.0",
-  "status": "pilot",
+  "status": "full_classification_candidate",
   "name": "JSCE 2026 独自分類体系",
   "source_scope": {
     "event": "令和8年度土木学会全国大会 第81回年次学術講演会",
