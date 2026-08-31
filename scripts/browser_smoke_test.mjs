@@ -118,25 +118,53 @@ const upcoming = await evaluate(`
     const input = document.querySelector('#reference-datetime');
     input.value = '2026-09-02T10:15';
     input.dispatchEvent(new Event('change', { bubbles: true }));
+    setTimeout(() => {
+      const liveCard = document.querySelector('#upcoming-sessions .session-card:has(.session-current-talk)');
+      liveCard.open = true;
+      setTimeout(() => resolve({
+        count: document.querySelector('#session-count').textContent,
+        upcomingCards: document.querySelectorAll('#upcoming-sessions .session-card').length,
+        liveCards: document.querySelectorAll('#upcoming-sessions .session-current-talk').length,
+        currentTalks: liveCard.querySelectorAll('.talk-item.is-current').length,
+        nextTalks: liveCard.querySelectorAll('.talk-item.is-next').length,
+        currentLabel: liveCard.querySelector('.talk-item.is-current .talk-time b')?.textContent,
+        nowHidden: document.querySelector('#now-view').hidden,
+        scheduleHidden: document.querySelector('#schedule-view').hidden,
+      }), 100);
+    }, 100);
+  })
+`);
+
+assert.equal(upcoming.count, "88件");
+assert.equal(upcoming.upcomingCards, 88);
+assert.ok(upcoming.liveCards > 0);
+assert.equal(upcoming.currentTalks, 1);
+assert.ok(upcoming.nextTalks <= 1);
+assert.equal(upcoming.currentLabel, "開催中");
+assert.equal(upcoming.nowHidden, false);
+assert.equal(upcoming.scheduleHidden, true);
+
+const grouped = await evaluate(`
+  new Promise((resolve) => {
+    document.querySelector('[data-program-tab="2026-09-02"]').click();
     setTimeout(() => resolve({
-      count: document.querySelector('#session-count').textContent,
-      upcomingCards: document.querySelectorAll('#upcoming-sessions .session-card').length,
-      nowHidden: document.querySelector('#now-view').hidden,
-      scheduleHidden: document.querySelector('#schedule-view').hidden,
+      timeGroups: document.querySelectorAll('#schedule-sessions .time-group').length,
+      openGroups: document.querySelectorAll('#schedule-sessions .time-group[open]').length,
+      firstStart: document.querySelector('#schedule-sessions .time-group-time')?.textContent,
+      sessionTotal: document.querySelectorAll('#schedule-sessions .session-card').length,
     }), 100);
   })
 `);
 
-assert.deepEqual(upcoming, {
-  count: "88件",
-  upcomingCards: 88,
-  nowHidden: false,
-  scheduleHidden: true,
+assert.deepEqual(grouped, {
+  timeGroups: 5,
+  openGroups: 1,
+  firstStart: "8:50",
+  sessionTotal: 126,
 });
 
 const filtered = await evaluate(`
   new Promise((resolve) => {
-    document.querySelector('[data-program-tab="2026-09-02"]').click();
     const input = document.querySelector('#query-filter');
     input.value = '留萌開発事務所';
     input.dispatchEvent(new Event('input', { bubbles: true }));
@@ -147,6 +175,8 @@ const filtered = await evaluate(`
         count: document.querySelector('#session-count').textContent,
         upcomingCards: document.querySelectorAll('#upcoming-sessions .session-card').length,
         dayCards: document.querySelectorAll('#schedule-sessions .session-card').length,
+        timeGroups: document.querySelectorAll('#schedule-sessions .time-group').length,
+        openGroups: document.querySelectorAll('#schedule-sessions .time-group[open]').length,
         links: [...card.querySelectorAll('.talk-link')].map((link) => link.href),
         authors: [...card.querySelectorAll('.talk-authors')].map((item) => item.textContent),
         affiliations: [...card.querySelectorAll('.talk-affiliations')].map((item) => item.textContent),
@@ -162,6 +192,8 @@ const filtered = await evaluate(`
 assert.equal(filtered.count, "0/88件");
 assert.equal(filtered.upcomingCards, 0);
 assert.equal(filtered.dayCards, 1);
+assert.equal(filtered.timeGroups, 1);
+assert.equal(filtered.openGroups, 1);
 assert.equal(filtered.nowHidden, true);
 assert.equal(filtered.scheduleHidden, false);
 assert.equal(filtered.referencePanelVisible, false);
@@ -190,6 +222,6 @@ assert.ok(themed.dayCards >= 3);
 assert.ok(themed.themeLabels.every((value) => value.includes("宇宙・月面")));
 assert.equal(themed.filterActive, true);
 
-console.log(JSON.stringify({ initial, upcoming, filtered, themed }, null, 2));
+console.log(JSON.stringify({ initial, upcoming, grouped, filtered, themed }, null, 2));
 await call("Browser.close").catch(() => {});
 socket.close();

@@ -373,6 +373,80 @@ main {
   gap: 12px;
 }
 
+.schedule-groups {
+  display: grid;
+  gap: 10px;
+}
+
+.time-group {
+  min-width: 0;
+}
+
+.time-group-summary {
+  position: sticky;
+  z-index: 10;
+  top: 104px;
+  min-height: 40px;
+  padding: 7px 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  background: rgba(244, 242, 235, 0.96);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 700;
+  list-style: none;
+}
+
+.time-group-summary::-webkit-details-marker {
+  display: none;
+}
+
+.time-group-summary::after {
+  content: "+";
+  margin-left: 3px;
+  color: var(--navy);
+  font-size: 16px;
+  line-height: 1;
+}
+
+.time-group[open] > .time-group-summary::after {
+  content: "−";
+}
+
+.time-group-time {
+  color: var(--navy);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.time-group-status {
+  padding: 2px 6px;
+  color: var(--green);
+  background: var(--green-soft);
+  border-radius: 5px;
+  font-size: 8px;
+}
+
+.time-group-count {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.time-group.is-ended > .time-group-summary {
+  color: #899693;
+}
+
+.time-group > .schedule-list {
+  padding-top: 10px;
+}
+
 .session-card {
   overflow: hidden;
   background: var(--surface);
@@ -452,6 +526,42 @@ main {
   letter-spacing: -0.02em;
 }
 
+.session-current-talk {
+  margin: -1px 0 8px;
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  color: var(--green);
+  background: var(--green-soft);
+  border-radius: 7px;
+  font-size: 9px;
+  line-height: 1.4;
+}
+
+.session-current-talk > span:first-child {
+  flex: 0 0 auto;
+  padding: 1px 4px;
+  color: white;
+  background: var(--green);
+  border-radius: 4px;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.session-current-talk b {
+  flex: 0 0 auto;
+}
+
+.session-current-talk > span:last-child {
+  overflow: hidden;
+  color: var(--ink);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .session-themes,
 .talk-tags {
   display: flex;
@@ -516,6 +626,23 @@ main {
   list-style: none;
 }
 
+.talk-item {
+  border-radius: 8px;
+}
+
+.talk-item.is-current {
+  background: var(--green-soft);
+  box-shadow: inset 3px 0 0 var(--green);
+}
+
+.talk-item.is-next {
+  background: var(--orange-soft);
+}
+
+.talk-item.is-ended .talk-link {
+  opacity: 0.52;
+}
+
 .talk-link {
   padding: 12px 4px;
   display: grid;
@@ -527,9 +654,32 @@ main {
 }
 
 .talk-time {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
   color: var(--green);
   font-size: 11px;
   font-weight: 800;
+}
+
+.talk-time b {
+  padding: 2px 5px;
+  color: var(--muted);
+  background: #e5e7e1;
+  border-radius: 4px;
+  font-size: 8px;
+  line-height: 1.35;
+}
+
+.talk-item.is-current .talk-time b {
+  color: white;
+  background: var(--green);
+}
+
+.talk-item.is-next .talk-time b {
+  color: #a13f20;
+  background: #ffd8c5;
 }
 
 .talk-code {

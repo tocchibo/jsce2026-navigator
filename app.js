@@ -8,6 +8,7 @@ const categoriesByCode = new Map();
 const categoryLabelByQualifiedId = new Map();
 let browseCollections = [];
 const initialNow = japanNow();
+let displayClock = initialNow;
 
 const state = {
   activeTab: "now",
@@ -17,6 +18,9 @@ const state = {
   campus: "",
   theme: "",
   query: "",
+  followRealTime: true,
+  openSessionIds: new Set(),
+  timeGroupOpen: new Map(),
 };
 
 const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
@@ -41,7 +45,8 @@ function escapeHtml(value) {
 }
 
 function sessionStatus(session) {
-  const now = minutes(state.referenceTime);
+  if (displayClock.date !== session.date) return null;
+  const now = minutes(displayClock.time);
   if (now >= minutes(session.start) && now < minutes(session.end)) {
     return { label: "開催中", className: "is-live" };
   }
@@ -49,6 +54,45 @@ function sessionStatus(session) {
     return { label: `${session.start}開始`, className: "" };
   }
   return { label: "終了", className: "is-ended" };
+}
+
+function talkStatus(session, talkIndex) {
+  if (displayClock.date !== session.date) return null;
+  const now = minutes(displayClock.time);
+  const talkStart = minutes(session.talks[talkIndex][0]);
+  const talkEnd =
+    talkIndex + 1 < session.talks.length
+      ? minutes(session.talks[talkIndex + 1][0])
+      : minutes(session.end);
+  if (now >= talkStart && now < talkEnd) {
+    return { label: "開催中", className: "is-current" };
+  }
+  if (now >= talkEnd) {
+    return { label: "終了", className: "is-ended" };
+  }
+  const nextIndex = session.talks.findIndex((talk) => minutes(talk[0]) > now);
+  if (talkIndex === nextIndex) {
+    return { label: "次", className: "is-next" };
+  }
+  return null;
+}
+
+function currentTalk(session) {
+  const talkIndex = session.talks.findIndex(
+    (_, index) => talkStatus(session, index)?.className === "is-current",
+  );
+  return talkIndex >= 0 ? session.talks[talkIndex] : null;
+}
+
+function currentTalkMarkup(session) {
+  const talk = currentTalk(session);
+  if (!talk) return "";
+  return `
+    <div class="session-current-talk">
+      <span>講演中</span>
+      <b>${escapeHtml(talk[0])}</b>
+      <span>${escapeHtml(talk[1])} ${escapeHtml(talk[2])}</span>
+    </div>`;
 }
 
 function talkCategoryMarkup(code) {
@@ -72,15 +116,19 @@ function talkCategoryMarkup(code) {
     .join("")}</span>`;
 }
 
-function talkMarkup(talk) {
+function talkMarkup(talk, session, talkIndex) {
   const [time, code, title, , authors] = talk;
+  const temporalStatus = talkStatus(session, talkIndex);
   const affiliationStart = authors.search(/\s+\(\d+\.\s*/);
   const names = affiliationStart >= 0 ? authors.slice(0, affiliationStart) : authors;
   const affiliations = affiliationStart >= 0 ? authors.slice(affiliationStart).trim() : "";
   return `
-    <li>
+    <li class="talk-item ${temporalStatus?.className ?? ""}">
       <a class="talk-link" href="${PRESENTATION_URL}${encodeURIComponent(code)}" target="_blank" rel="noopener noreferrer">
-        <span class="talk-time">${escapeHtml(time)}</span>
+        <span class="talk-time">
+          <span>${escapeHtml(time)}</span>
+          ${temporalStatus && temporalStatus.className !== "is-ended" ? `<b>${temporalStatus.label}</b>` : ""}
+        </span>
         <span>
           <span class="talk-code">${escapeHtml(code)}</span>
           <span class="talk-title">${escapeHtml(title)}</span>
@@ -130,25 +178,27 @@ function sessionThemeMarkup(session) {
     .join("")}</div>`;
 }
 
-function sessionMarkup(session, showStatus = true) {
+function sessionMarkup(session) {
   const status = sessionStatus(session);
+  const isOpen = state.openSessionIds.has(session.id);
   return `
-    <details class="session-card" data-session-id="${escapeHtml(session.id)}">
+    <details class="session-card" data-session-id="${escapeHtml(session.id)}" ${isOpen ? "open" : ""}>
       <summary class="session-summary">
         <div class="session-topline">
-          ${showStatus ? `<span class="status-pill ${status.className}">${status.label}</span>` : ""}
+          ${status ? `<span class="status-pill ${status.className}">${status.label}</span>` : ""}
           <span>${escapeHtml(session.start)}–${escapeHtml(session.end)}</span>
           <span>・</span>
           <span>${escapeHtml(session.division)}</span>
         </div>
         <h3>${escapeHtml(session.title)}</h3>
+        ${currentTalkMarkup(session)}
         ${sessionThemeMarkup(session)}
         <div class="meta-row">
           <span aria-label="会場"><span aria-hidden="true">●</span> ${escapeHtml(session.campus)}</span>
           <span aria-label="教室"><b>${escapeHtml(session.room)}</b></span>
         </div>
       </summary>
-      <div class="talks" data-talks></div>
+      <div class="talks" data-talks ${isOpen ? 'data-loaded="true"' : ""}>${isOpen ? talksMarkup(session) : ""}</div>
     </details>`;
 }
 
@@ -158,7 +208,9 @@ function talksMarkup(session) {
       <span>講演一覧（${session.talks.length}件）・* は発表者</span>
       <span>座長：${escapeHtml(session.chair)}</span>
     </div>
-    <ol class="talk-list">${session.talks.map(talkMarkup).join("")}</ol>`;
+    <ol class="talk-list">${session.talks
+      .map((talk, index) => talkMarkup(talk, session, index))
+      .join("")}</ol>`;
 }
 
 function emptyMarkup(message = "この時間帯に該当するセッションはありません") {
@@ -167,6 +219,75 @@ function emptyMarkup(message = "この時間帯に該当するセッションは
       <strong>${escapeHtml(message)}</strong>
       <p>時刻または絞り込み条件を変更してください。</p>
     </div>`;
+}
+
+function groupSessionsByStart(daySessions) {
+  const groups = new Map();
+  for (const session of daySessions) {
+    if (!groups.has(session.start)) groups.set(session.start, []);
+    groups.get(session.start).push(session);
+  }
+  return [...groups.entries()]
+    .sort(([left], [right]) => minutes(left) - minutes(right))
+    .map(([start, groupedSessions]) => ({ start, sessions: groupedSessions }));
+}
+
+function defaultOpenTimeGroups(groups, scheduleDate) {
+  if (!groups.length) return new Set();
+  if (displayClock.date !== scheduleDate) return new Set([groups[0].start]);
+
+  const now = minutes(displayClock.time);
+  const liveGroups = groups.filter((group) =>
+    group.sessions.some(
+      (session) => now >= minutes(session.start) && now < minutes(session.end),
+    ),
+  );
+  if (liveGroups.length) return new Set(liveGroups.map((group) => group.start));
+
+  const nextGroup = groups.find((group) => minutes(group.start) > now);
+  return new Set([nextGroup?.start ?? groups.at(-1).start]);
+}
+
+function timeGroupStatus(group, scheduleDate) {
+  if (displayClock.date !== scheduleDate) return null;
+  const now = minutes(displayClock.time);
+  if (
+    group.sessions.some(
+      (session) => now >= minutes(session.start) && now < minutes(session.end),
+    )
+  ) {
+    return { label: "開催中", className: "is-live" };
+  }
+  if (group.sessions.every((session) => now >= minutes(session.end))) {
+    return { label: "終了", className: "is-ended" };
+  }
+  return null;
+}
+
+function scheduleGroupsMarkup(daySessions, scheduleDate) {
+  const groups = groupSessionsByStart(daySessions);
+  const defaultOpen = defaultOpenTimeGroups(groups, scheduleDate);
+  const openAllMatches = hasActiveFilters();
+  return groups
+    .map((group) => {
+      const groupKey = `${scheduleDate}/${group.start}`;
+      const storedOpen = state.timeGroupOpen.get(groupKey);
+      const isOpen = storedOpen ?? (openAllMatches || defaultOpen.has(group.start));
+      const status = timeGroupStatus(group, scheduleDate);
+      return `
+        <details class="time-group ${status?.className ?? ""}" data-time-group-key="${escapeHtml(groupKey)}" ${isOpen ? "open" : ""}>
+          <summary class="time-group-summary">
+            <span class="time-group-time">${escapeHtml(group.start)}</span>
+            <span>開始</span>
+            ${status ? `<b class="time-group-status">${status.label}</b>` : ""}
+            <span class="time-group-count">${group.sessions.length}セッション</span>
+          </summary>
+          <div class="schedule-list">
+            ${group.sessions.map((session) => sessionMarkup(session)).join("")}
+          </div>
+        </details>`;
+    })
+    .join("");
 }
 
 function matchesFilters(session) {
@@ -205,6 +326,16 @@ function renderView() {
 }
 
 function render() {
+  if (state.activeTab === "now" && state.followRealTime) {
+    const now = japanNow();
+    state.referenceDate = now.date;
+    state.referenceTime = now.time;
+  }
+  displayClock =
+    state.activeTab === "now"
+      ? { date: state.referenceDate, time: state.referenceTime }
+      : japanNow();
+  const isNow = state.activeTab === "now";
   const referenceSessions = sessions
     .filter((session) => session.date === state.referenceDate)
     .sort(
@@ -237,9 +368,11 @@ function render() {
   document.querySelector("#upcoming-sessions").innerHTML = upcoming.length
     ? upcoming.map((session) => sessionMarkup(session)).join("")
     : emptyMarkup();
-  document.querySelector("#schedule-sessions").innerHTML = daySessions.length
-    ? daySessions.map((session) => sessionMarkup(session, false)).join("")
-    : emptyMarkup("この日の該当セッションはありません");
+  if (!isNow) {
+    document.querySelector("#schedule-sessions").innerHTML = daySessions.length
+      ? scheduleGroupsMarkup(daySessions, scheduleDate)
+      : emptyMarkup("この日の該当セッションはありません");
+  }
 
   const scheduleDateLabel = dateFormatter.format(new Date(`${scheduleDate}T12:00:00+09:00`));
   document.querySelector("#schedule-heading").textContent = `${scheduleDateLabel}のセッション（${daySessions.length}件）`;
@@ -374,6 +507,7 @@ document.querySelector("#reference-datetime").addEventListener("change", (event)
   if (!date || !time) return;
   state.referenceDate = date;
   state.referenceTime = time;
+  state.followRealTime = false;
   render();
 });
 
@@ -381,6 +515,7 @@ document.querySelector("#use-real-time").addEventListener("click", () => {
   const now = japanNow();
   state.referenceDate = now.date;
   state.referenceTime = now.time;
+  state.followRealTime = true;
   render();
 });
 
@@ -416,11 +551,23 @@ document.querySelector("#clear-filters").addEventListener("click", () => {
   render();
 });
 
+document.addEventListener("click", (event) => {
+  const summary = event.target.closest?.(".time-group-summary");
+  if (!summary) return;
+  const timeGroup = summary.parentElement;
+  state.timeGroupOpen.set(timeGroup.dataset.timeGroupKey, !timeGroup.open);
+});
+
 document.addEventListener(
   "toggle",
   (event) => {
     const details = event.target.closest?.(".session-card");
-    if (!details?.open) return;
+    if (!details || event.target !== details) return;
+    if (!details.open) {
+      state.openSessionIds.delete(details.dataset.sessionId);
+      return;
+    }
+    state.openSessionIds.add(details.dataset.sessionId);
     const container = details.querySelector("[data-talks]");
     if (container.dataset.loaded) return;
     const session = sessionsById.get(details.dataset.sessionId);
@@ -430,6 +577,19 @@ document.addEventListener(
   },
   true,
 );
+
+setInterval(() => {
+  const now = japanNow();
+  if (state.activeTab === "now") {
+    if (!state.followRealTime) return;
+    if (state.referenceDate === now.date && state.referenceTime === now.time) return;
+    state.referenceDate = now.date;
+    state.referenceTime = now.time;
+  } else if (displayClock.date === now.date && displayClock.time === now.time) {
+    return;
+  }
+  render();
+}, 30_000);
 
 document.querySelector("#upcoming-sessions").innerHTML = emptyMarkup("プログラムを読み込んでいます");
 document.querySelector("#schedule-sessions").innerHTML = emptyMarkup("プログラムを読み込んでいます");
