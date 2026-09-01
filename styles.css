@@ -139,6 +139,17 @@ main {
   background: var(--navy);
 }
 
+.has-personal-plan .program-tabs {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.program-tab-plan strong {
+  display: block;
+  margin: 1px 0 0;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
 .program-tab {
   position: relative;
   min-width: 0;
@@ -728,6 +739,36 @@ main {
   background: var(--orange-soft);
 }
 
+.talk-item.is-personal-pick {
+  background: #fff8d9;
+  box-shadow: inset 3px 0 0 #d7a500;
+}
+
+.talk-item.is-personal-pick.is-current {
+  background: var(--green-soft);
+  box-shadow: inset 3px 0 0 var(--green);
+}
+
+.plan-talk-badge,
+.session-plan-badge {
+  padding: 2px 6px;
+  color: #6f5100;
+  background: #ffe38a;
+  border-radius: 5px;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.plan-talk-badge {
+  display: inline-block;
+  margin-top: 3px;
+}
+
+.session-card.is-personal-session {
+  border-color: #e2bd45;
+  box-shadow: inset 4px 0 0 var(--yellow), var(--shadow);
+}
+
 .talk-item.is-ended .talk-link {
   opacity: 0.52;
 }
@@ -967,6 +1008,258 @@ main {
   margin: 3px 0 0;
 }
 
+.plan-block {
+  padding-top: 18px;
+}
+
+.plan-hero {
+  margin-bottom: 20px;
+  padding: 18px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 4px 12px;
+  color: white;
+  background:
+    radial-gradient(circle at 92% 12%, rgba(243, 199, 79, 0.24), transparent 30%),
+    var(--navy);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+
+.plan-hero h1 {
+  margin: 2px 0 0;
+  font-size: 22px;
+  line-height: 1.35;
+}
+
+.plan-hero .count-badge {
+  color: var(--navy);
+  background: var(--yellow);
+}
+
+.plan-hero p {
+  grid-column: 1 / -1;
+  margin: 8px 0 0;
+  color: #d3e0e2;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.plan-days {
+  display: grid;
+  gap: 26px;
+}
+
+.plan-day-heading {
+  position: sticky;
+  z-index: 10;
+  top: 104px;
+  margin-bottom: 10px;
+  padding: 8px 11px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  background: rgba(244, 242, 235, 0.96);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+}
+
+.plan-day-heading span {
+  color: var(--orange);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.plan-day-heading h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.plan-day-heading b {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.plan-timeline {
+  position: relative;
+  display: grid;
+  gap: 12px;
+}
+
+.plan-timeline::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  left: 55px;
+  width: 2px;
+  background: #d7dedb;
+}
+
+.plan-entry {
+  position: relative;
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 12px;
+}
+
+.plan-entry::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 20px;
+  left: 50px;
+  width: 10px;
+  height: 10px;
+  background: var(--yellow);
+  border: 3px solid var(--paper);
+  border-radius: 50%;
+}
+
+.plan-entry.is-fixed::before {
+  background: var(--orange);
+}
+
+.plan-entry-time {
+  padding-top: 13px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  color: var(--navy);
+  line-height: 1.2;
+}
+
+.plan-entry-time strong {
+  font-size: 15px;
+}
+
+.plan-entry-time span {
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.plan-entry-body {
+  min-width: 0;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+
+.plan-entry.is-fixed .plan-entry-body {
+  border-color: #ef9b7b;
+  box-shadow: inset 4px 0 0 var(--orange), var(--shadow);
+}
+
+.plan-entry-badges {
+  min-height: 18px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.plan-priority {
+  color: #d69f00;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+.plan-fixed-badge {
+  padding: 2px 6px;
+  color: #9b3517;
+  background: var(--orange-soft);
+  border-radius: 5px;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.plan-entry h3 {
+  margin: 3px 0 4px;
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.plan-entry-venue {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.plan-talks {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid #e6e5dd;
+  border-radius: 9px;
+}
+
+.plan-talk + .plan-talk {
+  border-top: 1px solid #e6e5dd;
+}
+
+.plan-talk a {
+  padding: 9px;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 12px;
+  gap: 7px;
+  text-decoration: none;
+}
+
+.plan-talk-time {
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.plan-talk b,
+.plan-talk strong,
+.plan-talk small {
+  display: block;
+}
+
+.plan-talk b {
+  color: var(--orange);
+  font-size: 9px;
+}
+
+.plan-talk strong {
+  margin-top: 1px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.plan-talk small {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.plan-talk.is-missing {
+  padding: 9px;
+  color: #9b3517;
+  background: var(--orange-soft);
+  font-size: 10px;
+}
+
+.plan-entry-note {
+  margin: 10px 0 0;
+  color: #44565c;
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+.plan-entry-note b {
+  margin-right: 7px;
+  color: var(--navy);
+  font-size: 9px;
+}
+
 @media (min-width: 700px) {
   body {
     padding-bottom: 30px;
@@ -986,6 +1279,18 @@ main {
 
   .section-block {
     padding-inline: 36px;
+  }
+
+  .plan-timeline::before {
+    left: 76px;
+  }
+
+  .plan-entry {
+    grid-template-columns: 77px minmax(0, 1fr);
+  }
+
+  .plan-entry::before {
+    left: 71px;
   }
 
   .session-list,

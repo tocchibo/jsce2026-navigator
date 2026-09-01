@@ -37,6 +37,10 @@
 
     <main id="top">
       <nav class="program-tabs" aria-label="表示するプログラムを選択">
+        <button class="program-tab program-tab-plan" type="button" data-program-tab="plan" hidden>
+          <span>MY PLAN</span>
+          <strong>本命</strong>
+        </button>
         <button class="program-tab program-tab-now is-active" type="button" data-program-tab="now">
           <span>NOW</span>
           <strong>今から1時間</strong>
@@ -95,6 +99,18 @@
           <button id="clear-filters" class="clear-filter-button" type="button" disabled>条件をクリア</button>
         </div>
       </details>
+
+      <section id="plan-view" class="section-block plan-block view-panel" aria-labelledby="plan-heading" hidden>
+        <div class="plan-hero">
+          <div>
+            <span class="section-kicker">PERSONAL ITINERARY</span>
+            <h1 id="plan-heading">本命スケジュール</h1>
+          </div>
+          <span id="plan-count" class="count-badge">0件</span>
+          <p id="plan-description"></p>
+        </div>
+        <div id="plan-sessions" class="plan-days" aria-live="polite"></div>
+      </section>
 
       <section id="now-view" class="section-block now-block view-panel" aria-labelledby="now-heading">
         <div class="reference-panel">

@@ -1,11 +1,14 @@
 const EVENT_DATES = ["2026-09-02", "2026-09-03", "2026-09-04"];
 const PRESENTATION_URL = "https://pub.confit.atlas.jp/ja/event/jsce2026/presentation/";
+const planSlug = new URLSearchParams(window.location.search).get("plan");
 
 let sessions = [];
+let personalPlan = null;
 const sessionsById = new Map();
 const searchTextById = new Map();
 const categoriesByCode = new Map();
 const categoryLabelByQualifiedId = new Map();
+const plannedTalks = new Map();
 let browseCollections = [];
 const initialNow = japanNow();
 let displayClock = initialNow;
@@ -119,11 +122,12 @@ function talkCategoryMarkup(code) {
 function talkMarkup(talk, session, talkIndex) {
   const [time, code, title, , authors] = talk;
   const temporalStatus = talkStatus(session, talkIndex);
+  const isPersonalPick = plannedTalks.has(code);
   const affiliationStart = authors.search(/\s+\(\d+\.\s*/);
   const names = affiliationStart >= 0 ? authors.slice(0, affiliationStart) : authors;
   const affiliations = affiliationStart >= 0 ? authors.slice(affiliationStart).trim() : "";
   return `
-    <li class="talk-item ${temporalStatus?.className ?? ""}">
+    <li class="talk-item ${temporalStatus?.className ?? ""} ${isPersonalPick ? "is-personal-pick" : ""}">
       <a class="talk-link" href="${PRESENTATION_URL}${encodeURIComponent(code)}" target="_blank" rel="noopener noreferrer">
         <span class="talk-time">
           <span>${escapeHtml(time)}</span>
@@ -131,6 +135,7 @@ function talkMarkup(talk, session, talkIndex) {
         </span>
         <span>
           <span class="talk-code">${escapeHtml(code)}</span>
+          ${isPersonalPick ? '<span class="plan-talk-badge">本命</span>' : ""}
           <span class="talk-title">${escapeHtml(title)}</span>
           ${talkCategoryMarkup(code)}
           <span class="talk-authors"><b>著者</b>${escapeHtml(names)}</span>
@@ -181,11 +186,13 @@ function sessionThemeMarkup(session) {
 
 function sessionMarkup(session) {
   const status = sessionStatus(session);
+  const plannedCount = session.talks.filter((talk) => plannedTalks.has(talk[1])).length;
   return `
-    <article class="session-card" data-session-id="${escapeHtml(session.id)}" role="button" tabindex="0" aria-haspopup="dialog" aria-label="${escapeHtml(session.title)}の詳細を開く">
+    <article class="session-card ${plannedCount ? "is-personal-session" : ""}" data-session-id="${escapeHtml(session.id)}" role="button" tabindex="0" aria-haspopup="dialog" aria-label="${escapeHtml(session.title)}の詳細を開く">
       <div class="session-summary">
         <div class="session-topline">
           ${status ? `<span class="status-pill ${status.className}">${status.label}</span>` : ""}
+          ${plannedCount ? `<span class="session-plan-badge">本命 ${plannedCount}件</span>` : ""}
           <span>${escapeHtml(session.start)}–${escapeHtml(session.end)}</span>
           <span>・</span>
           <span>${escapeHtml(session.division)}</span>
@@ -253,6 +260,112 @@ function emptyMarkup(message = "この時間帯に該当するセッションは
       <strong>${escapeHtml(message)}</strong>
       <p>時刻または絞り込み条件を変更してください。</p>
     </div>`;
+}
+
+function resolveTalk(code) {
+  for (const session of sessions) {
+    const talkIndex = session.talks.findIndex((talk) => talk[1] === code);
+    if (talkIndex >= 0) {
+      return { session, talk: session.talks[talkIndex], talkIndex };
+    }
+  }
+  return null;
+}
+
+function planTalkMarkup(code) {
+  const resolved = resolveTalk(code);
+  if (!resolved) {
+    return `<li class="plan-talk is-missing"><span>${escapeHtml(code)}</span><b>講演データが見つかりません</b></li>`;
+  }
+  const { session, talk } = resolved;
+  return `
+    <li class="plan-talk">
+      <a href="${PRESENTATION_URL}${encodeURIComponent(code)}" target="_blank" rel="noopener noreferrer">
+        <span class="plan-talk-time">${escapeHtml(talk[0])}</span>
+        <span>
+          <b>${escapeHtml(code)}</b>
+          <strong>${escapeHtml(talk[2])}</strong>
+          <small>${escapeHtml(session.campus)} ${escapeHtml(session.room)}</small>
+        </span>
+        <span aria-hidden="true">↗</span>
+      </a>
+    </li>`;
+}
+
+function planEntryMarkup(entry) {
+  const resolvedTalks = entry.talkCodes.map(resolveTalk).filter(Boolean);
+  const venues = [
+    ...new Set(
+      resolvedTalks.map(
+        ({ session }) => `${session.campus} ${session.room}`,
+      ),
+    ),
+  ];
+  return `
+    <article class="plan-entry ${entry.fixed ? "is-fixed" : ""}">
+      <div class="plan-entry-time">
+        <strong>${escapeHtml(entry.start)}</strong>
+        ${entry.end ? `<span>–${escapeHtml(entry.end)}</span>` : ""}
+      </div>
+      <div class="plan-entry-body">
+        <div class="plan-entry-badges">
+          <span class="plan-priority" aria-label="優先度 星${entry.priority ?? 3}">${"★".repeat(entry.priority ?? 3)}</span>
+          ${entry.fixed ? '<span class="plan-fixed-badge">固定</span>' : ""}
+        </div>
+        <h3>${escapeHtml(entry.title)}</h3>
+        ${venues.length ? `<p class="plan-entry-venue"><span aria-hidden="true">●</span> ${venues.map(escapeHtml).join(" → ")}</p>` : ""}
+        <ol class="plan-talks">${entry.talkCodes.map(planTalkMarkup).join("")}</ol>
+        <p class="plan-entry-note"><b>狙い</b>${escapeHtml(entry.note)}</p>
+      </div>
+    </article>`;
+}
+
+function renderPersonalPlan() {
+  if (!personalPlan) return;
+  const groups = new Map();
+  for (const entry of personalPlan.items) {
+    if (!groups.has(entry.date)) groups.set(entry.date, []);
+    groups.get(entry.date).push(entry);
+  }
+  const markup = [...groups.entries()]
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([date, entries], dayIndex) => `
+      <section class="plan-day">
+        <header class="plan-day-heading">
+          <span>DAY ${dayIndex + 1}</span>
+          <h2>${escapeHtml(dateFormatter.format(new Date(`${date}T12:00:00+09:00`)))}</h2>
+          <b>${entries.length}予定</b>
+        </header>
+        <div class="plan-timeline">${entries
+          .sort((a, b) => minutes(a.start) - minutes(b.start))
+          .map(planEntryMarkup)
+          .join("")}</div>
+      </section>`)
+    .join("");
+  document.querySelector("#plan-heading").textContent = personalPlan.title;
+  document.querySelector("#plan-description").textContent = personalPlan.description ?? "";
+  document.querySelector("#plan-count").textContent = `${personalPlan.items.length}件`;
+  document.querySelector("#plan-sessions").innerHTML = markup || emptyMarkup("予定が登録されていません");
+}
+
+async function loadPersonalPlan() {
+  if (!planSlug || !/^[a-z0-9_-]+$/i.test(planSlug)) return;
+  const response = await fetch(`data/plans/${encodeURIComponent(planSlug)}.json`);
+  if (!response.ok) {
+    console.warn(`個人プランを読み込めませんでした: HTTP ${response.status}`);
+    return;
+  }
+  const loadedPlan = await response.json();
+  if (!Array.isArray(loadedPlan.items)) throw new Error("個人プランのitemsが不正です");
+  personalPlan = loadedPlan;
+  for (const entry of personalPlan.items) {
+    if (!Array.isArray(entry.talkCodes)) throw new Error("個人プランのtalkCodesが不正です");
+    for (const code of entry.talkCodes) plannedTalks.set(code, entry);
+  }
+  document.querySelector(".program-tab-plan").hidden = false;
+  document.body.classList.add("has-personal-plan");
+  document.title = `${personalPlan.title} | JSCE 2026 Navigator`;
+  state.activeTab = "plan";
 }
 
 function groupSessionsByStart(daySessions) {
@@ -377,8 +490,11 @@ function updateMultiFilterLabels() {
 
 function renderView() {
   const isNow = state.activeTab === "now";
+  const isPlan = state.activeTab === "plan";
+  document.querySelector("#plan-view").hidden = !isPlan;
   document.querySelector("#now-view").hidden = !isNow;
-  document.querySelector("#schedule-view").hidden = isNow;
+  document.querySelector("#schedule-view").hidden = isNow || isPlan;
+  document.querySelector(".shared-filter").hidden = isPlan;
   document.querySelectorAll("[data-program-tab]").forEach((button) => {
     const isCurrent = button.dataset.programTab === state.activeTab;
     button.classList.toggle("is-active", isCurrent);
@@ -396,6 +512,11 @@ function render() {
     state.activeTab === "now"
       ? { date: state.referenceDate, time: state.referenceTime }
       : japanNow();
+  if (state.activeTab === "plan") {
+    renderPersonalPlan();
+    renderView();
+    return;
+  }
   const isNow = state.activeTab === "now";
   const referenceSessions = sessions
     .filter((session) => session.date === state.referenceDate)
@@ -569,6 +690,7 @@ async function loadSessions() {
       sessionsById.set(session.id, session);
       searchTextById.set(session.id, buildSearchIndex(session));
     }
+    await loadPersonalPlan();
     populateFilterOptions();
     render();
   } catch (error) {
