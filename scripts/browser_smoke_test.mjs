@@ -251,6 +251,63 @@ assert.equal(multiSelected.checkedThemes, 2);
 assert.equal(multiSelected.themeLabel, "2件選択");
 assert.ok(multiSelected.dayCards >= themed.dayCards);
 
-console.log(JSON.stringify({ initial, upcoming, grouped, filtered, themed, multiSelected }, null, 2));
+const planUrl = new URL(target.url);
+planUrl.search = "?plan=tocchibo";
+await call("Page.navigate", { url: planUrl.href });
+
+const personalPlan = await evaluate(`
+  new Promise((resolve, reject) => {
+    let attempts = 0;
+    const timer = setInterval(() => {
+      const entries = document.querySelectorAll('#plan-sessions .plan-entry');
+      if (entries.length) {
+        clearInterval(timer);
+        const first = entries[0];
+        const merged = document.querySelector('[data-plan-session-id="session-0072"]');
+        resolve({
+          activeTab: document.querySelector('.program-tab.is-active').dataset.programTab,
+          planHidden: document.querySelector('#plan-view').hidden,
+          count: document.querySelector('#plan-count').textContent,
+          sessions: entries.length,
+          talks: document.querySelectorAll('#plan-sessions .plan-talk').length,
+          picks: document.querySelectorAll('#plan-sessions .plan-talk.is-personal-pick').length,
+          firstTime: first.querySelector('.plan-entry-time strong').textContent,
+          firstTitle: first.querySelector('h3').textContent,
+          firstTalks: first.querySelectorAll('.plan-talk').length,
+          firstPicks: first.querySelectorAll('.plan-talk.is-personal-pick').length,
+          firstCodes: [...first.querySelectorAll('.plan-talk-code-row b')]
+            .map((item) => item.textContent),
+          mergedTalks: merged?.querySelectorAll('.plan-talk').length,
+          mergedPicks: merged?.querySelectorAll('.plan-talk.is-personal-pick').length,
+          mergedNotes: merged?.querySelectorAll('.plan-entry-note').length,
+        });
+      } else if (attempts++ > 100) {
+        clearInterval(timer);
+        reject(new Error('個人スケジュールの描画が完了しませんでした'));
+      }
+    }, 50);
+  })
+`);
+
+assert.deepEqual(personalPlan, {
+  activeTab: "plan",
+  planHidden: false,
+  count: "11セッション",
+  sessions: 11,
+  talks: 78,
+  picks: 27,
+  firstTime: "8:50",
+  firstTitle: "合意形成(1)",
+  firstTalks: 6,
+  firstPicks: 2,
+  firstCodes: ["VI-31", "VI-32", "VI-33", "VI-34", "VI-35", "VI-36"],
+  mergedTalks: 8,
+  mergedPicks: 4,
+  mergedNotes: 2,
+});
+
+console.log(
+  JSON.stringify({ initial, upcoming, grouped, filtered, themed, multiSelected, personalPlan }, null, 2),
+);
 await call("Browser.close").catch(() => {});
 socket.close();

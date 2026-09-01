@@ -272,79 +272,123 @@ function resolveTalk(code) {
   return null;
 }
 
-function planTalkMarkup(code) {
-  const resolved = resolveTalk(code);
-  if (!resolved) {
-    return `<li class="plan-talk is-missing"><span>${escapeHtml(code)}</span><b>講演データが見つかりません</b></li>`;
-  }
-  const { session, talk } = resolved;
+function planTalkMarkup(talk, selectedCodes) {
+  const [time, code, title, presenter] = talk;
+  const isPersonalPick = selectedCodes.has(code);
   return `
-    <li class="plan-talk">
+    <li class="plan-talk ${isPersonalPick ? "is-personal-pick" : ""}">
       <a href="${PRESENTATION_URL}${encodeURIComponent(code)}" target="_blank" rel="noopener noreferrer">
-        <span class="plan-talk-time">${escapeHtml(talk[0])}</span>
+        <span class="plan-talk-time">${escapeHtml(time)}</span>
         <span>
-          <b>${escapeHtml(code)}</b>
-          <strong>${escapeHtml(talk[2])}</strong>
-          <small>${escapeHtml(session.campus)} ${escapeHtml(session.room)}</small>
+          <span class="plan-talk-code-row">
+            <b>${escapeHtml(code)}</b>
+            ${isPersonalPick ? '<span class="plan-talk-badge">本命</span>' : ""}
+          </span>
+          <strong>${escapeHtml(title)}</strong>
+          <small>発表者：${escapeHtml(presenter)}</small>
         </span>
         <span aria-hidden="true">↗</span>
       </a>
     </li>`;
 }
 
-function planEntryMarkup(entry) {
-  const resolvedTalks = entry.talkCodes.map(resolveTalk).filter(Boolean);
-  const venues = [
-    ...new Set(
-      resolvedTalks.map(
-        ({ session }) => `${session.campus} ${session.room}`,
-      ),
-    ),
-  ];
+function groupPersonalPlanBySession() {
+  const grouped = new Map();
+  for (const entry of personalPlan.items) {
+    for (const code of entry.talkCodes) {
+      const resolved = resolveTalk(code);
+      if (!resolved) throw new Error(`個人プランの講演番号が見つかりません: ${code}`);
+      if (resolved.session.date !== entry.date) {
+        throw new Error(`個人プランの日付とセッションの日付が一致しません: ${code}`);
+      }
+      let group = grouped.get(resolved.session.id);
+      if (!group) {
+        group = {
+          session: resolved.session,
+          selectedCodes: new Set(),
+          entries: [],
+        };
+        grouped.set(resolved.session.id, group);
+      }
+      group.selectedCodes.add(code);
+      if (!group.entries.includes(entry)) group.entries.push(entry);
+    }
+  }
+  return [...grouped.values()].sort(
+    (a, b) =>
+      a.session.date.localeCompare(b.session.date) ||
+      minutes(a.session.start) - minutes(b.session.start) ||
+      a.session.campus.localeCompare(b.session.campus, "ja") ||
+      a.session.room.localeCompare(b.session.room, "ja"),
+  );
+}
+
+function planEntryMarkup({ session, selectedCodes, entries }) {
+  const priority = Math.max(...entries.map((entry) => entry.priority ?? 3));
+  const isFixed = entries.some((entry) => entry.fixed);
   return `
-    <article class="plan-entry ${entry.fixed ? "is-fixed" : ""}">
+    <article class="plan-entry ${isFixed ? "is-fixed" : ""}" data-plan-session-id="${escapeHtml(session.id)}">
       <div class="plan-entry-time">
-        <strong>${escapeHtml(entry.start)}</strong>
-        ${entry.end ? `<span>–${escapeHtml(entry.end)}</span>` : ""}
+        <strong>${escapeHtml(session.start)}</strong>
+        <span>–${escapeHtml(session.end)}</span>
       </div>
       <div class="plan-entry-body">
         <div class="plan-entry-badges">
-          <span class="plan-priority" aria-label="優先度 星${entry.priority ?? 3}">${"★".repeat(entry.priority ?? 3)}</span>
-          ${entry.fixed ? '<span class="plan-fixed-badge">固定</span>' : ""}
+          <span class="plan-priority" aria-label="優先度 星${priority}">${"★".repeat(priority)}</span>
+          ${isFixed ? '<span class="plan-fixed-badge">固定</span>' : ""}
+          <span class="session-plan-badge">本命 ${selectedCodes.size}件</span>
         </div>
-        <h3>${escapeHtml(entry.title)}</h3>
-        ${venues.length ? `<p class="plan-entry-venue"><span aria-hidden="true">●</span> ${venues.map(escapeHtml).join(" → ")}</p>` : ""}
-        <ol class="plan-talks">${entry.talkCodes.map(planTalkMarkup).join("")}</ol>
-        <p class="plan-entry-note"><b>狙い</b>${escapeHtml(entry.note)}</p>
+        <h3>${escapeHtml(session.title)}</h3>
+        <p class="plan-entry-venue">
+          <span aria-label="会場"><span aria-hidden="true">●</span> ${escapeHtml(session.campus)} ${escapeHtml(session.room)}</span>
+          <span>${escapeHtml(session.division)}</span>
+        </p>
+        <div class="plan-session-heading">
+          <span>講演一覧（${session.talks.length}件）</span>
+          <span>座長：${escapeHtml(session.chair)}</span>
+        </div>
+        <ol class="plan-talks">${session.talks
+          .map((talk) => planTalkMarkup(talk, selectedCodes))
+          .join("")}</ol>
+        <div class="plan-entry-notes">${entries
+          .map(
+            (entry) => `
+              <p class="plan-entry-note">
+                <b>${escapeHtml(entry.title)}</b>
+                <span>${escapeHtml(entry.note)}</span>
+              </p>`,
+          )
+          .join("")}</div>
       </div>
     </article>`;
 }
 
 function renderPersonalPlan() {
   if (!personalPlan) return;
+  const planSessions = groupPersonalPlanBySession();
   const groups = new Map();
-  for (const entry of personalPlan.items) {
-    if (!groups.has(entry.date)) groups.set(entry.date, []);
-    groups.get(entry.date).push(entry);
+  for (const planSession of planSessions) {
+    const date = planSession.session.date;
+    if (!groups.has(date)) groups.set(date, []);
+    groups.get(date).push(planSession);
   }
   const markup = [...groups.entries()]
     .sort(([left], [right]) => left.localeCompare(right))
-    .map(([date, entries], dayIndex) => `
+    .map(([date, daySessions], dayIndex) => `
       <section class="plan-day">
         <header class="plan-day-heading">
           <span>DAY ${dayIndex + 1}</span>
           <h2>${escapeHtml(dateFormatter.format(new Date(`${date}T12:00:00+09:00`)))}</h2>
-          <b>${entries.length}予定</b>
+          <b>${daySessions.length}セッション</b>
         </header>
-        <div class="plan-timeline">${entries
-          .sort((a, b) => minutes(a.start) - minutes(b.start))
+        <div class="plan-timeline">${daySessions
           .map(planEntryMarkup)
           .join("")}</div>
       </section>`)
     .join("");
   document.querySelector("#plan-heading").textContent = personalPlan.title;
   document.querySelector("#plan-description").textContent = personalPlan.description ?? "";
-  document.querySelector("#plan-count").textContent = `${personalPlan.items.length}件`;
+  document.querySelector("#plan-count").textContent = `${planSessions.length}セッション`;
   document.querySelector("#plan-sessions").innerHTML = markup || emptyMarkup("予定が登録されていません");
 }
 

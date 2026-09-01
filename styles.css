@@ -1186,9 +1186,24 @@ main {
 
 .plan-entry-venue {
   margin: 0 0 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 3px 10px;
   color: var(--muted);
   font-size: 10px;
   font-weight: 600;
+}
+
+.plan-session-heading {
+  padding: 0 2px 7px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 3px 10px;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 700;
 }
 
 .plan-talks {
@@ -1201,6 +1216,11 @@ main {
 
 .plan-talk + .plan-talk {
   border-top: 1px solid #e6e5dd;
+}
+
+.plan-talk.is-personal-pick {
+  background: #fff8d9;
+  box-shadow: inset 3px 0 0 #d7a500;
 }
 
 .plan-talk a {
@@ -1228,6 +1248,17 @@ main {
   font-size: 9px;
 }
 
+.plan-talk-code-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.plan-talk .plan-talk-badge {
+  margin: 0;
+  display: inline-block;
+}
+
 .plan-talk strong {
   margin-top: 1px;
   font-size: 11px;
@@ -1240,24 +1271,27 @@ main {
   font-size: 9px;
 }
 
-.plan-talk.is-missing {
-  padding: 9px;
-  color: #9b3517;
-  background: var(--orange-soft);
-  font-size: 10px;
+.plan-entry-notes {
+  margin-top: 10px;
+  display: grid;
+  gap: 7px;
 }
 
 .plan-entry-note {
-  margin: 10px 0 0;
+  margin: 0;
+  padding: 8px 9px;
   color: #44565c;
+  background: #f4f5ef;
+  border-radius: 8px;
   font-size: 11px;
   line-height: 1.65;
 }
 
 .plan-entry-note b {
-  margin-right: 7px;
+  display: block;
+  margin-bottom: 2px;
   color: var(--navy);
-  font-size: 9px;
+  font-size: 10px;
 }
 
 @media (min-width: 700px) {
