@@ -47,6 +47,23 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
+function planStatus(entry) {
+  return entry?.status ?? "planned";
+}
+
+function planTalkBadgeMarkup(entry) {
+  switch (planStatus(entry)) {
+    case "must":
+      return '<span class="plan-must-badge">最優先</span>';
+    case "fixed":
+      return '<span class="plan-fixed-badge">固定</span>';
+    case "reference":
+      return '<span class="plan-reference-badge">あとで確認</span>';
+    default:
+      return '<span class="plan-talk-badge">本命</span>';
+  }
+}
+
 function sessionStatus(session) {
   if (displayClock.date !== session.date) return null;
   const now = minutes(displayClock.time);
@@ -122,12 +139,14 @@ function talkCategoryMarkup(code) {
 function talkMarkup(talk, session, talkIndex) {
   const [time, code, title, , authors] = talk;
   const temporalStatus = talkStatus(session, talkIndex);
-  const isPersonalPick = plannedTalks.has(code);
+  const planEntry = plannedTalks.get(code);
+  const isReferencePick = planStatus(planEntry) === "reference";
+  const isPersonalPick = Boolean(planEntry) && !isReferencePick;
   const affiliationStart = authors.search(/\s+\(\d+\.\s*/);
   const names = affiliationStart >= 0 ? authors.slice(0, affiliationStart) : authors;
   const affiliations = affiliationStart >= 0 ? authors.slice(affiliationStart).trim() : "";
   return `
-    <li class="talk-item ${temporalStatus?.className ?? ""} ${isPersonalPick ? "is-personal-pick" : ""}">
+    <li class="talk-item ${temporalStatus?.className ?? ""} ${isPersonalPick ? "is-personal-pick" : ""} ${isReferencePick ? "is-reference-pick" : ""}">
       <a class="talk-link" href="${PRESENTATION_URL}${encodeURIComponent(code)}" target="_blank" rel="noopener noreferrer">
         <span class="talk-time">
           <span>${escapeHtml(time)}</span>
@@ -135,7 +154,7 @@ function talkMarkup(talk, session, talkIndex) {
         </span>
         <span>
           <span class="talk-code">${escapeHtml(code)}</span>
-          ${isPersonalPick ? '<span class="plan-talk-badge">本命</span>' : ""}
+          ${planEntry ? planTalkBadgeMarkup(planEntry) : ""}
           <span class="talk-title">${escapeHtml(title)}</span>
           ${talkCategoryMarkup(code)}
           <span class="talk-authors"><b>著者</b>${escapeHtml(names)}</span>
@@ -186,13 +205,21 @@ function sessionThemeMarkup(session) {
 
 function sessionMarkup(session) {
   const status = sessionStatus(session);
-  const plannedCount = session.talks.filter((talk) => plannedTalks.has(talk[1])).length;
+  const planCounts = { planned: 0, must: 0, fixed: 0, reference: 0 };
+  for (const talk of session.talks) {
+    const entry = plannedTalks.get(talk[1]);
+    if (entry) planCounts[planStatus(entry)] += 1;
+  }
+  const attendedCount = planCounts.planned + planCounts.must + planCounts.fixed;
   return `
-    <article class="session-card ${plannedCount ? "is-personal-session" : ""}" data-session-id="${escapeHtml(session.id)}" role="button" tabindex="0" aria-haspopup="dialog" aria-label="${escapeHtml(session.title)}の詳細を開く">
+    <article class="session-card ${attendedCount ? "is-personal-session" : ""} ${planCounts.reference && !attendedCount ? "is-plan-reference-session" : ""}" data-session-id="${escapeHtml(session.id)}" role="button" tabindex="0" aria-haspopup="dialog" aria-label="${escapeHtml(session.title)}の詳細を開く">
       <div class="session-summary">
         <div class="session-topline">
           ${status ? `<span class="status-pill ${status.className}">${status.label}</span>` : ""}
-          ${plannedCount ? `<span class="session-plan-badge">本命 ${plannedCount}件</span>` : ""}
+          ${planCounts.must ? `<span class="session-must-badge">最優先 ${planCounts.must}件</span>` : ""}
+          ${planCounts.fixed ? `<span class="session-fixed-badge">固定 ${planCounts.fixed}件</span>` : ""}
+          ${planCounts.planned ? `<span class="session-plan-badge">本命 ${planCounts.planned}件</span>` : ""}
+          ${planCounts.reference ? `<span class="session-reference-badge">あとで確認 ${planCounts.reference}件</span>` : ""}
           <span>${escapeHtml(session.start)}–${escapeHtml(session.end)}</span>
           <span>・</span>
           <span>${escapeHtml(session.division)}</span>
@@ -272,17 +299,19 @@ function resolveTalk(code) {
   return null;
 }
 
-function planTalkMarkup(talk, selectedCodes) {
+function planTalkMarkup(talk, talkEntries) {
   const [time, code, title, presenter] = talk;
-  const isPersonalPick = selectedCodes.has(code);
+  const planEntry = talkEntries.get(code);
+  const isReferencePick = planStatus(planEntry) === "reference";
+  const isPersonalPick = Boolean(planEntry) && !isReferencePick;
   return `
-    <li class="plan-talk ${isPersonalPick ? "is-personal-pick" : ""}">
+    <li class="plan-talk ${isPersonalPick ? "is-personal-pick" : ""} ${isReferencePick ? "is-reference-pick" : ""}">
       <a href="${PRESENTATION_URL}${encodeURIComponent(code)}" target="_blank" rel="noopener noreferrer">
         <span class="plan-talk-time">${escapeHtml(time)}</span>
         <span>
           <span class="plan-talk-code-row">
             <b>${escapeHtml(code)}</b>
-            ${isPersonalPick ? '<span class="plan-talk-badge">本命</span>' : ""}
+            ${planEntry ? planTalkBadgeMarkup(planEntry) : ""}
           </span>
           <strong>${escapeHtml(title)}</strong>
           <small>発表者：${escapeHtml(presenter)}</small>
@@ -305,12 +334,12 @@ function groupPersonalPlanBySession() {
       if (!group) {
         group = {
           session: resolved.session,
-          selectedCodes: new Set(),
+          talkEntries: new Map(),
           entries: [],
         };
         grouped.set(resolved.session.id, group);
       }
-      group.selectedCodes.add(code);
+      group.talkEntries.set(code, entry);
       if (!group.entries.includes(entry)) group.entries.push(entry);
     }
   }
@@ -323,20 +352,39 @@ function groupPersonalPlanBySession() {
   );
 }
 
-function planEntryMarkup({ session, selectedCodes, entries }) {
+function planSessionStatus(entries) {
+  if (entries.every((entry) => planStatus(entry) === "reference")) return "reference";
+  if (entries.some((entry) => planStatus(entry) === "fixed")) return "fixed";
+  if (entries.some((entry) => planStatus(entry) === "must")) return "must";
+  return "planned";
+}
+
+function planEntryMarkup({ session, talkEntries, entries }) {
+  const status = planSessionStatus(entries);
   const priority = Math.max(...entries.map((entry) => entry.priority ?? 3));
-  const isFixed = entries.some((entry) => entry.fixed);
+  const selectedCount = [...talkEntries.values()].filter(
+    (entry) => planStatus(entry) !== "reference",
+  ).length;
+  const referenceCount = talkEntries.size - selectedCount;
+  const statusBadge =
+    status === "reference"
+      ? `<span class="session-reference-badge">あとで確認 ${referenceCount}件</span>`
+      : status === "must"
+        ? `<span class="session-must-badge">最優先 ${selectedCount}件</span>`
+        : status === "fixed"
+          ? `<span class="session-fixed-badge">固定 ${selectedCount}件</span>`
+          : `<span class="session-plan-badge">本命 ${selectedCount}件</span>`;
+  const afterActions = entries.filter((entry) => entry.after);
   return `
-    <article class="plan-entry ${isFixed ? "is-fixed" : ""}" data-plan-session-id="${escapeHtml(session.id)}">
+    <article class="plan-entry is-${status}" data-plan-session-id="${escapeHtml(session.id)}">
       <div class="plan-entry-time">
         <strong>${escapeHtml(session.start)}</strong>
         <span>–${escapeHtml(session.end)}</span>
       </div>
       <div class="plan-entry-body">
         <div class="plan-entry-badges">
-          <span class="plan-priority" aria-label="優先度 星${priority}">${"★".repeat(priority)}</span>
-          ${isFixed ? '<span class="plan-fixed-badge">固定</span>' : ""}
-          <span class="session-plan-badge">本命 ${selectedCodes.size}件</span>
+          ${status !== "reference" ? `<span class="plan-priority" aria-label="優先度 星${priority}">${"★".repeat(priority)}</span>` : ""}
+          ${statusBadge}
         </div>
         <h3>${escapeHtml(session.title)}</h3>
         <p class="plan-entry-venue">
@@ -348,8 +396,17 @@ function planEntryMarkup({ session, selectedCodes, entries }) {
           <span>座長：${escapeHtml(session.chair)}</span>
         </div>
         <ol class="plan-talks">${session.talks
-          .map((talk) => planTalkMarkup(talk, selectedCodes))
+          .map((talk) => planTalkMarkup(talk, talkEntries))
           .join("")}</ol>
+        ${afterActions.length ? `<div class="plan-after-actions">${afterActions
+          .map(
+            (entry) => `
+              <p class="plan-after-action">
+                <b>終了後</b>
+                <span>${escapeHtml(entry.after)}</span>
+              </p>`,
+          )
+          .join("")}</div>` : ""}
         <div class="plan-entry-notes">${entries
           .map(
             (entry) => `
@@ -363,6 +420,45 @@ function planEntryMarkup({ session, selectedCodes, entries }) {
     </article>`;
 }
 
+function planReferenceSectionMarkup(referenceSessions) {
+  if (!referenceSessions.length) return "";
+  return `
+    <section class="plan-reference-section" aria-label="見送り・あとで確認">
+      <header class="plan-reference-heading">
+        <div>
+          <span>REFERENCE</span>
+          <h3>見送り・あとで確認</h3>
+        </div>
+        <b>${referenceSessions.length}セッション</b>
+        <p>当日は聴講せず、資料や講演情報をあとで確認する候補です。</p>
+      </header>
+      <div class="plan-reference-list">${referenceSessions
+        .map(planEntryMarkup)
+        .join("")}</div>
+    </section>`;
+}
+
+function planDayMarkup([date, daySessions], dayIndex) {
+  const scheduledSessions = daySessions.filter(
+    (planSession) => planSessionStatus(planSession.entries) !== "reference",
+  );
+  const referenceSessions = daySessions.filter(
+    (planSession) => planSessionStatus(planSession.entries) === "reference",
+  );
+  return `
+    <section class="plan-day">
+      <header class="plan-day-heading">
+        <span>DAY ${dayIndex + 1}</span>
+        <h2>${escapeHtml(dateFormatter.format(new Date(`${date}T12:00:00+09:00`)))}</h2>
+        <b>${scheduledSessions.length}予定${referenceSessions.length ? `・${referenceSessions.length}参考` : ""}</b>
+      </header>
+      <div class="plan-timeline">${scheduledSessions
+        .map(planEntryMarkup)
+        .join("")}</div>
+      ${planReferenceSectionMarkup(referenceSessions)}
+    </section>`;
+}
+
 function renderPersonalPlan() {
   if (!personalPlan) return;
   const planSessions = groupPersonalPlanBySession();
@@ -374,21 +470,15 @@ function renderPersonalPlan() {
   }
   const markup = [...groups.entries()]
     .sort(([left], [right]) => left.localeCompare(right))
-    .map(([date, daySessions], dayIndex) => `
-      <section class="plan-day">
-        <header class="plan-day-heading">
-          <span>DAY ${dayIndex + 1}</span>
-          <h2>${escapeHtml(dateFormatter.format(new Date(`${date}T12:00:00+09:00`)))}</h2>
-          <b>${daySessions.length}セッション</b>
-        </header>
-        <div class="plan-timeline">${daySessions
-          .map(planEntryMarkup)
-          .join("")}</div>
-      </section>`)
+    .map(planDayMarkup)
     .join("");
+  const scheduledCount = planSessions.filter(
+    (planSession) => planSessionStatus(planSession.entries) !== "reference",
+  ).length;
+  const referenceCount = planSessions.length - scheduledCount;
   document.querySelector("#plan-heading").textContent = personalPlan.title;
   document.querySelector("#plan-description").textContent = personalPlan.description ?? "";
-  document.querySelector("#plan-count").textContent = `${planSessions.length}セッション`;
+  document.querySelector("#plan-count").textContent = `${scheduledCount}予定${referenceCount ? `・${referenceCount}参考` : ""}`;
   document.querySelector("#plan-sessions").innerHTML = markup || emptyMarkup("予定が登録されていません");
 }
 
@@ -402,9 +492,16 @@ async function loadPersonalPlan() {
   const loadedPlan = await response.json();
   if (!Array.isArray(loadedPlan.items)) throw new Error("個人プランのitemsが不正です");
   personalPlan = loadedPlan;
+  const allowedStatuses = new Set(["planned", "must", "fixed", "reference"]);
   for (const entry of personalPlan.items) {
     if (!Array.isArray(entry.talkCodes)) throw new Error("個人プランのtalkCodesが不正です");
-    for (const code of entry.talkCodes) plannedTalks.set(code, entry);
+    if (!allowedStatuses.has(planStatus(entry))) {
+      throw new Error(`個人プランのstatusが不正です: ${entry.status}`);
+    }
+    for (const code of entry.talkCodes) {
+      if (plannedTalks.has(code)) throw new Error(`個人プランの講演番号が重複しています: ${code}`);
+      plannedTalks.set(code, entry);
+    }
   }
   document.querySelector(".program-tab-plan").hidden = false;
   document.body.classList.add("has-personal-plan");

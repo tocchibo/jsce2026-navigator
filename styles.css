@@ -749,17 +749,53 @@ main {
   box-shadow: inset 3px 0 0 var(--green);
 }
 
+.talk-item.is-reference-pick {
+  background: #f0f2ef;
+  box-shadow: inset 3px 0 0 #98a4a3;
+}
+
 .plan-talk-badge,
-.session-plan-badge {
+.session-plan-badge,
+.plan-must-badge,
+.session-must-badge,
+.plan-fixed-badge,
+.session-fixed-badge,
+.plan-reference-badge,
+.session-reference-badge {
   padding: 2px 6px;
-  color: #6f5100;
-  background: #ffe38a;
   border-radius: 5px;
   font-size: 8px;
   font-weight: 800;
 }
 
-.plan-talk-badge {
+.plan-talk-badge,
+.session-plan-badge {
+  color: #6f5100;
+  background: #ffe38a;
+}
+
+.plan-must-badge,
+.session-must-badge {
+  color: #9b3517;
+  background: var(--orange-soft);
+}
+
+.plan-fixed-badge,
+.session-fixed-badge {
+  color: var(--navy);
+  background: var(--navy-soft);
+}
+
+.plan-reference-badge,
+.session-reference-badge {
+  color: #566468;
+  background: #e4e7e3;
+}
+
+.plan-talk-badge,
+.plan-must-badge,
+.plan-fixed-badge,
+.plan-reference-badge {
   display: inline-block;
   margin-top: 3px;
 }
@@ -767,6 +803,13 @@ main {
 .session-card.is-personal-session {
   border-color: #e2bd45;
   box-shadow: inset 4px 0 0 var(--yellow), var(--shadow);
+}
+
+.session-card.is-plan-reference-session {
+  background: #f7f7f3;
+  border-color: #b9c1bf;
+  border-style: dashed;
+  box-shadow: inset 4px 0 0 #98a4a3, var(--shadow);
 }
 
 .talk-item.is-ended .talk-link {
@@ -1120,8 +1163,16 @@ main {
   border-radius: 50%;
 }
 
-.plan-entry.is-fixed::before {
+.plan-entry.is-must::before {
   background: var(--orange);
+}
+
+.plan-entry.is-fixed::before {
+  background: var(--navy);
+}
+
+.plan-entry.is-reference::before {
+  background: #98a4a3;
 }
 
 .plan-entry-time {
@@ -1151,9 +1202,21 @@ main {
   box-shadow: var(--shadow);
 }
 
-.plan-entry.is-fixed .plan-entry-body {
+.plan-entry.is-must .plan-entry-body {
   border-color: #ef9b7b;
   box-shadow: inset 4px 0 0 var(--orange), var(--shadow);
+}
+
+.plan-entry.is-fixed .plan-entry-body {
+  border-color: #9bb3ba;
+  box-shadow: inset 4px 0 0 var(--navy), var(--shadow);
+}
+
+.plan-entry.is-reference .plan-entry-body {
+  background: #f7f7f3;
+  border-color: #b9c1bf;
+  border-style: dashed;
+  box-shadow: none;
 }
 
 .plan-entry-badges {
@@ -1167,15 +1230,6 @@ main {
   color: #d69f00;
   font-size: 12px;
   letter-spacing: 0.04em;
-}
-
-.plan-fixed-badge {
-  padding: 2px 6px;
-  color: #9b3517;
-  background: var(--orange-soft);
-  border-radius: 5px;
-  font-size: 8px;
-  font-weight: 800;
 }
 
 .plan-entry h3 {
@@ -1223,6 +1277,16 @@ main {
   box-shadow: inset 3px 0 0 #d7a500;
 }
 
+.plan-entry.is-must .plan-talk.is-personal-pick {
+  background: var(--orange-soft);
+  box-shadow: inset 3px 0 0 var(--orange);
+}
+
+.plan-talk.is-reference-pick {
+  background: #ecefeb;
+  box-shadow: inset 3px 0 0 #98a4a3;
+}
+
 .plan-talk a {
   padding: 9px;
   display: grid;
@@ -1254,7 +1318,10 @@ main {
   gap: 5px;
 }
 
-.plan-talk .plan-talk-badge {
+.plan-talk-code-row > .plan-talk-badge,
+.plan-talk-code-row > .plan-must-badge,
+.plan-talk-code-row > .plan-fixed-badge,
+.plan-talk-code-row > .plan-reference-badge {
   margin: 0;
   display: inline-block;
 }
@@ -1269,6 +1336,28 @@ main {
   margin-top: 3px;
   color: var(--muted);
   font-size: 9px;
+}
+
+.plan-after-actions {
+  margin-top: 10px;
+}
+
+.plan-after-action {
+  margin: 0;
+  padding: 9px 10px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 7px;
+  color: #66331f;
+  background: var(--orange-soft);
+  border-radius: 8px;
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+.plan-after-action b {
+  color: var(--orange);
+  font-size: 10px;
 }
 
 .plan-entry-notes {
@@ -1292,6 +1381,51 @@ main {
   margin-bottom: 2px;
   color: var(--navy);
   font-size: 10px;
+}
+
+.plan-reference-section {
+  margin-top: 18px;
+  padding: 12px;
+  background: rgba(231, 233, 228, 0.68);
+  border: 1px dashed #aeb8b6;
+  border-radius: 14px;
+}
+
+.plan-reference-heading {
+  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 2px 10px;
+}
+
+.plan-reference-heading span {
+  color: #71807f;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.plan-reference-heading h3 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.plan-reference-heading b {
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.plan-reference-heading p {
+  grid-column: 1 / -1;
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.plan-reference-list {
+  display: grid;
+  gap: 10px;
 }
 
 @media (min-width: 700px) {

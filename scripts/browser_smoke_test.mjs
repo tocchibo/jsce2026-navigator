@@ -262,21 +262,36 @@ const personalPlan = await evaluate(`
       const entries = document.querySelectorAll('#plan-sessions .plan-entry');
       if (entries.length) {
         clearInterval(timer);
-        const first = entries[0];
+        const must = document.querySelector('[data-plan-session-id="session-0085"]');
+        const fixed = document.querySelector('[data-plan-session-id="session-0070"]');
+        const reference = document.querySelector('[data-plan-session-id="session-0069"]');
         const merged = document.querySelector('[data-plan-session-id="session-0072"]');
         resolve({
           activeTab: document.querySelector('.program-tab.is-active').dataset.programTab,
           planHidden: document.querySelector('#plan-view').hidden,
           count: document.querySelector('#plan-count').textContent,
           sessions: entries.length,
+          scheduledSessions: document.querySelectorAll('.plan-timeline > .plan-entry').length,
+          referenceSessions: document.querySelectorAll('.plan-reference-list > .plan-entry').length,
           talks: document.querySelectorAll('#plan-sessions .plan-talk').length,
           picks: document.querySelectorAll('#plan-sessions .plan-talk.is-personal-pick').length,
-          firstTime: first.querySelector('.plan-entry-time strong').textContent,
-          firstTitle: first.querySelector('h3').textContent,
-          firstTalks: first.querySelectorAll('.plan-talk').length,
-          firstPicks: first.querySelectorAll('.plan-talk.is-personal-pick').length,
-          firstCodes: [...first.querySelectorAll('.plan-talk-code-row b')]
+          references: document.querySelectorAll('#plan-sessions .plan-talk.is-reference-pick').length,
+          mustTime: must?.querySelector('.plan-entry-time strong').textContent,
+          mustTitle: must?.querySelector('h3').textContent,
+          mustTalks: must?.querySelectorAll('.plan-talk').length,
+          mustPicks: must?.querySelectorAll('.plan-talk.is-personal-pick').length,
+          mustBadge: must?.querySelector('.plan-must-badge').textContent,
+          mustAfter: must?.querySelector('.plan-after-action').textContent
+            .replace(/\s+/g, ' ')
+            .trim(),
+          mustCodes: [...must.querySelectorAll('.plan-talk-code-row b')]
             .map((item) => item.textContent),
+          fixedBadge: fixed?.querySelector('.plan-fixed-badge').textContent,
+          referenceTitle: reference?.querySelector('h3').textContent,
+          referenceTalks: reference?.querySelectorAll('.plan-talk').length,
+          referencePicks: reference?.querySelectorAll('.plan-talk.is-reference-pick').length,
+          referenceBadge: reference?.querySelector('.plan-reference-badge').textContent,
+          referenceHeading: document.querySelector('.plan-reference-heading h3')?.textContent,
           mergedTalks: merged?.querySelectorAll('.plan-talk').length,
           mergedPicks: merged?.querySelectorAll('.plan-talk.is-personal-pick').length,
           mergedNotes: merged?.querySelectorAll('.plan-entry-note').length,
@@ -292,22 +307,65 @@ const personalPlan = await evaluate(`
 assert.deepEqual(personalPlan, {
   activeTab: "plan",
   planHidden: false,
-  count: "11セッション",
-  sessions: 11,
-  talks: 78,
-  picks: 27,
-  firstTime: "8:50",
-  firstTitle: "合意形成(1)",
-  firstTalks: 6,
-  firstPicks: 2,
-  firstCodes: ["VI-31", "VI-32", "VI-33", "VI-34", "VI-35", "VI-36"],
+  count: "11予定・1参考",
+  sessions: 12,
+  scheduledSessions: 11,
+  referenceSessions: 1,
+  talks: 86,
+  picks: 26,
+  references: 2,
+  mustTime: "8:50",
+  mustTitle: "診断技術(1)",
+  mustTalks: 8,
+  mustPicks: 1,
+  mustBadge: "最優先",
+  mustAfter: "終了後 セッション終了後は名刺交換を優先し、その後、10:40の自身の発表に向けて2号館1階13へ移動する。",
+  mustCodes: ["VI-147", "VI-148", "VI-149", "VI-150", "VI-151", "VI-152", "VI-153", "VI-154"],
+  fixedBadge: "固定",
+  referenceTitle: "合意形成(1)",
+  referenceTalks: 6,
+  referencePicks: 2,
+  referenceBadge: "あとで確認",
+  referenceHeading: "見送り・あとで確認",
   mergedTalks: 8,
   mergedPicks: 4,
   mergedNotes: 2,
 });
 
+const planMarkers = await evaluate(`
+  new Promise((resolve) => {
+    document.querySelector('[data-program-tab="2026-09-02"]').click();
+    setTimeout(() => {
+      const must = document.querySelector('[data-session-id="session-0085"]');
+      const fixed = document.querySelector('[data-session-id="session-0070"]');
+      const reference = document.querySelector('[data-session-id="session-0069"]');
+      resolve({
+        mustPersonal: must.classList.contains('is-personal-session'),
+        mustBadge: must.querySelector('.session-must-badge')?.textContent,
+        fixedPersonal: fixed.classList.contains('is-personal-session'),
+        fixedBadge: fixed.querySelector('.session-fixed-badge')?.textContent,
+        referenceOnly: reference.classList.contains('is-plan-reference-session'),
+        referenceBadge: reference.querySelector('.session-reference-badge')?.textContent,
+      });
+    }, 100);
+  })
+`);
+
+assert.deepEqual(planMarkers, {
+  mustPersonal: true,
+  mustBadge: "最優先 1件",
+  fixedPersonal: true,
+  fixedBadge: "固定 1件",
+  referenceOnly: true,
+  referenceBadge: "あとで確認 2件",
+});
+
 console.log(
-  JSON.stringify({ initial, upcoming, grouped, filtered, themed, multiSelected, personalPlan }, null, 2),
+  JSON.stringify(
+    { initial, upcoming, grouped, filtered, themed, multiSelected, personalPlan, planMarkers },
+    null,
+    2,
+  ),
 );
 await call("Browser.close").catch(() => {});
 socket.close();
