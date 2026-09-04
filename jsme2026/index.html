@@ -1,33 +1,33 @@
 <!doctype html>
-<html lang="ja" data-event-config="events/jsce2026/event.json">
+<html lang="ja" data-event-config="../events/jsme2026/event.json">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta id="theme-color" name="theme-color" content="#123c4a" />
+    <meta id="theme-color" name="theme-color" content="#43316f" />
     <meta
       id="page-description"
       name="description"
-      content="令和8年度 土木学会全国大会を回るためのスマートフォン向けタイムテーブル"
+      content="日本機械学会 2026年度年次大会を回るためのスマートフォン向けタイムテーブル"
     />
-    <title>JSCE 2026 Navigator</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23f3c74f'/%3E%3Ctext x='32' y='43' text-anchor='middle' font-size='34'%3E土%3C/text%3E%3C/svg%3E" />
-    <link rel="stylesheet" href="assets/navigator.css" />
-    <script src="assets/navigator.js" defer></script>
+    <title>JSME 2026 Navigator</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23f2cf58'/%3E%3Ctext x='32' y='43' text-anchor='middle' font-size='34'%3E機%3C/text%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="../assets/navigator.css" />
+    <script src="../assets/navigator.js" defer></script>
   </head>
   <body>
     <header class="site-header">
       <div class="header-inner">
         <a class="brand" href="#top" aria-label="トップへ戻る">
-          <span id="brand-mark" class="brand-mark" aria-hidden="true">土</span>
+          <span id="brand-mark" class="brand-mark" aria-hidden="true">機</span>
           <span>
-            <strong id="brand-name">JSCE 2026</strong>
+            <strong id="brand-name">JSME 2026</strong>
             <small id="brand-subtitle">大会ナビ</small>
           </span>
         </a>
         <a
           id="official-link"
           class="bookmark-link"
-          href="https://pub.confit.atlas.jp/ja/event/jsce2026/bookmarks"
+          href="https://pub.confit.atlas.jp/ja/event/jsme2026/bookmarks"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -47,27 +47,12 @@
           <span>NOW</span>
           <strong>今から1時間</strong>
         </button>
-        <button class="program-tab" type="button" data-program-tab="2026-09-02">
-          <span>DAY 1</span>
-          <strong>9/2</strong>
-          <small>水</small>
-        </button>
-        <button class="program-tab" type="button" data-program-tab="2026-09-03">
-          <span>DAY 2</span>
-          <strong>9/3</strong>
-          <small>木</small>
-        </button>
-        <button class="program-tab" type="button" data-program-tab="2026-09-04">
-          <span>DAY 3</span>
-          <strong>9/4</strong>
-          <small>金</small>
-        </button>
       </nav>
 
       <details class="filter-panel shared-filter">
         <summary id="filter-summary">
           <span>絞り込み</span>
-          <span id="filter-summary-note" class="filter-summary-note">テーマ・部門・会場・キーワード</span>
+          <span id="filter-summary-note" class="filter-summary-note">分野・企画種別・棟・キーワード</span>
         </summary>
         <div class="filter-controls">
           <label class="query-field">
@@ -78,21 +63,21 @@
           <div class="multi-filter-grid">
             <details class="multi-select">
               <summary>
-                <span id="theme-filter-name">テーマ</span>
+                <span id="theme-filter-name">分野</span>
                 <b id="theme-filter-label">すべて</b>
               </summary>
               <div id="theme-filter" class="multi-select-options"></div>
             </details>
             <details class="multi-select">
               <summary>
-                <span id="division-filter-name">部門</span>
+                <span id="division-filter-name">企画種別</span>
                 <b id="division-filter-label">すべて</b>
               </summary>
               <div id="division-filter" class="multi-select-options"></div>
             </details>
             <details class="multi-select">
               <summary>
-                <span id="campus-filter-name">会場</span>
+                <span id="campus-filter-name">棟</span>
                 <b id="campus-filter-label">すべて</b>
               </summary>
               <div id="campus-filter" class="multi-select-options"></div>
@@ -143,9 +128,9 @@
       </section>
 
       <aside class="mock-note">
-        <strong id="program-note-heading">プログラムについて</strong>
+        <strong id="program-note-heading">収録範囲について</strong>
         <p id="program-note-body">
-          9月2日〜4日のプログラムPDFをもとに掲載しています。講演を選ぶとConfitの公式ページを開きます。
+          追加されたプログラムPDFに収録された「技術・社会・教育」分野の9月6日〜9日の企画を掲載しています。
         </p>
       </aside>
     </main>
@@ -162,6 +147,5 @@
         <div id="session-dialog-content" class="session-dialog-content"></div>
       </div>
     </dialog>
-
   </body>
 </html>

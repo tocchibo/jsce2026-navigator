@@ -11,8 +11,9 @@ from build_category_pilot_v02 import RULES, THRESHOLDS
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE_PATH = ROOT / "data" / "category_all_source.local.json"
-TAXONOMY_PATH = ROOT / "data" / "category_taxonomy.json"
+JSCE_DATA = ROOT / "events" / "jsce2026"
+SOURCE_PATH = JSCE_DATA / "category_all_source.local.json"
+TAXONOMY_PATH = JSCE_DATA / "category_taxonomy.json"
 
 VARIANTS = {
     "v02_current": {

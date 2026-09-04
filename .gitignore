@@ -1,16 +1,19 @@
 # Source PDFs are kept locally and are too large for GitHub.
 2026/
+/sources/
 
 # Python cache files
 __pycache__/
 *.py[cod]
+.venv/
 .uv-cache/
 
 # Local browser test screenshots
 jsce2026-mobile*.png
+.chrome-test-*/
 
 # Copyrighted abstract text used only for local classification work
-data/*.local.json
+events/jsce2026/*.local.json
 
 # OS-generated files
 Thumbs.db

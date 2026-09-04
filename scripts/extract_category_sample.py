@@ -158,17 +158,17 @@ def main() -> int:
     parser.add_argument(
         "--pdf",
         type=Path,
-        default=ROOT / "2026" / "jsce2026_program_all.pdf",
+        default=ROOT / "sources" / "jsce2026" / "program.pdf",
     )
     parser.add_argument(
         "--sessions",
         type=Path,
-        default=ROOT / "data" / "sessions.json",
+        default=ROOT / "events" / "jsce2026" / "sessions.json",
     )
     parser.add_argument(
         "--output",
         type=Path,
-        default=ROOT / "data" / "category_sample_source.local.json",
+        default=ROOT / "events" / "jsce2026" / "category_sample_source.local.json",
     )
     args = parser.parse_args()
 

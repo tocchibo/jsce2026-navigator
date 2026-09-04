@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "id": "jsce2026",
+  "name": "令和8年度 土木学会全国大会",
+  "shortName": "JSCE 2026",
+  "pageTitle": "JSCE 2026 Navigator",
+  "subtitle": "大会ナビ",
+  "brandMark": "土",
+  "description": "令和8年度 土木学会全国大会を回るためのスマートフォン向けタイムテーブル",
+  "dates": ["2026-09-02", "2026-09-03", "2026-09-04"],
+  "timeZone": "Asia/Tokyo",
+  "expectedCounts": { "sessions": 748, "presentations": 5636 },
+  "theme": {
+    "primary": "#123c4a",
+    "primarySoft": "#dbe8e8",
+    "accent": "#ed6a3a",
+    "accentSoft": "#fff0e7",
+    "highlight": "#f3c74f"
+  },
+  "data": {
+    "sessions": "sessions.json",
+    "taxonomy": "category_taxonomy.json",
+    "categories": "categories.json",
+    "plans": "plans/"
+  },
+  "links": {
+    "official": "https://pub.confit.atlas.jp/ja/event/jsce2026/bookmarks",
+    "officialLabel": "本家ブックマーク",
+    "presentationTemplate": "https://pub.confit.atlas.jp/ja/event/jsce2026/presentation/{code}"
+  },
+  "labels": {
+    "themeFilter": "テーマ",
+    "divisionFilter": "部門",
+    "campusFilter": "会場",
+    "filterSummary": "テーマ・部門・会場・キーワード",
+    "venue": "会場",
+    "room": "教室",
+    "authors": "著者",
+    "presenterNote": "* は発表者"
+  },
+  "features": {
+    "categories": true,
+    "showAffiliations": true,
+    "personalPlans": true
+  },
+  "categoryAxisPriority": ["domain", "phase", "method", "issue", "material"],
+  "divisionOrder": [
+    "第I部門",
+    "第II部門",
+    "第III部門",
+    "第IV部門",
+    "第V部門",
+    "第VI部門",
+    "第VII部門",
+    "共通セッション"
+  ],
+  "programNote": {
+    "heading": "プログラムについて",
+    "body": "9月2日〜4日のプログラムPDFをもとに掲載しています。講演を選ぶとConfitの公式ページを開きます。"
+  }
+}

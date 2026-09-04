@@ -8,11 +8,12 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE_PATH = ROOT / "data" / "category_all_source.local.json"
-CLASSIFIED_PATH = ROOT / "data" / "category_all_classified.local.json"
-TAXONOMY_PATH = ROOT / "data" / "category_taxonomy.json"
+JSCE_DATA = ROOT / "events" / "jsce2026"
+SOURCE_PATH = JSCE_DATA / "category_all_source.local.json"
+CLASSIFIED_PATH = JSCE_DATA / "category_all_classified.local.json"
+TAXONOMY_PATH = JSCE_DATA / "category_taxonomy.json"
 REPORT_PATH = ROOT / "docs" / "category-all-report.md"
-REVIEW_PATH = ROOT / "data" / "category_review_queue.local.json"
+REVIEW_PATH = JSCE_DATA / "category_review_queue.local.json"
 
 
 def table(rows: list[tuple[str, int, float]]) -> list[str]:

@@ -1,64 +1,92 @@
-# JSCE 2026 大会ナビ
+# JSCE / JSME 2026 大会ナビ
 
-令和8年度土木学会全国大会の9月2日〜4日を対象にした、スマートフォン向け静的タイムテーブルです。
+土木学会と日本機械学会の2026年全国大会プログラムを、同じ画面で閲覧するための静的Webアプリです。
 
-## 確認方法
+- リポジトリ直下の `index.html`: JSCE 2026
+- `jsme2026/index.html`: JSME 2026
+- `assets/`: 両大会で共有する画面・スタイル
+- `events/<event-id>/`: 大会ごとの設定・公開データ・個人プラン
+- `scripts/extract/`: PDF書式ごとの専用抽出器
+- `sources/`: Git管理外の原本PDF
 
-依存パッケージはありません。リポジトリ直下で次を実行します。
+GitHub Pagesでは次のURLになります。
+
+- `https://tocchibo.github.io/jsce2026-navigator/`
+- `https://tocchibo.github.io/jsce2026-navigator/jsme2026/`
+
+## ローカル確認
 
 ```powershell
 uv run python -m http.server 8000
 ```
 
-ブラウザで `http://localhost:8000/` を開いてください。`index.html` をGitHub Pagesでそのまま公開することもできます。
+ブラウザで以下を開きます。
 
-## 主な機能
+- `http://localhost:8000/`
+- `http://localhost:8000/jsme2026/`
 
-- 「今から1時間」に重なるセッションの表示
-- 「今から1時間」「9/2」「9/3」「9/4」の4タブ切り替え
-- 日別プログラムの開始時刻グループ表示
-- 開催中の講演と次の講演の強調表示
-- 発表者・共同報告者それぞれの所属表示
-- セッションカードから開く全画面の講演一覧
-- 講演番号から生成したConfit公式ページへのリンク
-- Confit本家ブックマークへのリンク
-- 「今から1時間」タブでの表示基準日時の変更（初期値は現在日時）
-- テーマ・部門・キャンパスの複数選択と、題名・著者全員・所属・講演番号による絞り込み
-- 19個の横断テーマによる絞り込みと、セッション・講演のカテゴリ表示
-- URLの `plan` パラメータに応じた個人用スケジュール（対象セッションの全講演を表示し、本命講演と現在時刻に応じた進行状況を強調）
+## 共通機能
+
+- 「今から1時間」と日別プログラムの切り替え
+- 開催中のセッション、講演中・次の講演の強調
+- 分野、部門・企画種別、会場・棟による複数選択フィルター
+- 題名、著者、所属、講演番号によるキーワード検索
+- セッションカードから開く講演一覧
+- Confit公式講演ページ、公式ブックマークへのリンク
+- URLの `plan` パラメータによる個人用スケジュール
 - スマートフォン／PC向けレスポンシブ表示
 
-プログラムPDFから抽出した748セッション、5,636講演を収録しています。
+大会名、日程、テーマ色、データURL、フィルター名などは、各大会の `event.json` で切り替えます。PDF抽出処理は大会ごとの書式に決定的に従うため、共通化せず別モジュールにしています。
 
-## 独自カテゴリ設計
+## 収録データ
 
-講演内容を横断的に探すための分類体系は、[カテゴリ事前設計](docs/category-taxonomy-design.md)にまとめています。機械可読な定義は `data/category_taxonomy.json`、全5,636講演の公開用タグは `data/categories.json` です。分類結果の分布と要確認件数は[全講演一次分類レポート](docs/category-all-report.md)、120講演での事前検証は[層化試行レポート](docs/category-pilot-v02-report.md)に記録しています。
+### JSCE 2026
 
-```powershell
-uv run --no-project python scripts\validate_category_taxonomy.py
+9月2日〜4日の748セッション、5,636講演を収録しています。
+
+JSCE独自の19個の横断テーマは、[カテゴリ事前設計](docs/category-taxonomy-design.md)にまとめています。機械可読な定義は `events/jsce2026/category_taxonomy.json`、公開用タグは `events/jsce2026/categories.json` です。分類結果は[全講演一次分類レポート](docs/category-all-report.md)、120講演での事前検証は[層化試行レポート](docs/category-pilot-v02-report.md)に記録しています。
+
+### JSME 2026
+
+`jsme2026_program_all.pdf` のプログラム欄（先頭117ページ）を対象とし、9月6日〜9日の全分野250開催枠を収録しています。PDFに個別番号がある1,063講演・行事と、個別番号のない33行事を合わせ、画面上では1,096項目を表示します。通常講演に加え、基調講演、フォーラム、ワークショップ、一般公開イベント、関係者向け行事を含みます。
+
+セッション一覧PDFに掲載されたS・Jセッション61件がすべて含まれることを番号で突合しています。個別時刻がPDFに記載されていない講演は推定せず、「時刻記載なし」として扱います。`S171-07` と `S052p-04` はPDFの記載どおり「欠番」として保持しています。
+
+## データ再生成
+
+原本PDFは公開データへ含めず、次の場所に置きます。
+
+```text
+sources/jsce2026/program.pdf
+sources/jsme2026/jsme2026_program_all.pdf
+sources/jsme2026/nenji2026sessions_ja_20260511131150123.pdf
 ```
 
-梗概の著者キーワード・短い内容要約は、PDFからローカル専用ファイルへ抽出します。抽出物はGitの管理対象外です。
+JSMEデータの再生成:
 
 ```powershell
-uv run --no-project python scripts\extract_category_sample.py
-uv run --no-project python scripts\build_category_pilot_v02.py
-uv run --no-project python scripts\analyze_category_pilot_v02.py
+uv run python -m scripts.extract.jsme2026
 ```
 
-全件処理はPDFを1回走査してローカル解析データを作り、公開用タグだけを書き出します。PDF由来の内容要約・著者キーワード・分類スコア・確認キューはGit管理対象外です。
+JSCEデータの再生成:
 
 ```powershell
-uv run --no-project python scripts\extract_all_abstract_summaries.py
-uv run --no-project python scripts\build_category_all.py
-uv run --no-project python scripts\analyze_category_all.py
-uv run --no-project python scripts\validate_category_taxonomy.py
+uv run python -m scripts.extract.jsce2026
 ```
 
-## プログラムデータの再生成
+## 検証
+
+イベント設定、日程、想定件数、セッションID、講演番号、カテゴリ参照をまとめて検証します。
 
 ```powershell
-uv run --no-project python scripts\extract_program.py
+uv run python -m scripts.validate_events
+uv run python scripts\validate_category_taxonomy.py
 ```
 
-PDFのプログラム部から `data\sessions.json` を再生成し、想定件数、講演番号の重複、対象日を検証します。
+ローカルサーバーを起動した状態で、ChromeまたはEdgeを使った両大会のスモークテストを実行できます。
+
+```powershell
+uv run python scripts\browser_smoke_test.py
+```
+
+梗概由来の要約、著者キーワード、分類スコア、確認キューは `*.local.json` としてGit管理外に置きます。

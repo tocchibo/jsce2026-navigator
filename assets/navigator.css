@@ -26,8 +26,8 @@ html {
 body {
   margin: 0;
   background:
-    linear-gradient(rgba(18, 60, 74, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(18, 60, 74, 0.025) 1px, transparent 1px),
+    linear-gradient(color-mix(in srgb, var(--navy) 2.5%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--navy) 2.5%, transparent) 1px, transparent 1px),
     var(--paper);
   background-size: 24px 24px;
   color: var(--ink);
@@ -51,7 +51,7 @@ a {
   z-index: 20;
   top: 0;
   color: white;
-  background: rgba(18, 60, 74, 0.96);
+  background: color-mix(in srgb, var(--navy) 96%, transparent);
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(14px);
 }
@@ -134,13 +134,9 @@ main {
   z-index: 19;
   top: 56px;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--program-tab-count, 4), minmax(0, 1fr));
   padding: 0 8px;
   background: var(--navy);
-}
-
-.has-personal-plan .program-tabs {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .program-tab-plan strong {

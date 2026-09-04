@@ -262,13 +262,13 @@ def main() -> int:
     parser.add_argument(
         "--input",
         type=Path,
-        default=Path("2026/jsce2026_program_all.pdf"),
+        default=Path("sources/jsce2026/program.pdf"),
         help="全プログラムPDF",
     )
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("data/sessions.json"),
+        default=Path("events/jsce2026/sessions.json"),
         help="出力JSON",
     )
     args = parser.parse_args()

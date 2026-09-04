@@ -1,0 +1,519 @@
+{
+  "schema_version": 1,
+  "axes": [
+    {
+      "id": "topic",
+      "label": "分野",
+      "values": [
+        {
+          "id": "topic-45d0a7aa11",
+          "label": "International Union"
+        },
+        {
+          "id": "topic-6553544fa1",
+          "label": "JABEE事業委員会"
+        },
+        {
+          "id": "topic-3a174e4941",
+          "label": "Ladies’Association of JSME （LAJ委員会）"
+        },
+        {
+          "id": "topic-7c2281ce71",
+          "label": "その他"
+        },
+        {
+          "id": "topic-e9a039941e",
+          "label": "エンジンシステム"
+        },
+        {
+          "id": "topic-6d9260a1a5",
+          "label": "スポーツ工学・ヒューマンダイナミクス"
+        },
+        {
+          "id": "topic-09e2d5abae",
+          "label": "バイオエンジニアリング"
+        },
+        {
+          "id": "topic-222c05f4c0",
+          "label": "バイオ・生体・医工学"
+        },
+        {
+          "id": "topic-469c72a5b0",
+          "label": "マイクロ・ナノ工学"
+        },
+        {
+          "id": "topic-7aeba9de6d",
+          "label": "ロボティクス・メカトロニクス"
+        },
+        {
+          "id": "topic-e898186f74",
+          "label": "交通・物流"
+        },
+        {
+          "id": "topic-15de57088f",
+          "label": "人材育成・活躍支援委員会"
+        },
+        {
+          "id": "topic-88f389bdac",
+          "label": "会員部会"
+        },
+        {
+          "id": "topic-0f3f96216e",
+          "label": "動力エネルギーシステム"
+        },
+        {
+          "id": "topic-85a1f0cc42",
+          "label": "動力エネルギーシステム部門"
+        },
+        {
+          "id": "topic-313f3350db",
+          "label": "医工学テクノロジー推進会議"
+        },
+        {
+          "id": "topic-a60c8481d4",
+          "label": "宇宙工学"
+        },
+        {
+          "id": "topic-fa6bbdf1cc",
+          "label": "情報・知能・機械システム"
+        },
+        {
+          "id": "topic-7bfa7bbb9d",
+          "label": "情報・知能・精密機器"
+        },
+        {
+          "id": "topic-cea29978dd",
+          "label": "技術と社会"
+        },
+        {
+          "id": "topic-978f99f554",
+          "label": "技術ロードマップ委員会"
+        },
+        {
+          "id": "topic-116a33e801",
+          "label": "技術・社会・教育"
+        },
+        {
+          "id": "topic-4b219fa6e7",
+          "label": "技術倫理委員会"
+        },
+        {
+          "id": "topic-b91bf25623",
+          "label": "日本クレーン協会"
+        },
+        {
+          "id": "topic-97b302705a",
+          "label": "日本ロボット学会"
+        },
+        {
+          "id": "topic-7acb1a779b",
+          "label": "日本循環器学会"
+        },
+        {
+          "id": "topic-68c471b41e",
+          "label": "材料・加工・生産技術"
+        },
+        {
+          "id": "topic-ac1da4a513",
+          "label": "材料力学"
+        },
+        {
+          "id": "topic-48d8f5d0bc",
+          "label": "材料力学部門"
+        },
+        {
+          "id": "topic-33c3d71826",
+          "label": "機械・インフラの保守・保全，信頼性強化に関する連携分科会"
+        },
+        {
+          "id": "topic-8daf655a3e",
+          "label": "機械力学・計測制御"
+        },
+        {
+          "id": "topic-85618a3e94",
+          "label": "機械材料・材料加工"
+        },
+        {
+          "id": "topic-67d68059b5",
+          "label": "機素潤滑設計"
+        },
+        {
+          "id": "topic-c05e6c94d8",
+          "label": "法工学専門会議"
+        },
+        {
+          "id": "topic-59b0cb31b0",
+          "label": "流体工学"
+        },
+        {
+          "id": "topic-49390fbeb6",
+          "label": "熱工学"
+        },
+        {
+          "id": "topic-06b7a3da9e",
+          "label": "理事会"
+        },
+        {
+          "id": "topic-e5c24f9f0c",
+          "label": "環境・エネルギー"
+        },
+        {
+          "id": "topic-53d31e0bba",
+          "label": "環境工学"
+        },
+        {
+          "id": "topic-06c9793f57",
+          "label": "生産システム"
+        },
+        {
+          "id": "topic-8a9e4cb240",
+          "label": "生産加工・工作機械"
+        },
+        {
+          "id": "topic-d8466dc679",
+          "label": "産業・化学機械と安全"
+        },
+        {
+          "id": "topic-b887b0989d",
+          "label": "解析・設計・機械要素"
+        },
+        {
+          "id": "topic-f3a047ee26",
+          "label": "計算力学"
+        },
+        {
+          "id": "topic-3ca21086bf",
+          "label": "計算力学部門"
+        },
+        {
+          "id": "topic-762190d958",
+          "label": "設計工学・システム"
+        }
+      ]
+    }
+  ],
+  "browse_collections": [
+    {
+      "id": "topic-45d0a7aa11",
+      "label": "International Union",
+      "any": [
+        "topic:topic-45d0a7aa11"
+      ]
+    },
+    {
+      "id": "topic-6553544fa1",
+      "label": "JABEE事業委員会",
+      "any": [
+        "topic:topic-6553544fa1"
+      ]
+    },
+    {
+      "id": "topic-3a174e4941",
+      "label": "Ladies’Association of JSME （LAJ委員会）",
+      "any": [
+        "topic:topic-3a174e4941"
+      ]
+    },
+    {
+      "id": "topic-7c2281ce71",
+      "label": "その他",
+      "any": [
+        "topic:topic-7c2281ce71"
+      ]
+    },
+    {
+      "id": "topic-e9a039941e",
+      "label": "エンジンシステム",
+      "any": [
+        "topic:topic-e9a039941e"
+      ]
+    },
+    {
+      "id": "topic-6d9260a1a5",
+      "label": "スポーツ工学・ヒューマンダイナミクス",
+      "any": [
+        "topic:topic-6d9260a1a5"
+      ]
+    },
+    {
+      "id": "topic-09e2d5abae",
+      "label": "バイオエンジニアリング",
+      "any": [
+        "topic:topic-09e2d5abae"
+      ]
+    },
+    {
+      "id": "topic-222c05f4c0",
+      "label": "バイオ・生体・医工学",
+      "any": [
+        "topic:topic-222c05f4c0"
+      ]
+    },
+    {
+      "id": "topic-469c72a5b0",
+      "label": "マイクロ・ナノ工学",
+      "any": [
+        "topic:topic-469c72a5b0"
+      ]
+    },
+    {
+      "id": "topic-7aeba9de6d",
+      "label": "ロボティクス・メカトロニクス",
+      "any": [
+        "topic:topic-7aeba9de6d"
+      ]
+    },
+    {
+      "id": "topic-e898186f74",
+      "label": "交通・物流",
+      "any": [
+        "topic:topic-e898186f74"
+      ]
+    },
+    {
+      "id": "topic-15de57088f",
+      "label": "人材育成・活躍支援委員会",
+      "any": [
+        "topic:topic-15de57088f"
+      ]
+    },
+    {
+      "id": "topic-88f389bdac",
+      "label": "会員部会",
+      "any": [
+        "topic:topic-88f389bdac"
+      ]
+    },
+    {
+      "id": "topic-0f3f96216e",
+      "label": "動力エネルギーシステム",
+      "any": [
+        "topic:topic-0f3f96216e"
+      ]
+    },
+    {
+      "id": "topic-85a1f0cc42",
+      "label": "動力エネルギーシステム部門",
+      "any": [
+        "topic:topic-85a1f0cc42"
+      ]
+    },
+    {
+      "id": "topic-313f3350db",
+      "label": "医工学テクノロジー推進会議",
+      "any": [
+        "topic:topic-313f3350db"
+      ]
+    },
+    {
+      "id": "topic-a60c8481d4",
+      "label": "宇宙工学",
+      "any": [
+        "topic:topic-a60c8481d4"
+      ]
+    },
+    {
+      "id": "topic-fa6bbdf1cc",
+      "label": "情報・知能・機械システム",
+      "any": [
+        "topic:topic-fa6bbdf1cc"
+      ]
+    },
+    {
+      "id": "topic-7bfa7bbb9d",
+      "label": "情報・知能・精密機器",
+      "any": [
+        "topic:topic-7bfa7bbb9d"
+      ]
+    },
+    {
+      "id": "topic-cea29978dd",
+      "label": "技術と社会",
+      "any": [
+        "topic:topic-cea29978dd"
+      ]
+    },
+    {
+      "id": "topic-978f99f554",
+      "label": "技術ロードマップ委員会",
+      "any": [
+        "topic:topic-978f99f554"
+      ]
+    },
+    {
+      "id": "topic-116a33e801",
+      "label": "技術・社会・教育",
+      "any": [
+        "topic:topic-116a33e801"
+      ]
+    },
+    {
+      "id": "topic-4b219fa6e7",
+      "label": "技術倫理委員会",
+      "any": [
+        "topic:topic-4b219fa6e7"
+      ]
+    },
+    {
+      "id": "topic-b91bf25623",
+      "label": "日本クレーン協会",
+      "any": [
+        "topic:topic-b91bf25623"
+      ]
+    },
+    {
+      "id": "topic-97b302705a",
+      "label": "日本ロボット学会",
+      "any": [
+        "topic:topic-97b302705a"
+      ]
+    },
+    {
+      "id": "topic-7acb1a779b",
+      "label": "日本循環器学会",
+      "any": [
+        "topic:topic-7acb1a779b"
+      ]
+    },
+    {
+      "id": "topic-68c471b41e",
+      "label": "材料・加工・生産技術",
+      "any": [
+        "topic:topic-68c471b41e"
+      ]
+    },
+    {
+      "id": "topic-ac1da4a513",
+      "label": "材料力学",
+      "any": [
+        "topic:topic-ac1da4a513"
+      ]
+    },
+    {
+      "id": "topic-48d8f5d0bc",
+      "label": "材料力学部門",
+      "any": [
+        "topic:topic-48d8f5d0bc"
+      ]
+    },
+    {
+      "id": "topic-33c3d71826",
+      "label": "機械・インフラの保守・保全，信頼性強化に関する連携分科会",
+      "any": [
+        "topic:topic-33c3d71826"
+      ]
+    },
+    {
+      "id": "topic-8daf655a3e",
+      "label": "機械力学・計測制御",
+      "any": [
+        "topic:topic-8daf655a3e"
+      ]
+    },
+    {
+      "id": "topic-85618a3e94",
+      "label": "機械材料・材料加工",
+      "any": [
+        "topic:topic-85618a3e94"
+      ]
+    },
+    {
+      "id": "topic-67d68059b5",
+      "label": "機素潤滑設計",
+      "any": [
+        "topic:topic-67d68059b5"
+      ]
+    },
+    {
+      "id": "topic-c05e6c94d8",
+      "label": "法工学専門会議",
+      "any": [
+        "topic:topic-c05e6c94d8"
+      ]
+    },
+    {
+      "id": "topic-59b0cb31b0",
+      "label": "流体工学",
+      "any": [
+        "topic:topic-59b0cb31b0"
+      ]
+    },
+    {
+      "id": "topic-49390fbeb6",
+      "label": "熱工学",
+      "any": [
+        "topic:topic-49390fbeb6"
+      ]
+    },
+    {
+      "id": "topic-06b7a3da9e",
+      "label": "理事会",
+      "any": [
+        "topic:topic-06b7a3da9e"
+      ]
+    },
+    {
+      "id": "topic-e5c24f9f0c",
+      "label": "環境・エネルギー",
+      "any": [
+        "topic:topic-e5c24f9f0c"
+      ]
+    },
+    {
+      "id": "topic-53d31e0bba",
+      "label": "環境工学",
+      "any": [
+        "topic:topic-53d31e0bba"
+      ]
+    },
+    {
+      "id": "topic-06c9793f57",
+      "label": "生産システム",
+      "any": [
+        "topic:topic-06c9793f57"
+      ]
+    },
+    {
+      "id": "topic-8a9e4cb240",
+      "label": "生産加工・工作機械",
+      "any": [
+        "topic:topic-8a9e4cb240"
+      ]
+    },
+    {
+      "id": "topic-d8466dc679",
+      "label": "産業・化学機械と安全",
+      "any": [
+        "topic:topic-d8466dc679"
+      ]
+    },
+    {
+      "id": "topic-b887b0989d",
+      "label": "解析・設計・機械要素",
+      "any": [
+        "topic:topic-b887b0989d"
+      ]
+    },
+    {
+      "id": "topic-f3a047ee26",
+      "label": "計算力学",
+      "any": [
+        "topic:topic-f3a047ee26"
+      ]
+    },
+    {
+      "id": "topic-3ca21086bf",
+      "label": "計算力学部門",
+      "any": [
+        "topic:topic-3ca21086bf"
+      ]
+    },
+    {
+      "id": "topic-762190d958",
+      "label": "設計工学・システム",
+      "any": [
+        "topic:topic-762190d958"
+      ]
+    }
+  ]
+}

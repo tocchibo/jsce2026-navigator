@@ -9,10 +9,11 @@ from build_category_pilot_v02 import classify
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE_PATH = ROOT / "data" / "category_all_source.local.json"
-TAXONOMY_PATH = ROOT / "data" / "category_taxonomy.json"
-PUBLIC_OUTPUT_PATH = ROOT / "data" / "categories.json"
-LOCAL_OUTPUT_PATH = ROOT / "data" / "category_all_classified.local.json"
+JSCE_DATA = ROOT / "events" / "jsce2026"
+SOURCE_PATH = JSCE_DATA / "category_all_source.local.json"
+TAXONOMY_PATH = JSCE_DATA / "category_taxonomy.json"
+PUBLIC_OUTPUT_PATH = JSCE_DATA / "categories.json"
+LOCAL_OUTPUT_PATH = JSCE_DATA / "category_all_classified.local.json"
 EXPECTED_PRESENTATIONS = 5636
 
 

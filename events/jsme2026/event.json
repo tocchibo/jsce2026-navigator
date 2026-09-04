@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "id": "jsme2026",
+  "name": "日本機械学会 2026年度年次大会",
+  "shortName": "JSME 2026",
+  "pageTitle": "JSME 2026 Navigator",
+  "subtitle": "大会ナビ",
+  "brandMark": "機",
+  "description": "日本機械学会 2026年度年次大会の全分野を回るためのスマートフォン向けタイムテーブル",
+  "dates": ["2026-09-06", "2026-09-07", "2026-09-08", "2026-09-09"],
+  "timeZone": "Asia/Tokyo",
+  "expectedCounts": { "sessions": 250, "presentations": 1096 },
+  "theme": {
+    "primary": "#43316f",
+    "primarySoft": "#e8e2f3",
+    "accent": "#c55336",
+    "accentSoft": "#fbece7",
+    "highlight": "#f2cf58"
+  },
+  "data": {
+    "sessions": "sessions.json",
+    "taxonomy": "category_taxonomy.json",
+    "categories": "categories.json",
+    "plans": "plans/"
+  },
+  "links": {
+    "official": "https://pub.confit.atlas.jp/ja/event/jsme2026/bookmarks",
+    "officialLabel": "本家ブックマーク",
+    "presentationTemplate": "https://pub.confit.atlas.jp/ja/event/jsme2026/presentation/{code}"
+  },
+  "labels": {
+    "themeFilter": "分野",
+    "divisionFilter": "企画種別",
+    "campusFilter": "会場",
+    "filterSummary": "分野・企画種別・棟・キーワード",
+    "venue": "会場",
+    "room": "会場",
+    "authors": "登壇者・著者",
+    "presenterNote": "〇 は発表者。個別時刻のない講演は時刻記載なし。講演番号のない行事は企画自体を表示"
+  },
+  "features": {
+    "categories": true,
+    "showAffiliations": false,
+    "personalPlans": true
+  },
+  "categoryAxisPriority": ["topic"],
+  "divisionOrder": [
+    "部門単独セッション",
+    "部門横断セッション",
+    "特別行事：基調講演",
+    "特別行事：フォーラム",
+    "特別行事：ワークショップ",
+    "特別行事：ランチョンセミナー",
+    "特別行事：交流会・懇親会",
+    "特別行事",
+    "特別講演：特別講演",
+    "一般公開イベント：基調講演",
+    "一般公開イベント：市民フォーラム",
+    "一般公開イベント：フォーラム",
+    "一般公開イベント：ワークショップ",
+    "一般公開イベント：キッズプログラム",
+    "一般公開イベント：交流会・意見交換会",
+    "一般公開イベント：展示会",
+    "関係者向け"
+  ],
+  "programNote": {
+    "heading": "全体プログラムについて",
+    "body": "9月6日〜9日の全分野250開催枠を掲載しています。全61件のS・Jセッションはセッション一覧PDFとも突合済みです。講演を選ぶとConfitの公式ページを開きます。"
+  }
+}

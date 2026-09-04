@@ -1,7 +1,8 @@
-const EVENT_DATES = ["2026-09-02", "2026-09-03", "2026-09-04"];
-const PRESENTATION_URL = "https://pub.confit.atlas.jp/ja/event/jsce2026/presentation/";
+const EVENT_CONFIG_PATH = document.documentElement.dataset.eventConfig;
 const planSlug = new URLSearchParams(window.location.search).get("plan");
 
+let eventConfig = null;
+let eventConfigUrl = null;
 let sessions = [];
 let personalPlan = null;
 const sessionsById = new Map();
@@ -26,7 +27,7 @@ const state = {
   activeSessionId: null,
 };
 
-const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
+let dateFormatter = new Intl.DateTimeFormat("ja-JP", {
   month: "long",
   day: "numeric",
   weekday: "short",
@@ -45,6 +46,50 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function normalizeTalk(rawTalk) {
+  if (Array.isArray(rawTalk)) {
+    return {
+      start: rawTalk[0] ?? "",
+      end: "",
+      code: rawTalk[1] ?? "",
+      title: rawTalk[2] ?? "",
+      presenter: rawTalk[3] ?? "",
+      authors: rawTalk[4] ?? "",
+      status: "scheduled",
+    };
+  }
+  return {
+    start: rawTalk.start ?? "",
+    end: rawTalk.end ?? "",
+    code: rawTalk.code ?? rawTalk.id ?? "",
+    title: rawTalk.title ?? "",
+    presenter: rawTalk.presenter ?? "",
+    authors: rawTalk.authors ?? rawTalk.authorsText ?? "",
+    contributors: rawTalk.contributors ?? null,
+    status: rawTalk.status ?? "scheduled",
+    url: rawTalk.url ?? "",
+  };
+}
+
+function normalizeSession(rawSession) {
+  return {
+    ...rawSession,
+    talks: (rawSession.talks ?? rawSession.presentations ?? []).map(normalizeTalk),
+  };
+}
+
+function eventResourceUrl(relativePath) {
+  if (!relativePath) return null;
+  return new URL(relativePath, eventConfigUrl).href;
+}
+
+function talkUrl(talk) {
+  if (talk.status === "missing" || talk.status === "session") return null;
+  if (talk.url) return talk.url;
+  const template = eventConfig?.links?.presentationTemplate;
+  return template ? template.replace("{code}", encodeURIComponent(talk.code)) : null;
 }
 
 function planStatus(entry) {
@@ -78,19 +123,21 @@ function sessionStatus(session) {
 
 function talkStatus(session, talkIndex) {
   if (displayClock.date !== session.date) return null;
+  const talk = session.talks[talkIndex];
+  if (!talk.start || talk.status === "missing") return null;
   const now = minutes(displayClock.time);
-  const talkStart = minutes(session.talks[talkIndex][0]);
-  const talkEnd =
-    talkIndex + 1 < session.talks.length
-      ? minutes(session.talks[talkIndex + 1][0])
-      : minutes(session.end);
+  const talkStart = minutes(talk.start);
+  const nextTimedTalk = session.talks.slice(talkIndex + 1).find((item) => item.start);
+  const talkEnd = minutes(talk.end || nextTimedTalk?.start || session.end);
   if (now >= talkStart && now < talkEnd) {
     return { label: "開催中", className: "is-current" };
   }
   if (now >= talkEnd) {
     return { label: "終了", className: "is-ended" };
   }
-  const nextIndex = session.talks.findIndex((talk) => minutes(talk[0]) > now);
+  const nextIndex = session.talks.findIndex(
+    (item) => item.start && item.status !== "missing" && minutes(item.start) > now,
+  );
   if (talkIndex === nextIndex) {
     return { label: "次", className: "is-next" };
   }
@@ -110,8 +157,8 @@ function currentTalkMarkup(session) {
   return `
     <div class="session-current-talk">
       <span>講演中</span>
-      <b>${escapeHtml(talk[0])}</b>
-      <span>${escapeHtml(talk[1])} ${escapeHtml(talk[2])}</span>
+      <b>${escapeHtml(talk.start)}</b>
+      <span>${escapeHtml(talk.code)} ${escapeHtml(talk.title)}</span>
     </div>`;
 }
 
@@ -134,7 +181,17 @@ function uniqueAffiliations(ids, affiliationById) {
 }
 
 function talkContributorDetails(talk) {
-  const [, , , rawPresenter, authors = ""] = talk;
+  if (talk.contributors) {
+    return {
+      names: talk.contributors.names ?? talk.authors,
+      presenter: talk.contributors.presenter ?? talk.presenter,
+      presenterAffiliations: talk.contributors.presenterAffiliations ?? [],
+      coauthorAffiliations: talk.contributors.coauthorAffiliations ?? [],
+      hasCoauthors: talk.contributors.hasCoauthors ?? false,
+    };
+  }
+  const rawPresenter = talk.presenter;
+  const authors = talk.authors;
   const affiliationStart = authors.search(/\s+\(\d+\.\s*/);
   const names = affiliationStart >= 0 ? authors.slice(0, affiliationStart) : authors;
   const rawAffiliations = affiliationStart >= 0 ? authors.slice(affiliationStart).trim() : "";
@@ -189,7 +246,13 @@ function affiliationText(affiliations) {
 function talkCategoryMarkup(code) {
   const category = categoriesByCode.get(code);
   if (!category) return "";
-  const priorities = ["domain", "phase", "method", "issue", "material"];
+  const priorities = eventConfig.categoryAxisPriority ?? [
+    "domain",
+    "phase",
+    "method",
+    "issue",
+    "material",
+  ];
   const selected = [];
   for (const axisId of priorities) {
     const labelId = category.labels[axisId]?.[0];
@@ -208,37 +271,38 @@ function talkCategoryMarkup(code) {
 }
 
 function talkMarkup(talk, session, talkIndex) {
-  const [time, code, title] = talk;
   const temporalStatus = talkStatus(session, talkIndex);
-  const planEntry = plannedTalks.get(code);
+  const planEntry = plannedTalks.get(talk.code);
   const isReferencePick = planStatus(planEntry) === "reference";
   const isPersonalPick = Boolean(planEntry) && !isReferencePick;
   const contributors = talkContributorDetails(talk);
+  const link = talkUrl(talk);
+  const showAffiliations = eventConfig.features?.showAffiliations !== false;
   return `
     <li class="talk-item ${temporalStatus?.className ?? ""} ${isPersonalPick ? "is-personal-pick" : ""} ${isReferencePick ? "is-reference-pick" : ""}">
-      <a class="talk-link" href="${PRESENTATION_URL}${encodeURIComponent(code)}" target="_blank" rel="noopener noreferrer">
+      <a class="talk-link ${link ? "" : "is-disabled"}" ${link ? `href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer"` : "aria-disabled=\"true\""}>
         <span class="talk-time">
-          <span>${escapeHtml(time)}</span>
+          <span>${escapeHtml(talk.start || "時刻記載なし")}</span>
           ${temporalStatus && temporalStatus.className !== "is-ended" ? `<b>${temporalStatus.label}</b>` : ""}
         </span>
         <span>
-          <span class="talk-code">${escapeHtml(code)}</span>
+          <span class="talk-code">${escapeHtml(talk.code)}</span>
           ${planEntry ? planTalkBadgeMarkup(planEntry) : ""}
-          <span class="talk-title">${escapeHtml(title)}</span>
-          ${talkCategoryMarkup(code)}
-          <span class="talk-authors"><b>著者</b>${escapeHtml(contributors.names)}</span>
-          <span class="talk-presenter-affiliation"><b>発表者所属</b>${affiliationText(
+          <span class="talk-title">${escapeHtml(talk.title)}</span>
+          ${talkCategoryMarkup(talk.code)}
+          ${contributors.names ? `<span class="talk-authors"><b>${escapeHtml(eventConfig.labels?.authors ?? "著者")}</b>${escapeHtml(contributors.names)}</span>` : ""}
+          ${showAffiliations ? `<span class="talk-presenter-affiliation"><b>発表者所属</b>${affiliationText(
             contributors.presenterAffiliations,
-          )}</span>
+          )}</span>` : ""}
           ${
-            contributors.hasCoauthors
+            showAffiliations && contributors.hasCoauthors
               ? `<span class="talk-coauthor-affiliations"><b>共同報告者所属</b>${affiliationText(
                   contributors.coauthorAffiliations,
                 )}</span>`
               : ""
           }
         </span>
-        <span class="external-icon" aria-hidden="true">↗</span>
+        ${link ? '<span class="external-icon" aria-hidden="true">↗</span>' : ""}
       </a>
     </li>`;
 }
@@ -257,7 +321,7 @@ function sessionCollectionCounts(session) {
     .map((collection, order) => ({
       ...collection,
       order,
-      count: session.talks.filter((talk) => collectionMatchesCode(collection, talk[1])).length,
+      count: session.talks.filter((talk) => collectionMatchesCode(collection, talk.code)).length,
     }))
     .filter((collection) => collection.count > 0)
     .sort((a, b) => {
@@ -285,7 +349,7 @@ function sessionMarkup(session) {
   const status = sessionStatus(session);
   const planCounts = { planned: 0, must: 0, fixed: 0, reference: 0 };
   for (const talk of session.talks) {
-    const entry = plannedTalks.get(talk[1]);
+    const entry = plannedTalks.get(talk.code);
     if (entry) planCounts[planStatus(entry)] += 1;
   }
   const attendedCount = planCounts.planned + planCounts.must + planCounts.fixed;
@@ -306,8 +370,8 @@ function sessionMarkup(session) {
         ${currentTalkMarkup(session)}
         ${sessionThemeMarkup(session)}
         <div class="meta-row">
-          <span aria-label="会場"><span aria-hidden="true">●</span> ${escapeHtml(session.campus)}</span>
-          <span aria-label="教室"><b>${escapeHtml(session.room)}</b></span>
+          <span aria-label="${escapeHtml(eventConfig.labels?.venue ?? "会場")}"><span aria-hidden="true">●</span> ${escapeHtml(session.campus)}</span>
+          <span aria-label="${escapeHtml(eventConfig.labels?.room ?? "教室")}"><b>${escapeHtml(session.room)}</b></span>
         </div>
       </div>
     </article>`;
@@ -316,8 +380,8 @@ function sessionMarkup(session) {
 function talksMarkup(session) {
   return `
     <div class="talks-heading">
-      <span>講演一覧（${session.talks.length}件）・* は発表者</span>
-      <span>座長：${escapeHtml(session.chair)}</span>
+      <span>講演一覧（${session.talks.length}件）・${escapeHtml(eventConfig.labels?.presenterNote ?? "")}</span>
+      ${session.chair ? `<span>座長：${escapeHtml(session.chair)}</span>` : ""}
     </div>
     <ol class="talk-list">${session.talks
       .map((talk, index) => talkMarkup(talk, session, index))
@@ -338,8 +402,8 @@ function sessionDialogMarkup(session) {
       ${currentTalkMarkup(session)}
       ${sessionThemeMarkup(session)}
       <div class="meta-row">
-        <span aria-label="会場"><span aria-hidden="true">●</span> ${escapeHtml(session.campus)}</span>
-        <span aria-label="教室"><b>${escapeHtml(session.room)}</b></span>
+        <span aria-label="${escapeHtml(eventConfig.labels?.venue ?? "会場")}"><span aria-hidden="true">●</span> ${escapeHtml(session.campus)}</span>
+        <span aria-label="${escapeHtml(eventConfig.labels?.room ?? "教室")}"><b>${escapeHtml(session.room)}</b></span>
       </div>
     </section>
     <div class="talks session-dialog-talks">${talksMarkup(session)}</div>`;
@@ -369,7 +433,7 @@ function emptyMarkup(message = "この時間帯に該当するセッションは
 
 function resolveTalk(code) {
   for (const session of sessions) {
-    const talkIndex = session.talks.findIndex((talk) => talk[1] === code);
+    const talkIndex = session.talks.findIndex((talk) => talk.code === code);
     if (talkIndex >= 0) {
       return { session, talk: session.talks[talkIndex], talkIndex };
     }
@@ -394,38 +458,39 @@ function planTalkTemporalStatus(session, talkIndex) {
 }
 
 function planTalkMarkup(talk, talkEntries, session, talkIndex) {
-  const [time, code, title] = talk;
-  const planEntry = talkEntries.get(code);
+  const planEntry = talkEntries.get(talk.code);
   const isReferencePick = planStatus(planEntry) === "reference";
   const isPersonalPick = Boolean(planEntry) && !isReferencePick;
   const temporalStatus = planTalkTemporalStatus(session, talkIndex);
   const contributors = talkContributorDetails(talk);
+  const link = talkUrl(talk);
+  const showAffiliations = eventConfig.features?.showAffiliations !== false;
   return `
     <li class="plan-talk ${temporalStatus?.className ?? ""} ${isPersonalPick ? "is-personal-pick" : ""} ${isReferencePick ? "is-reference-pick" : ""}">
-      <a href="${PRESENTATION_URL}${encodeURIComponent(code)}" target="_blank" rel="noopener noreferrer">
+      <a ${link ? `href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer"` : "aria-disabled=\"true\""}>
         <span class="plan-talk-time">
-          <span>${escapeHtml(time)}</span>
+          <span>${escapeHtml(talk.start || "時刻記載なし")}</span>
           ${temporalStatus && temporalStatus.className !== "is-ended" ? `<b>${temporalStatus.label}</b>` : ""}
         </span>
         <span>
           <span class="plan-talk-code-row">
-            <b>${escapeHtml(code)}</b>
+            <b>${escapeHtml(talk.code)}</b>
             ${planEntry ? planTalkBadgeMarkup(planEntry) : ""}
           </span>
-          <strong>${escapeHtml(title)}</strong>
+          <strong>${escapeHtml(talk.title)}</strong>
           <small class="plan-talk-presenter">発表者：${escapeHtml(contributors.presenter)}</small>
-          <small class="plan-talk-affiliation"><b>発表者所属</b>${affiliationText(
+          ${showAffiliations ? `<small class="plan-talk-affiliation"><b>発表者所属</b>${affiliationText(
             contributors.presenterAffiliations,
-          )}</small>
+          )}</small>` : ""}
           ${
-            contributors.hasCoauthors
+            showAffiliations && contributors.hasCoauthors
               ? `<small class="plan-talk-affiliation"><b>共同報告者所属</b>${affiliationText(
                   contributors.coauthorAffiliations,
                 )}</small>`
               : ""
           }
         </span>
-        <span aria-hidden="true">↗</span>
+        ${link ? '<span aria-hidden="true">↗</span>' : ""}
       </a>
     </li>`;
 }
@@ -602,7 +667,10 @@ function renderPersonalPlan() {
 
 async function loadPersonalPlan() {
   if (!planSlug || !/^[a-z0-9_-]+$/i.test(planSlug)) return;
-  const response = await fetch(`data/plans/${encodeURIComponent(planSlug)}.json`);
+  if (eventConfig.features?.personalPlans === false || !eventConfig.data?.plans) return;
+  const response = await fetch(
+    eventResourceUrl(`${eventConfig.data.plans}${encodeURIComponent(planSlug)}.json`),
+  );
   if (!response.ok) {
     console.warn(`個人プランを読み込めませんでした: HTTP ${response.status}`);
     return;
@@ -623,7 +691,11 @@ async function loadPersonalPlan() {
   }
   document.querySelector(".program-tab-plan").hidden = false;
   document.body.classList.add("has-personal-plan");
-  document.title = `${personalPlan.title} | JSCE 2026 Navigator`;
+  document.title = `${personalPlan.title} | ${eventConfig.pageTitle}`;
+  document.documentElement.style.setProperty(
+    "--program-tab-count",
+    String(eventConfig.dates.length + 2),
+  );
   state.activeTab = "plan";
 }
 
@@ -703,7 +775,7 @@ function matchesFilters(session) {
     const selectedCollections = browseCollections.filter((item) => state.themes.has(item.id));
     if (
       !selectedCollections.some((collection) =>
-        session.talks.some((talk) => collectionMatchesCode(collection, talk[1])),
+        session.talks.some((talk) => collectionMatchesCode(collection, talk.code)),
       )
     ) {
       return false;
@@ -785,7 +857,7 @@ function render() {
         a.campus.localeCompare(b.campus, "ja") ||
         a.room.localeCompare(b.room, "ja"),
     );
-  const scheduleDate = state.activeTab === "now" ? EVENT_DATES[0] : state.activeTab;
+  const scheduleDate = state.activeTab === "now" ? eventConfig.dates[0] : state.activeTab;
   const allDaySessions = sessions
     .filter((session) => session.date === scheduleDate)
     .sort(
@@ -848,18 +920,13 @@ function multiSelectOptionsMarkup(groupId, values) {
 }
 
 function populateFilterOptions() {
-  const divisionOrder = [
-    "第I部門",
-    "第II部門",
-    "第III部門",
-    "第IV部門",
-    "第V部門",
-    "第VI部門",
-    "第VII部門",
-    "共通セッション",
-  ];
+  const divisionOrder = eventConfig.divisionOrder ?? [];
+  const divisionRank = (value) => {
+    const index = divisionOrder.indexOf(value);
+    return index >= 0 ? index : divisionOrder.length;
+  };
   const divisions = [...new Set(sessions.map((session) => session.division))].sort(
-    (a, b) => divisionOrder.indexOf(a) - divisionOrder.indexOf(b),
+    (a, b) => divisionRank(a) - divisionRank(b) || a.localeCompare(b, "ja"),
   );
   const campuses = [...new Set(sessions.map((session) => session.campus))].sort((a, b) =>
     a.localeCompare(b, "ja"),
@@ -890,7 +957,7 @@ function japanNow() {
     hour: "2-digit",
     minute: "2-digit",
     hourCycle: "h23",
-    timeZone: "Asia/Tokyo",
+    timeZone: eventConfig?.timeZone ?? "Asia/Tokyo",
   }).formatToParts(new Date());
   const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
   return {
@@ -901,7 +968,7 @@ function japanNow() {
 
 function buildSearchIndex(session) {
   const categoryLabels = session.talks.flatMap((talk) => {
-    const category = categoriesByCode.get(talk[1]);
+    const category = categoriesByCode.get(talk.code);
     if (!category) return [];
     return Object.entries(category.labels).flatMap(([axisId, labelIds]) =>
       labelIds.map((labelId) => categoryLabelByQualifiedId.get(`${axisId}:${labelId}`) ?? ""),
@@ -913,7 +980,12 @@ function buildSearchIndex(session) {
     session.campus,
     session.room,
     session.chair,
-    ...session.talks.flatMap((talk) => talk.slice(1)),
+    ...session.talks.flatMap((talk) => [
+      talk.code,
+      talk.title,
+      talk.presenter,
+      talk.authors,
+    ]),
     ...categoryLabels,
   ]
     .join(" ")
@@ -922,28 +994,32 @@ function buildSearchIndex(session) {
 
 async function loadSessions() {
   try {
-    const [sessionsResponse, taxonomyResponse, categoriesResponse] = await Promise.all([
-      fetch("data/sessions.json"),
-      fetch("data/category_taxonomy.json"),
-      fetch("data/categories.json"),
-    ]);
-    for (const response of [sessionsResponse, taxonomyResponse, categoriesResponse]) {
+    const categoriesEnabled = eventConfig.features?.categories !== false;
+    const requests = [fetch(eventResourceUrl(eventConfig.data.sessions))];
+    if (categoriesEnabled) {
+      requests.push(fetch(eventResourceUrl(eventConfig.data.taxonomy)));
+      requests.push(fetch(eventResourceUrl(eventConfig.data.categories)));
+    }
+    const [sessionsResponse, taxonomyResponse, categoriesResponse] = await Promise.all(requests);
+    for (const response of [sessionsResponse, taxonomyResponse, categoriesResponse].filter(Boolean)) {
       if (!response.ok) throw new Error(`${response.url}: HTTP ${response.status}`);
     }
-    const [loadedSessions, taxonomy, categoryData] = await Promise.all([
-      sessionsResponse.json(),
-      taxonomyResponse.json(),
-      categoriesResponse.json(),
-    ]);
-    sessions = loadedSessions;
-    browseCollections = taxonomy.browse_collections;
-    for (const axis of taxonomy.axes) {
-      for (const value of axis.values) {
-        categoryLabelByQualifiedId.set(`${axis.id}:${value.id}`, value.label);
+    const loadedSessions = await sessionsResponse.json();
+    sessions = loadedSessions.map(normalizeSession);
+    if (categoriesEnabled) {
+      const [taxonomy, categoryData] = await Promise.all([
+        taxonomyResponse.json(),
+        categoriesResponse.json(),
+      ]);
+      browseCollections = taxonomy.browse_collections;
+      for (const axis of taxonomy.axes) {
+        for (const value of axis.values) {
+          categoryLabelByQualifiedId.set(`${axis.id}:${value.id}`, value.label);
+        }
       }
-    }
-    for (const category of categoryData.presentations) {
-      categoriesByCode.set(category.code, category);
+      for (const category of categoryData.presentations) {
+        categoriesByCode.set(category.code, category);
+      }
     }
     for (const session of sessions) {
       sessionsById.set(session.id, session);
@@ -960,36 +1036,6 @@ async function loadSessions() {
   }
 }
 
-document.querySelectorAll("[data-program-tab]").forEach((button) => {
-  button.addEventListener("click", () => {
-    state.activeTab = button.dataset.programTab;
-    render();
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
-});
-
-document.querySelector("#reference-datetime").addEventListener("change", (event) => {
-  const [date, time] = event.target.value.split("T");
-  if (!date || !time) return;
-  state.referenceDate = date;
-  state.referenceTime = time;
-  state.followRealTime = false;
-  render();
-});
-
-document.querySelector("#use-real-time").addEventListener("click", () => {
-  const now = japanNow();
-  state.referenceDate = now.date;
-  state.referenceTime = now.time;
-  state.followRealTime = true;
-  render();
-});
-
-document.querySelector("#query-filter").addEventListener("input", (event) => {
-  state.query = event.target.value.trim();
-  render();
-});
-
 function bindMultiFilter(selector, selectedValues) {
   document.querySelector(selector).addEventListener("change", (event) => {
     if (event.target.type !== "checkbox") return;
@@ -999,72 +1045,198 @@ function bindMultiFilter(selector, selectedValues) {
   });
 }
 
-bindMultiFilter("#division-filter", state.divisions);
-bindMultiFilter("#campus-filter", state.campuses);
-bindMultiFilter("#theme-filter", state.themes);
+function configureEventPage() {
+  document.title = eventConfig.pageTitle;
+  document.querySelector("#page-description").content = eventConfig.description;
+  document.querySelector("#theme-color").content = eventConfig.theme.primary;
+  document.querySelector("#brand-mark").textContent = eventConfig.brandMark;
+  document.querySelector("#brand-name").textContent = eventConfig.shortName;
+  document.querySelector("#brand-subtitle").textContent = eventConfig.subtitle;
+  document.querySelector("#theme-filter-name").textContent = eventConfig.labels.themeFilter;
+  document.querySelector("#division-filter-name").textContent = eventConfig.labels.divisionFilter;
+  document.querySelector("#campus-filter-name").textContent = eventConfig.labels.campusFilter;
+  document.querySelector("#filter-summary-note").textContent = eventConfig.labels.filterSummary;
+  document.querySelector("#program-note-heading").textContent = eventConfig.programNote.heading;
+  document.querySelector("#program-note-body").textContent = eventConfig.programNote.body;
 
-document.querySelector("#clear-filters").addEventListener("click", () => {
-  state.query = "";
-  state.divisions.clear();
-  state.campuses.clear();
-  state.themes.clear();
-  document.querySelector("#query-filter").value = "";
-  document
-    .querySelectorAll(".multi-select-options input[type='checkbox']")
-    .forEach((input) => {
-      input.checked = false;
+  const rootStyle = document.documentElement.style;
+  rootStyle.setProperty("--navy", eventConfig.theme.primary);
+  rootStyle.setProperty("--navy-soft", eventConfig.theme.primarySoft);
+  rootStyle.setProperty("--orange", eventConfig.theme.accent);
+  rootStyle.setProperty("--orange-soft", eventConfig.theme.accentSoft);
+  rootStyle.setProperty("--yellow", eventConfig.theme.highlight);
+  rootStyle.setProperty("--program-tab-count", String(eventConfig.dates.length + 1));
+  document.body.dataset.event = eventConfig.id;
+
+  const icon = document.querySelector('link[rel="icon"]');
+  const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="${eventConfig.theme.highlight}"/><text x="32" y="43" text-anchor="middle" font-size="34">${eventConfig.brandMark}</text></svg>`;
+  icon.href = `data:image/svg+xml,${encodeURIComponent(iconSvg)}`;
+
+  const officialLink = document.querySelector("#official-link");
+  if (eventConfig.links?.official) {
+    officialLink.href = eventConfig.links.official;
+    document.querySelector("#official-link-label").textContent =
+      eventConfig.links.officialLabel ?? "公式プログラム";
+  } else {
+    officialLink.hidden = true;
+  }
+
+  const weekdayFormatter = new Intl.DateTimeFormat("ja-JP", {
+    weekday: "short",
+    timeZone: eventConfig.timeZone,
+  });
+  const dateButtons = eventConfig.dates
+    .map((date, index) => {
+      const [, month, day] = date.split("-");
+      const weekday = weekdayFormatter.format(new Date(`${date}T12:00:00+09:00`));
+      return `
+        <button class="program-tab" type="button" data-program-tab="${escapeHtml(date)}">
+          <span>DAY ${index + 1}</span>
+          <strong>${Number(month)}/${Number(day)}</strong>
+          <small>${escapeHtml(weekday)}</small>
+        </button>`;
+    })
+    .join("");
+  document.querySelector("#program-tabs").innerHTML = `
+    <button class="program-tab program-tab-plan" type="button" data-program-tab="plan" hidden>
+      <span>MY PLAN</span>
+      <strong>本命</strong>
+    </button>
+    <button class="program-tab program-tab-now is-active" type="button" data-program-tab="now">
+      <span>NOW</span>
+      <strong>今から1時間</strong>
+    </button>
+    ${dateButtons}`;
+
+  dateFormatter = new Intl.DateTimeFormat("ja-JP", {
+    month: "long",
+    day: "numeric",
+    weekday: "short",
+    timeZone: eventConfig.timeZone,
+  });
+}
+
+function bindEventHandlers() {
+  document.querySelectorAll("[data-program-tab]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.activeTab = button.dataset.programTab;
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
     });
-  render();
-});
+  });
 
-document.addEventListener("click", (event) => {
-  const summary = event.target.closest?.(".time-group-summary");
-  if (!summary) return;
-  const timeGroup = summary.parentElement;
-  state.timeGroupOpen.set(timeGroup.dataset.timeGroupKey, !timeGroup.open);
-});
+  document.querySelector("#reference-datetime").addEventListener("change", (event) => {
+    const [date, time] = event.target.value.split("T");
+    if (!date || !time) return;
+    state.referenceDate = date;
+    state.referenceTime = time;
+    state.followRealTime = false;
+    render();
+  });
 
-document.addEventListener("click", (event) => {
-  const card = event.target.closest?.(".session-card");
-  if (!card) return;
-  const session = sessionsById.get(card.dataset.sessionId);
-  if (session) openSessionDialog(session);
-});
-
-document.addEventListener("keydown", (event) => {
-  const card = event.target.closest?.(".session-card");
-  if (!card || !["Enter", " "].includes(event.key)) return;
-  event.preventDefault();
-  const session = sessionsById.get(card.dataset.sessionId);
-  if (session) openSessionDialog(session);
-});
-
-document.querySelector("#session-dialog-close").addEventListener("click", closeSessionDialog);
-
-document.querySelector("#session-dialog").addEventListener("click", (event) => {
-  if (event.target === event.currentTarget) closeSessionDialog();
-});
-
-document.querySelector("#session-dialog").addEventListener("close", () => {
-  const closedSessionId = state.activeSessionId;
-  state.activeSessionId = null;
-  document.body.classList.remove("modal-open");
-  document.querySelector(`[data-session-id="${closedSessionId}"]`)?.focus();
-});
-
-setInterval(() => {
-  const now = japanNow();
-  if (state.activeTab === "now") {
-    if (!state.followRealTime) return;
-    if (state.referenceDate === now.date && state.referenceTime === now.time) return;
+  document.querySelector("#use-real-time").addEventListener("click", () => {
+    const now = japanNow();
     state.referenceDate = now.date;
     state.referenceTime = now.time;
-  } else if (displayClock.date === now.date && displayClock.time === now.time) {
-    return;
-  }
-  render();
-}, 30_000);
+    state.followRealTime = true;
+    render();
+  });
 
-document.querySelector("#upcoming-sessions").innerHTML = emptyMarkup("プログラムを読み込んでいます");
-document.querySelector("#schedule-sessions").innerHTML = emptyMarkup("プログラムを読み込んでいます");
-loadSessions();
+  document.querySelector("#query-filter").addEventListener("input", (event) => {
+    state.query = event.target.value.trim();
+    render();
+  });
+
+  bindMultiFilter("#division-filter", state.divisions);
+  bindMultiFilter("#campus-filter", state.campuses);
+  bindMultiFilter("#theme-filter", state.themes);
+
+  document.querySelector("#clear-filters").addEventListener("click", () => {
+    state.query = "";
+    state.divisions.clear();
+    state.campuses.clear();
+    state.themes.clear();
+    document.querySelector("#query-filter").value = "";
+    document
+      .querySelectorAll(".multi-select-options input[type='checkbox']")
+      .forEach((input) => {
+        input.checked = false;
+      });
+    render();
+  });
+
+  document.addEventListener("click", (event) => {
+    const summary = event.target.closest?.(".time-group-summary");
+    if (!summary) return;
+    const timeGroup = summary.parentElement;
+    state.timeGroupOpen.set(timeGroup.dataset.timeGroupKey, !timeGroup.open);
+  });
+
+  document.addEventListener("click", (event) => {
+    const card = event.target.closest?.(".session-card");
+    if (!card) return;
+    const session = sessionsById.get(card.dataset.sessionId);
+    if (session) openSessionDialog(session);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    const card = event.target.closest?.(".session-card");
+    if (!card || !["Enter", " "].includes(event.key)) return;
+    event.preventDefault();
+    const session = sessionsById.get(card.dataset.sessionId);
+    if (session) openSessionDialog(session);
+  });
+
+  document.querySelector("#session-dialog-close").addEventListener("click", closeSessionDialog);
+  document.querySelector("#session-dialog").addEventListener("click", (event) => {
+    if (event.target === event.currentTarget) closeSessionDialog();
+  });
+  document.querySelector("#session-dialog").addEventListener("close", () => {
+    const closedSessionId = state.activeSessionId;
+    state.activeSessionId = null;
+    document.body.classList.remove("modal-open");
+    document.querySelector(`[data-session-id="${closedSessionId}"]`)?.focus();
+  });
+
+  setInterval(() => {
+    const now = japanNow();
+    if (state.activeTab === "now") {
+      if (!state.followRealTime) return;
+      if (state.referenceDate === now.date && state.referenceTime === now.time) return;
+      state.referenceDate = now.date;
+      state.referenceTime = now.time;
+    } else if (displayClock.date === now.date && displayClock.time === now.time) {
+      return;
+    }
+    render();
+  }, 30_000);
+}
+
+async function initialize() {
+  try {
+    if (!EVENT_CONFIG_PATH) throw new Error("data-event-config が指定されていません");
+    eventConfigUrl = new URL(EVENT_CONFIG_PATH, document.baseURI);
+    const response = await fetch(eventConfigUrl);
+    if (!response.ok) throw new Error(`${response.url}: HTTP ${response.status}`);
+    eventConfig = await response.json();
+    if (eventConfig.schemaVersion !== 1 || !eventConfig.dates?.length) {
+      throw new Error("未対応または不正なイベント設定です");
+    }
+    configureEventPage();
+    bindEventHandlers();
+    document.querySelector("#upcoming-sessions").innerHTML = emptyMarkup(
+      "プログラムを読み込んでいます",
+    );
+    document.querySelector("#schedule-sessions").innerHTML = emptyMarkup(
+      "プログラムを読み込んでいます",
+    );
+    await loadSessions();
+  } catch (error) {
+    console.error(error);
+    const message = "イベント設定を読み込めませんでした";
+    document.querySelector("#upcoming-sessions").innerHTML = emptyMarkup(message);
+    document.querySelector("#schedule-sessions").innerHTML = emptyMarkup(message);
+  }
+}
+
+initialize();

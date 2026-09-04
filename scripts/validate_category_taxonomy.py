@@ -8,13 +8,14 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-TAXONOMY_PATH = ROOT / "data" / "category_taxonomy.json"
+JSCE_DATA = ROOT / "events" / "jsce2026"
+TAXONOMY_PATH = JSCE_DATA / "category_taxonomy.json"
 PILOT_PATHS = [
-    ROOT / "data" / "category_pilot.json",
-    ROOT / "data" / "category_pilot_v02.json",
+    JSCE_DATA / "category_pilot.json",
+    JSCE_DATA / "category_pilot_v02.json",
 ]
-SESSIONS_PATH = ROOT / "data" / "sessions.json"
-CATEGORIES_PATH = ROOT / "data" / "categories.json"
+SESSIONS_PATH = JSCE_DATA / "sessions.json"
+CATEGORIES_PATH = JSCE_DATA / "categories.json"
 
 
 def load_json(path: Path) -> object:

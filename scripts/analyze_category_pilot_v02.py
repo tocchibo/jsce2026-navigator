@@ -8,9 +8,10 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE_PATH = ROOT / "data" / "category_sample_source.local.json"
-PILOT_PATH = ROOT / "data" / "category_pilot_v02.json"
-TAXONOMY_PATH = ROOT / "data" / "category_taxonomy.json"
+JSCE_DATA = ROOT / "events" / "jsce2026"
+SOURCE_PATH = JSCE_DATA / "category_sample_source.local.json"
+PILOT_PATH = JSCE_DATA / "category_pilot_v02.json"
+TAXONOMY_PATH = JSCE_DATA / "category_taxonomy.json"
 OUTPUT_PATH = ROOT / "docs" / "category-pilot-v02-report.md"
 
 
