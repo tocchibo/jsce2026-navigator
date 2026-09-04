@@ -886,7 +886,8 @@ main {
 }
 
 .talk-authors,
-.talk-affiliations {
+.talk-presenter-affiliation,
+.talk-coauthor-affiliations {
   display: block;
   margin-top: 4px;
   color: var(--muted);
@@ -895,7 +896,8 @@ main {
 }
 
 .talk-authors b,
-.talk-affiliations b {
+.talk-presenter-affiliation b,
+.talk-coauthor-affiliations b {
   margin-right: 6px;
   color: var(--navy);
   font-size: 9px;
@@ -1127,6 +1129,16 @@ main {
   font-size: 9px;
 }
 
+.plan-day-heading .plan-now-marker {
+  padding: 3px 7px;
+  color: white;
+  background: var(--green);
+  border-radius: 5px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
 .plan-timeline {
   position: relative;
   display: grid;
@@ -1175,6 +1187,14 @@ main {
   background: #98a4a3;
 }
 
+.plan-entry.is-live::before {
+  background: var(--green);
+}
+
+.plan-entry.is-ended::before {
+  background: #aeb7b5;
+}
+
 .plan-entry-time {
   padding-top: 13px;
   display: flex;
@@ -1217,6 +1237,11 @@ main {
   border-color: #b9c1bf;
   border-style: dashed;
   box-shadow: none;
+}
+
+.plan-entry.is-live .plan-entry-body {
+  border-color: #71a58f;
+  box-shadow: inset 4px 0 0 var(--green), var(--shadow);
 }
 
 .plan-entry-badges {
@@ -1287,6 +1312,21 @@ main {
   box-shadow: inset 3px 0 0 #98a4a3;
 }
 
+.plan-talk.is-current,
+.plan-entry.is-must .plan-talk.is-personal-pick.is-current,
+.plan-talk.is-reference-pick.is-current {
+  background: var(--green-soft);
+  box-shadow: inset 3px 0 0 var(--green);
+}
+
+.plan-talk.is-next:not(.is-personal-pick):not(.is-reference-pick) {
+  background: var(--orange-soft);
+}
+
+.plan-talk.is-ended a {
+  opacity: 0.52;
+}
+
 .plan-talk a {
   padding: 9px;
   display: grid;
@@ -1296,9 +1336,32 @@ main {
 }
 
 .plan-talk-time {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
   color: var(--green);
   font-size: 10px;
   font-weight: 800;
+}
+
+.plan-talk .plan-talk-time b {
+  padding: 2px 5px;
+  color: var(--muted);
+  background: #e5e7e1;
+  border-radius: 4px;
+  font-size: 8px;
+  line-height: 1.35;
+}
+
+.plan-talk.is-current .plan-talk-time b {
+  color: white;
+  background: var(--green);
+}
+
+.plan-talk.is-next .plan-talk-time b {
+  color: #a13f20;
+  background: #ffd8c5;
 }
 
 .plan-talk b,
@@ -1336,6 +1399,13 @@ main {
   margin-top: 3px;
   color: var(--muted);
   font-size: 9px;
+}
+
+.plan-talk-affiliation b {
+  display: inline;
+  margin-right: 5px;
+  color: var(--navy);
+  font-size: 8px;
 }
 
 .plan-after-actions {

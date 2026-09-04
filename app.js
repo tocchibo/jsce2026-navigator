@@ -115,6 +115,77 @@ function currentTalkMarkup(session) {
     </div>`;
 }
 
+function affiliationEntries(rawAffiliations) {
+  if (!rawAffiliations) return [];
+  const source = rawAffiliations.replace(/^\(/, "").replace(/\)\s*$/, "");
+  const markerPattern = /(?:^|[、,]\s*)(\d+)\.\s*/g;
+  const markers = [...source.matchAll(markerPattern)];
+  return markers.map((marker, index) => ({
+    id: marker[1],
+    name: source
+      .slice(marker.index + marker[0].length, markers[index + 1]?.index ?? source.length)
+      .trim()
+      .replace(/[、,]\s*$/, ""),
+  }));
+}
+
+function uniqueAffiliations(ids, affiliationById) {
+  return [...new Set(ids.map((id) => affiliationById.get(id)).filter(Boolean))];
+}
+
+function talkContributorDetails(talk) {
+  const [, , , rawPresenter, authors = ""] = talk;
+  const affiliationStart = authors.search(/\s+\(\d+\.\s*/);
+  const names = affiliationStart >= 0 ? authors.slice(0, affiliationStart) : authors;
+  const rawAffiliations = affiliationStart >= 0 ? authors.slice(affiliationStart).trim() : "";
+  const entries = affiliationEntries(rawAffiliations);
+  const affiliationById = new Map(entries.map((entry) => [entry.id, entry.name]));
+  const presenter = String(rawPresenter)
+    .replace(/\s*\d+(?:\s*[,，・/]\s*\d+)*\s*$/, "")
+    .trim();
+
+  let presenterAffiliationIds = [];
+  let otherAuthors = names;
+  const presenterMarker = names.indexOf("*");
+  if (presenterMarker >= 0) {
+    const afterMarker = names.slice(presenterMarker + 1);
+    const presenterLength = afterMarker.startsWith(presenter) ? presenter.length : 0;
+    const affiliationMatch = afterMarker
+      .slice(presenterLength)
+      .match(/^\s*(\d+(?:\s*,\s*\d+)*)/);
+    presenterAffiliationIds = affiliationMatch
+      ? affiliationMatch[1].split(",").map((id) => id.trim())
+      : [];
+    const presenterTokenLength = 1 + presenterLength + (affiliationMatch?.[0].length ?? 0);
+    otherAuthors = `${names.slice(0, presenterMarker)}${names.slice(
+      presenterMarker + presenterTokenLength,
+    )}`;
+  }
+
+  if (!presenterAffiliationIds.length && affiliationById.has("1")) {
+    presenterAffiliationIds = ["1"];
+  }
+
+  const hasCoauthors = otherAuthors.replace(/[\s、,，*\d]/g, "").length > 0;
+  const coauthorAffiliationIds = [...otherAuthors.matchAll(/\d+/g)].map((match) => match[0]);
+  let coauthorAffiliations = uniqueAffiliations(coauthorAffiliationIds, affiliationById);
+  if (hasCoauthors && !coauthorAffiliations.length && entries.length === 1) {
+    coauthorAffiliations = [entries[0].name];
+  }
+
+  return {
+    names,
+    presenter,
+    presenterAffiliations: uniqueAffiliations(presenterAffiliationIds, affiliationById),
+    coauthorAffiliations,
+    hasCoauthors,
+  };
+}
+
+function affiliationText(affiliations) {
+  return affiliations.length ? affiliations.map(escapeHtml).join("／") : "記載なし";
+}
+
 function talkCategoryMarkup(code) {
   const category = categoriesByCode.get(code);
   if (!category) return "";
@@ -137,14 +208,12 @@ function talkCategoryMarkup(code) {
 }
 
 function talkMarkup(talk, session, talkIndex) {
-  const [time, code, title, , authors] = talk;
+  const [time, code, title] = talk;
   const temporalStatus = talkStatus(session, talkIndex);
   const planEntry = plannedTalks.get(code);
   const isReferencePick = planStatus(planEntry) === "reference";
   const isPersonalPick = Boolean(planEntry) && !isReferencePick;
-  const affiliationStart = authors.search(/\s+\(\d+\.\s*/);
-  const names = affiliationStart >= 0 ? authors.slice(0, affiliationStart) : authors;
-  const affiliations = affiliationStart >= 0 ? authors.slice(affiliationStart).trim() : "";
+  const contributors = talkContributorDetails(talk);
   return `
     <li class="talk-item ${temporalStatus?.className ?? ""} ${isPersonalPick ? "is-personal-pick" : ""} ${isReferencePick ? "is-reference-pick" : ""}">
       <a class="talk-link" href="${PRESENTATION_URL}${encodeURIComponent(code)}" target="_blank" rel="noopener noreferrer">
@@ -157,8 +226,17 @@ function talkMarkup(talk, session, talkIndex) {
           ${planEntry ? planTalkBadgeMarkup(planEntry) : ""}
           <span class="talk-title">${escapeHtml(title)}</span>
           ${talkCategoryMarkup(code)}
-          <span class="talk-authors"><b>著者</b>${escapeHtml(names)}</span>
-          ${affiliations ? `<span class="talk-affiliations"><b>所属</b>${escapeHtml(affiliations)}</span>` : ""}
+          <span class="talk-authors"><b>著者</b>${escapeHtml(contributors.names)}</span>
+          <span class="talk-presenter-affiliation"><b>発表者所属</b>${affiliationText(
+            contributors.presenterAffiliations,
+          )}</span>
+          ${
+            contributors.hasCoauthors
+              ? `<span class="talk-coauthor-affiliations"><b>共同報告者所属</b>${affiliationText(
+                  contributors.coauthorAffiliations,
+                )}</span>`
+              : ""
+          }
         </span>
         <span class="external-icon" aria-hidden="true">↗</span>
       </a>
@@ -299,22 +377,53 @@ function resolveTalk(code) {
   return null;
 }
 
-function planTalkMarkup(talk, talkEntries) {
-  const [time, code, title, presenter] = talk;
+function planSessionTemporalStatus(session) {
+  if (session.date < displayClock.date) return { label: "終了", className: "is-ended" };
+  if (session.date > displayClock.date) return null;
+  return sessionStatus(session);
+}
+
+function planTalkTemporalStatus(session, talkIndex) {
+  if (session.date < displayClock.date) return { label: "終了", className: "is-ended" };
+  if (session.date > displayClock.date) return null;
+  const status = talkStatus(session, talkIndex);
+  if (status?.className === "is-next" && sessionStatus(session)?.className !== "is-live") {
+    return null;
+  }
+  return status;
+}
+
+function planTalkMarkup(talk, talkEntries, session, talkIndex) {
+  const [time, code, title] = talk;
   const planEntry = talkEntries.get(code);
   const isReferencePick = planStatus(planEntry) === "reference";
   const isPersonalPick = Boolean(planEntry) && !isReferencePick;
+  const temporalStatus = planTalkTemporalStatus(session, talkIndex);
+  const contributors = talkContributorDetails(talk);
   return `
-    <li class="plan-talk ${isPersonalPick ? "is-personal-pick" : ""} ${isReferencePick ? "is-reference-pick" : ""}">
+    <li class="plan-talk ${temporalStatus?.className ?? ""} ${isPersonalPick ? "is-personal-pick" : ""} ${isReferencePick ? "is-reference-pick" : ""}">
       <a href="${PRESENTATION_URL}${encodeURIComponent(code)}" target="_blank" rel="noopener noreferrer">
-        <span class="plan-talk-time">${escapeHtml(time)}</span>
+        <span class="plan-talk-time">
+          <span>${escapeHtml(time)}</span>
+          ${temporalStatus && temporalStatus.className !== "is-ended" ? `<b>${temporalStatus.label}</b>` : ""}
+        </span>
         <span>
           <span class="plan-talk-code-row">
             <b>${escapeHtml(code)}</b>
             ${planEntry ? planTalkBadgeMarkup(planEntry) : ""}
           </span>
           <strong>${escapeHtml(title)}</strong>
-          <small>発表者：${escapeHtml(presenter)}</small>
+          <small class="plan-talk-presenter">発表者：${escapeHtml(contributors.presenter)}</small>
+          <small class="plan-talk-affiliation"><b>発表者所属</b>${affiliationText(
+            contributors.presenterAffiliations,
+          )}</small>
+          ${
+            contributors.hasCoauthors
+              ? `<small class="plan-talk-affiliation"><b>共同報告者所属</b>${affiliationText(
+                  contributors.coauthorAffiliations,
+                )}</small>`
+              : ""
+          }
         </span>
         <span aria-hidden="true">↗</span>
       </a>
@@ -361,6 +470,7 @@ function planSessionStatus(entries) {
 
 function planEntryMarkup({ session, talkEntries, entries }) {
   const status = planSessionStatus(entries);
+  const temporalStatus = planSessionTemporalStatus(session);
   const priority = Math.max(...entries.map((entry) => entry.priority ?? 3));
   const selectedCount = [...talkEntries.values()].filter(
     (entry) => planStatus(entry) !== "reference",
@@ -376,13 +486,14 @@ function planEntryMarkup({ session, talkEntries, entries }) {
           : `<span class="session-plan-badge">本命 ${selectedCount}件</span>`;
   const afterActions = entries.filter((entry) => entry.after);
   return `
-    <article class="plan-entry is-${status}" data-plan-session-id="${escapeHtml(session.id)}">
+    <article class="plan-entry is-${status} ${temporalStatus?.className ?? ""}" data-plan-session-id="${escapeHtml(session.id)}">
       <div class="plan-entry-time">
         <strong>${escapeHtml(session.start)}</strong>
         <span>–${escapeHtml(session.end)}</span>
       </div>
       <div class="plan-entry-body">
         <div class="plan-entry-badges">
+          ${temporalStatus ? `<span class="status-pill ${temporalStatus.className}">${temporalStatus.label}</span>` : ""}
           ${status !== "reference" ? `<span class="plan-priority" aria-label="優先度 星${priority}">${"★".repeat(priority)}</span>` : ""}
           ${statusBadge}
         </div>
@@ -396,7 +507,7 @@ function planEntryMarkup({ session, talkEntries, entries }) {
           <span>座長：${escapeHtml(session.chair)}</span>
         </div>
         <ol class="plan-talks">${session.talks
-          .map((talk) => planTalkMarkup(talk, talkEntries))
+          .map((talk, talkIndex) => planTalkMarkup(talk, talkEntries, session, talkIndex))
           .join("")}</ol>
         ${afterActions.length ? `<div class="plan-after-actions">${afterActions
           .map(
@@ -445,11 +556,18 @@ function planDayMarkup([date, daySessions], dayIndex) {
   const referenceSessions = daySessions.filter(
     (planSession) => planSessionStatus(planSession.entries) === "reference",
   );
+  const dayClass =
+    date === displayClock.date
+      ? "is-today"
+      : date < displayClock.date
+        ? "is-past"
+        : "is-future";
   return `
-    <section class="plan-day">
+    <section class="plan-day ${dayClass}" data-plan-date="${escapeHtml(date)}">
       <header class="plan-day-heading">
         <span>DAY ${dayIndex + 1}</span>
         <h2>${escapeHtml(dateFormatter.format(new Date(`${date}T12:00:00+09:00`)))}</h2>
+        ${date === displayClock.date ? `<span class="plan-now-marker">現在 ${escapeHtml(displayClock.time)}</span>` : ""}
         <b>${scheduledSessions.length}予定${referenceSessions.length ? `・${referenceSessions.length}参考` : ""}</b>
       </header>
       <div class="plan-timeline">${scheduledSessions

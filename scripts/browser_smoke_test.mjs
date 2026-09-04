@@ -186,7 +186,12 @@ const filtered = await evaluate(`
         inlineTalks: document.querySelectorAll('#schedule-sessions .talk-list').length,
         links: [...document.querySelectorAll('#session-dialog .talk-link')].map((link) => link.href),
         authors: [...document.querySelectorAll('#session-dialog .talk-authors')].map((item) => item.textContent),
-        affiliations: [...document.querySelectorAll('#session-dialog .talk-affiliations')].map((item) => item.textContent),
+        presenterAffiliations: [
+          ...document.querySelectorAll('#session-dialog .talk-presenter-affiliation'),
+        ].map((item) => item.textContent),
+        coauthorAffiliations: [
+          ...document.querySelectorAll('#session-dialog .talk-coauthor-affiliations'),
+        ].map((item) => item.textContent),
         talkTags: [...document.querySelectorAll('#session-dialog .talk-tag')].map((item) => item.textContent),
         nowHidden: document.querySelector('#now-view').hidden,
         scheduleHidden: document.querySelector('#schedule-view').hidden,
@@ -208,7 +213,8 @@ assert.equal(filtered.scheduleHidden, false);
 assert.equal(filtered.referencePanelVisible, false);
 assert.ok(filtered.links.some((url) => url.endsWith("/CS18-07")));
 assert.ok(filtered.authors.some((value) => value.includes("千葉 雄貴")));
-assert.ok(filtered.affiliations.some((value) => value.includes("留萌開発事務所")));
+assert.ok(filtered.presenterAffiliations.some((value) => value.includes("株式会社 堀口組")));
+assert.ok(filtered.coauthorAffiliations.some((value) => value.includes("留萌開発事務所")));
 assert.ok(filtered.talkTags.length > 0);
 
 const themed = await evaluate(`
@@ -262,6 +268,8 @@ const personalPlan = await evaluate(`
       const entries = document.querySelectorAll('#plan-sessions .plan-entry');
       if (entries.length) {
         clearInterval(timer);
+        japanNow = () => ({ date: '2026-09-02', time: '09:35' });
+        render();
         const must = document.querySelector('[data-plan-session-id="session-0085"]');
         const fixed = document.querySelector('[data-plan-session-id="session-0070"]');
         const reference = document.querySelector('[data-plan-session-id="session-0069"]');
@@ -281,11 +289,22 @@ const personalPlan = await evaluate(`
           mustTalks: must?.querySelectorAll('.plan-talk').length,
           mustPicks: must?.querySelectorAll('.plan-talk.is-personal-pick').length,
           mustBadge: must?.querySelector('.plan-must-badge').textContent,
+          mustTemporalStatus: must?.querySelector('.status-pill').textContent,
+          mustIsLive: must?.classList.contains('is-live'),
+          currentTalkCode: must?.querySelector('.plan-talk.is-current .plan-talk-code-row b')?.textContent,
+          nextTalkCode: must?.querySelector('.plan-talk.is-next .plan-talk-code-row b')?.textContent,
+          todayMarker: document.querySelector('[data-plan-date="2026-09-02"] .plan-now-marker')?.textContent,
           mustAfter: must?.querySelector('.plan-after-action').textContent
             .replace(/\s+/g, ' ')
             .trim(),
           mustCodes: [...must.querySelectorAll('.plan-talk-code-row b')]
             .map((item) => item.textContent),
+          mustPresenterAffiliation: must
+            ?.querySelector('.plan-talk.is-personal-pick .plan-talk-affiliation')
+            ?.textContent,
+          mustCoauthorAffiliation: must
+            ?.querySelectorAll('.plan-talk.is-personal-pick .plan-talk-affiliation')[1]
+            ?.textContent,
           fixedBadge: fixed?.querySelector('.plan-fixed-badge').textContent,
           referenceTitle: reference?.querySelector('h3').textContent,
           referenceTalks: reference?.querySelectorAll('.plan-talk').length,
@@ -319,8 +338,15 @@ assert.deepEqual(personalPlan, {
   mustTalks: 8,
   mustPicks: 1,
   mustBadge: "最優先",
+  mustTemporalStatus: "開催中",
+  mustIsLive: true,
+  currentTalkCode: "VI-151",
+  nextTalkCode: "VI-152",
+  todayMarker: "現在 09:35",
   mustAfter: "終了後 セッション終了後は名刺交換を優先し、その後、10:40の自身の発表に向けて2号館1階13へ移動する。",
   mustCodes: ["VI-147", "VI-148", "VI-149", "VI-150", "VI-151", "VI-152", "VI-153", "VI-154"],
+  mustPresenterAffiliation: "発表者所属内外構造株式会社",
+  mustCoauthorAffiliation: "共同報告者所属阪神高速道路株式会社／阪神高速技術株式会社／内外構造株式会社",
   fixedBadge: "固定",
   referenceTitle: "合意形成(1)",
   referenceTalks: 6,
